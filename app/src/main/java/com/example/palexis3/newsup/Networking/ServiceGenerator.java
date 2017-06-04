@@ -1,4 +1,4 @@
-package com.example.palexis3.newsup;
+package com.example.palexis3.newsup.Networking;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,13 +12,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
    The ServiceGenerator class uses Retrofit’s Retrofit builder to
    create a new REST client with the given API base url (BASE_URL)
 */
+
 public class ServiceGenerator {
 
-    private static final String BASE_URL = "https://newsapi.org/v1/";
+    private static final String BASE_URL = "https://newsapi.org/";
 
     private static Gson gson = new GsonBuilder()
             .setLenient()
             .create();
+
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
