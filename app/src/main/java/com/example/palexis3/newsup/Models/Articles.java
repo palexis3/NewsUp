@@ -1,6 +1,9 @@
 package com.example.palexis3.newsup.Models;
 
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Articles {
 
     String source;
@@ -11,6 +14,8 @@ public class Articles {
     String urlToImage;
     String publishedAt;
 
+    // empty constructor used for parceler library
+    public Articles(){};
 
     public String getUrlToImage() {
         return urlToImage;

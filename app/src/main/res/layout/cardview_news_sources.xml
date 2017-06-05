@@ -18,8 +18,9 @@
         <ImageView
             android:id="@+id/sourceImage"
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher"/>
 
@@ -31,18 +32,31 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="@string/temp"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textColor="@color/black"/>
 
         <TextView
-            android:id="@+id/tvCategory"
+            android:id="@+id/tvSourceInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvName"
             android:gravity="center"
             android:padding="5dp"
+            android:layout_marginTop="4dp"
+            android:textSize="13sp"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/temp"/>
+
+        <TextView
+            android:id="@+id/tvCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvSourceInfo"
+            android:gravity="center|bottom"
+            android:padding="5dp"
+            android:layout_marginTop="8dp"
             android:text="@string/temp"
-            android:textSize="14sp"/>
+            android:textSize="13sp"/>
 
     </LinearLayout>
 

@@ -22,8 +22,6 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String NEWS_API_KEY = "77b5d1cccfc04ba0a312d832ee46b4cf";
-
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<Sources> sourcesArrayList;
@@ -57,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<NewsSourceResponse> call, Response<NewsSourceResponse> response) {
 
                 if(response.isSuccessful()) {
+
                     NewsSourceResponse sourceResponse = response.body();
                     sourcesArrayList = new ArrayList<>(sourceResponse.getSources());
 
@@ -66,10 +65,8 @@ public class MainActivity extends AppCompatActivity {
                     // add adapter to recyclerview
                     recyclerView.setAdapter(adapter);
                 } else {
-
                     Log.d("Call", call.request().body().toString());
                 }
-
             }
 
             @Override

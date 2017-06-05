@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.palexis3.newsup">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <meta-data
+        android:name="com.example.palexis3.newsup.MyAppGlideModule"
+        android:value="AppGlideModule" />
 
     <application
         android:allowBackup="true"
@@ -18,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.SourcesActivity" />
+        <activity android:name=".Activities.ArticleWebView"></activity>
     </application>
 
 </manifest>
