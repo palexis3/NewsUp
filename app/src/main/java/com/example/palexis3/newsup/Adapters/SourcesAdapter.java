@@ -146,6 +146,8 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
                         Toast.makeText(context, "Cannot get articles at the moment!", Toast.LENGTH_LONG).show();
                     }
                 });
+            } else {
+                /** TODO: Place a snackbar notifying the user, request cannot be made */
             }
         }
     }

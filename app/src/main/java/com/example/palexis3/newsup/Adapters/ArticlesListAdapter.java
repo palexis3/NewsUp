@@ -2,6 +2,7 @@ package com.example.palexis3.newsup.Adapters;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,11 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.palexis3.newsup.Activities.ArticleWebViewActivity;
 import com.example.palexis3.newsup.Models.Articles;
 import com.example.palexis3.newsup.R;
 import com.example.palexis3.newsup.Utilities.Utility;
 
 import java.util.ArrayList;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class ArticlesListAdapter extends RecyclerView.Adapter<ArticlesListAdapter.ViewHolder> {
 
@@ -84,6 +88,30 @@ public class ArticlesListAdapter extends RecyclerView.Adapter<ArticlesListAdapte
             poster = (ImageView) v.findViewById(R.id.ivArticleImage);
             title = (TextView) v.findViewById(R.id.tvArticleTitle);
             date = (TextView) v.findViewById(R.id.tvArticleDate);
+
+            // attach an on click listenr for this article
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+
+                    /** TODO: USE DAGGER INSTEAD OF CONTEXT FOR SPAWNING INTENT */
+                    if(position != RecyclerView.NO_POSITION) {
+
+                        // launch article intent
+                        final Articles article = articlesArrayList.get(position);
+                        Intent i = new Intent(context, ArticleWebViewActivity.class);  // <- USE DAGGER FOR DEPENDENCY INJECTION
+                        i.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                        i.putExtra("title", article.getTitle());
+                        i.putExtra("url", article.getUrl());
+
+                        context.startActivity(i); // <- USE DAGGER FOR DEPENDENCY INJECTION
+
+                    } else {
+                        /** TODO: place a snack bar that request cannot be made */
+                    }
+                }
+            });
         }
 
     }
