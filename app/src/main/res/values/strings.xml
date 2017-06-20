@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NewsUp!</string>
     <string name="temp">Temp</string>
+    <string name="error_message">Failed to get results, please try again.</string>
 </resources>

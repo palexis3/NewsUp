@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.SourcesActivity"
+        <activity android:name=".Activities.SourceArticleListActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".Activities.ArticleWebViewActivity"></activity>
     </application>

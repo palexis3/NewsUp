@@ -6,8 +6,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.example.palexis3.newsup.Adapters.ArticlesListAdapter;
+import com.example.palexis3.newsup.Adapters.ArticlesAdapter;
 import com.example.palexis3.newsup.Models.Articles;
 import com.example.palexis3.newsup.R;
 
@@ -15,17 +18,24 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-public class SourcesActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class SourceArticleListActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     private ArrayList<Articles> articlesArrayList;
     private String name;
 
+    @BindView(R.id.tv_error_message) TextView mErrorMessage;
+    @BindView(R.id.pg_loading_indication) ProgressBar pgLoadingIndication;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sources);
+        ButterKnife.bind(this);
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -53,11 +63,24 @@ public class SourcesActivity extends AppCompatActivity {
         // set necessary recyclerview items
         recyclerView = (RecyclerView) findViewById(R.id.sourceRecyclerview);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // set recycler view invisible
+        recyclerView.setVisibility(View.GONE);
 
-        adapter = new ArticlesListAdapter(this, articlesArrayList);
+        // set the progess bar to invisible
+        pgLoadingIndication.setVisibility(View.GONE);
 
-        recyclerView.setAdapter(adapter);
+        if(articlesArrayList != null && articlesArrayList.size() > 0) {
+
+            showJsonData();
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            adapter = new ArticlesAdapter(this, articlesArrayList);
+
+            recyclerView.setAdapter(adapter);
+        } else {
+            showErrorMessage();
+        }
 
     }
 
@@ -71,5 +94,15 @@ public class SourcesActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showJsonData() {
+        recyclerView.setVisibility(View.VISIBLE);
+        mErrorMessage.setVisibility(View.GONE);
+    }
+
+    private void showErrorMessage() {
+        mErrorMessage.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
     }
 }

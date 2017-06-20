@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.palexis3.newsup.Activities.SourcesActivity;
+import com.example.palexis3.newsup.Activities.SourceArticleListActivity;
 import com.example.palexis3.newsup.Models.Articles;
 import com.example.palexis3.newsup.Models.Sources;
 import com.example.palexis3.newsup.Networking.NewsClient;
@@ -46,7 +46,7 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_news_sources, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_list_sources_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
 
         return vh;
@@ -126,12 +126,12 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
                             ArrayList<Articles> articlesArrayList = new ArrayList<>(sourceResponse.getArticles());
 
                             // launch an activity with the list of articles
-                            Intent i = new Intent(context, SourcesActivity.class); // <- SHOULD BE USING DAGGER FOR DEPENDENCY INJECTION
+                            Intent i = new Intent(context, SourceArticleListActivity.class); // <- SHOULD BE USING DAGGER FOR DEPENDENCY INJECTION
                             i.addFlags(FLAG_ACTIVITY_NEW_TASK);
                             i.putExtra("title", source.getName());
                             i.putExtra("sourcesList", Parcels.wrap(articlesArrayList));
 
-                            // go to the SourcesActivity
+                            // go to the SourceArticleListActivity
                             context.startActivity(i); // <- SHOULD BE USING DAGGER FOR DEPENDENCY INJECTION
 
                         } else{
