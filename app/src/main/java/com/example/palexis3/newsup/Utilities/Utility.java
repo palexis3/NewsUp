@@ -1,5 +1,6 @@
 package com.example.palexis3.newsup.Utilities;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,6 +67,18 @@ public class Utility {
         String month = arr[1].charAt(0) == '0' ? arr[1].substring(1) : arr[1];
         String res = String.format("%s %s, %s", map.get(month), arr[2], arr[0]);
         return res;
+    }
+
+    // this method checks if there is internet connectivity on the device
+    public static boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch(IOException e) {e.printStackTrace();}
+          catch (InterruptedException e) {e.printStackTrace();}
+        return false;
     }
 
 }

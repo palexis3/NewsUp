@@ -17,6 +17,7 @@ import com.example.palexis3.newsup.Networking.NewsClient;
 import com.example.palexis3.newsup.Networking.ServiceGenerator;
 import com.example.palexis3.newsup.R;
 import com.example.palexis3.newsup.Responses.NewsSourceResponse;
+import com.example.palexis3.newsup.Utilities.Utility;
 
 import java.util.ArrayList;
 
@@ -50,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
 
+        // check if we're
+        if(Utility.isOnline()) {
+
+        }
         initViews();
     }
 
