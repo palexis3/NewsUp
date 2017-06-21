@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,21 +14,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.palexis3.newsup.Activities.SourceArticleListActivity;
-import com.example.palexis3.newsup.Models.Articles;
 import com.example.palexis3.newsup.Models.Sources;
-import com.example.palexis3.newsup.Networking.NewsClient;
-import com.example.palexis3.newsup.Networking.ServiceGenerator;
 import com.example.palexis3.newsup.R;
-import com.example.palexis3.newsup.Responses.NewsArticleResponse;
 import com.example.palexis3.newsup.Utilities.Utility;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -39,9 +30,13 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
     private Context context;
     private static String PHOTO_URL = "https://icons.better-idea.org/icon?url=%s&size=40..50..60";
 
-    public SourcesAdapter(Context context, ArrayList<Sources> sources) {
+    // store a reference to the ListItemClickListener interface
+    private final ListItemClickListener mOnClickListener ;
+
+    public SourcesAdapter(Context context, ArrayList<Sources> sources, ListItemClickListener listener) {
         this.context = context;
         this.sources = sources;
+        mOnClickListener = listener;
     }
 
     @Override
@@ -82,6 +77,10 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
         return (sources != null) ? sources.size() : 0;
     }
 
+    // create an interface for clicking items
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedItem);
+    }
 
     // viewholder caching class for performance
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -102,52 +101,25 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
             sourceInfo = (TextView) v.findViewById(R.id.tvSourceInfo);
 
             // attach click listener to this entire row
-            itemView.setOnClickListener(this);
+            v.setOnClickListener(this);
         }
 
-        // launch an intent to get the list of articles for this source
+        // launch an intent to launch SourceArticleList activity
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            if(position != RecyclerView.NO_POSITION) {
+
+            if(position != RecyclerView.NO_POSITION && Utility.isNetworkAvailable(context) && Utility.isOnline() ) {
                 final Sources source = sources.get(position);
-
-                // create an instance of our news client
-                NewsClient client = ServiceGenerator.createService(NewsClient.class);
-                Call<NewsArticleResponse> call = client.getArticles(source.getId(), Utility.getNewsApiKey());
-
-                call.enqueue(new Callback<NewsArticleResponse>() {
-                    @Override
-                    public void onResponse(Call<NewsArticleResponse> call, Response<NewsArticleResponse> response) {
-
-                        if(response.isSuccessful()) {
-
-                            NewsArticleResponse sourceResponse = response.body();
-                            ArrayList<Articles> articlesArrayList = new ArrayList<>(sourceResponse.getArticles());
-
-                            // launch an activity with the list of articles
-                            Intent i = new Intent(context, SourceArticleListActivity.class); // <- SHOULD BE USING DAGGER FOR DEPENDENCY INJECTION
-                            i.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                            i.putExtra("title", source.getName());
-                            i.putExtra("sourcesList", Parcels.wrap(articlesArrayList));
-
-                            // go to the SourceArticleListActivity
-                            context.startActivity(i); // <- SHOULD BE USING DAGGER FOR DEPENDENCY INJECTION
-
-                        } else{
-                            Log.d("Source", call.request().body().toString());
-                            Toast.makeText(context, "Cannot get articles at the moment!", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<NewsArticleResponse> call, Throwable t) {
-                        Log.d("Source", t.toString());
-                        Toast.makeText(context, "Cannot get articles at the moment!", Toast.LENGTH_LONG).show();
-                    }
-                });
+                mOnClickListener.onListItemClick(position);
+                Intent i = new Intent(context, SourceArticleListActivity.class);
+                i.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                i.putExtra("source", Parcels.wrap(source));
+                i.putExtra("title", source.getName());
+                context.startActivity(i); // <-- PROBABLY SHOULD BE USING DAGGER
             } else {
                 /** TODO: Place a snackbar notifying the user, request cannot be made */
+                Toast.makeText(context, "Hello", Toast.LENGTH_LONG).show();
             }
         }
     }

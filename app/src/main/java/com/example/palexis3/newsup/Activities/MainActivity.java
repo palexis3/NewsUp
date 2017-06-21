@@ -28,10 +28,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SourcesAdapter.ListItemClickListener {
 
     private RecyclerView.Adapter adapter;
     private ArrayList<Sources> sourcesArrayList;
+    private SourcesAdapter.ListItemClickListener listener;
 
     @BindView(R.id.tv_error_message) TextView mErrorMessage;
     @BindView(R.id.pg_loading_indication) ProgressBar mLoadingIndication;
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         // Sets the Toolbar to act as the ActionBar for this Activity window.
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
+
+        // set our list item click listener
+        listener = this;
 
         // swipe refresh layout callback
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if(sourcesArrayList != null && sourcesArrayList.size() > 0) {
                         // now add list of sources to grid layout recycler view, using adapter
-                        adapter = new SourcesAdapter(getApplicationContext(), sourcesArrayList);
+                        adapter = new SourcesAdapter(getApplicationContext(), sourcesArrayList, listener);
 
                         recyclerView.setVisibility(View.VISIBLE);
 
@@ -142,6 +146,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Call", t.getMessage());
             }
         });
+    }
+
+    // keep this empty since there is no appropriate function
+    @Override
+    public void onListItemClick(int clickedItem) {
     }
 
     // set all views invisible

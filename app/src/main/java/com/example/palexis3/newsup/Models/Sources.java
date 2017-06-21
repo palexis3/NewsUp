@@ -1,6 +1,8 @@
 package com.example.palexis3.newsup.Models;
 
+import org.parceler.Parcel;
 
+@Parcel
 public class Sources {
 
     String id;
@@ -10,6 +12,9 @@ public class Sources {
     String category;
     String language;
     String country;
+
+    // empty constructor used for parceler library
+    public Sources(){};
 
     public String getId() { return id; }
 

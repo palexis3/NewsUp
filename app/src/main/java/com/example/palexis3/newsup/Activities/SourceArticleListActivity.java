@@ -5,14 +5,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.palexis3.newsup.Adapters.ArticlesAdapter;
 import com.example.palexis3.newsup.Models.Articles;
+import com.example.palexis3.newsup.Models.Sources;
+import com.example.palexis3.newsup.Networking.NewsClient;
+import com.example.palexis3.newsup.Networking.ServiceGenerator;
 import com.example.palexis3.newsup.R;
+import com.example.palexis3.newsup.Responses.NewsArticleResponse;
 import com.example.palexis3.newsup.Utilities.Utility;
 
 import org.parceler.Parcels;
@@ -21,11 +27,14 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SourceArticleListActivity extends AppCompatActivity {
 
     RecyclerView.Adapter adapter;
-    private ArrayList<Articles> articlesArrayList;
+    private Sources source;
     private String name;
 
     @BindView(R.id.tv_error_message) TextView mErrorMessage;
@@ -43,7 +52,8 @@ public class SourceArticleListActivity extends AppCompatActivity {
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
 
-        articlesArrayList = (ArrayList<Articles>) Parcels.unwrap(getIntent().getParcelableExtra("sourcesList"));
+        //articlesArrayList = (ArrayList<Articles>) Parcels.unwrap(getIntent().getParcelableExtra("sourcesList"));
+        source = (Sources) Parcels.unwrap(getIntent().getParcelableExtra("source"));
         name =  getIntent().getStringExtra("title");
 
         // set the title for this source with articles
@@ -74,18 +84,50 @@ public class SourceArticleListActivity extends AppCompatActivity {
         // set the progess bar to invisible
         pgLoadingIndication.setVisibility(View.GONE);
 
-        if(articlesArrayList != null && articlesArrayList.size() > 0) {
+        // get json items from server
+        getJson();
+    }
 
-            showJsonData();
+    // start network call
+    private void getJson() {
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // create an instance of our news client
+        NewsClient client = ServiceGenerator.createService(NewsClient.class);
+        Call<NewsArticleResponse> call = client.getArticles(source.getId(), Utility.getNewsApiKey());
 
-            adapter = new ArticlesAdapter(this, articlesArrayList);
+        call.enqueue(new Callback<NewsArticleResponse>() {
+            @Override
+            public void onResponse(Call<NewsArticleResponse> call, Response<NewsArticleResponse> response) {
+                if(response.isSuccessful()) {
 
-            recyclerView.setAdapter(adapter);
-        } else {
-            showErrorMessage();
-        }
+                    NewsArticleResponse sourceResponse = response.body();
+                    ArrayList<Articles> articlesArrayList = new ArrayList<>(sourceResponse.getArticles());
+
+                    if(articlesArrayList != null && articlesArrayList.size() > 0) {
+
+                        showJsonData();
+
+                        recyclerView.setLayoutManager(new LinearLayoutManager(SourceArticleListActivity.this));
+
+                        adapter = new ArticlesAdapter(SourceArticleListActivity.this, articlesArrayList);
+
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        showErrorMessage();
+                    }
+
+                } else{
+                    Log.d("Source", call.request().body().toString());
+                    Toast.makeText(SourceArticleListActivity.this, "Cannot get articles at the moment!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NewsArticleResponse> call, Throwable t) {
+                Log.d("Source", t.toString());
+                Toast.makeText(SourceArticleListActivity.this, "Cannot get articles at the moment!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     // initialize method to going back home
