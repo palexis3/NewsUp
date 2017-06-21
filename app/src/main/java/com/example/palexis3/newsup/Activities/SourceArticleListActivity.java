@@ -1,6 +1,7 @@
 package com.example.palexis3.newsup.Activities;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +41,7 @@ public class SourceArticleListActivity extends AppCompatActivity {
     @BindView(R.id.tv_error_message) TextView mErrorMessage;
     @BindView(R.id.pg_loading_indication) ProgressBar pgLoadingIndication;
     @BindView(R.id.sourceRecyclerview) RecyclerView recyclerView;
+    @BindView(R.id.swiperefresh) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
@@ -112,6 +114,7 @@ public class SourceArticleListActivity extends AppCompatActivity {
                         adapter = new ArticlesAdapter(SourceArticleListActivity.this, articlesArrayList);
 
                         recyclerView.setAdapter(adapter);
+
                     } else {
                         showErrorMessage();
                     }

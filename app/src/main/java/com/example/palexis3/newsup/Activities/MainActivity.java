@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
         // apply grid layout manager with 3 columns
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
 
-
         // set recyclerview to invisible
         recyclerView.setVisibility(View.GONE);
 
@@ -149,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
     }
 
     // keep this empty since there is no appropriate function
+    // for the ListItemClickListener
     @Override
     public void onListItemClick(int clickedItem) {
     }
