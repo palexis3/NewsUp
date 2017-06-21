@@ -107,18 +107,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView title = holder.title;
         title.setText(article.getTitle());
 
-        /*
-        TextView description = holder.description;
-        description.setMovementMethod(new ScrollingMovementMethod());
-        if(article.getDescription() != null) {
-            description.setText(article.getDescription());
-        } else {
-            description.setMaxHeight(1);
-            description.setTextColor(ContextCompat.getColor(context, R.color.grey));
-            description.setText("Nothing.");
-        }
-        */
-
 
         TextView author = holder.author;
         if(article.getAuthor() != null) {

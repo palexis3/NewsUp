@@ -54,7 +54,6 @@ public class SourceArticleListActivity extends AppCompatActivity {
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
 
-        //articlesArrayList = (ArrayList<Articles>) Parcels.unwrap(getIntent().getParcelableExtra("sourcesList"));
         source = (Sources) Parcels.unwrap(getIntent().getParcelableExtra("source"));
         name =  getIntent().getStringExtra("title");
 
