@@ -113,6 +113,15 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             String str = String.format("Written by %s", article.getAuthor());
             author.setText(str);
         }
+
+        // set up sharing listener
+        ImageView share = holder.share;
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUrl(article.getUrl());
+            }
+        });
     }
 
 
@@ -125,18 +134,34 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         // parsing date
         TextView date = holder.date;
-        // && article.getPublishedAt().length() == 2
         if(article.getPublishedAt() != null) {
             String[] arr = article.getPublishedAt().split("T");
             date.setText(Utility.parseDate(arr[0]));
         }
-
 
         ImageView poster = holder.poster;
         poster.setImageResource(0);
 
         // load poster image
         Glide.with(context).load(article.getUrlToImage()).into(poster);
+
+        // set up sharing listener
+        ImageView share = holder.share;
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUrl(article.getUrl());
+            }
+        });
+    }
+
+    // implicit intent for sharing article
+    private void shareUrl(String url) {
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, url);
+        context.startActivity(Intent.createChooser(shareIntent, "Share this article!"));
     }
 
     @Override
@@ -152,6 +177,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @BindView(R.id.ivArticleImage) ImageView poster;
         @BindView(R.id.tvArticleTitle) TextView title;
         @BindView(R.id.tvArticleDate) TextView date;
+        @BindView(R.id.iv_share) ImageView share;
 
         public ViewHolderPic(View v) {
             super(v);
@@ -191,6 +217,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @BindView(R.id.cvArticlesNoPic) CardView cv;
         //@BindView(R.id.tvArticleDescription) TextView description;
         @BindView(R.id.tvArticleAuthor) TextView author;
+        @BindView(R.id.iv_share) ImageView share;
 
         public ViewHolderNoPic(View v) {
             super(v);

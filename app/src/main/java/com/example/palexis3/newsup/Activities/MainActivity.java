@@ -115,10 +115,11 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
                     sourcesArrayList = new ArrayList<>(sourceResponse.getSources());
 
                     if(sourcesArrayList != null && sourcesArrayList.size() > 0) {
+
+                        showJsonData();
+
                         // now add list of sources to grid layout recycler view, using adapter
                         adapter = new SourcesAdapter(getApplicationContext(), sourcesArrayList, listener);
-
-                        recyclerView.setVisibility(View.VISIBLE);
 
                         // add adapter to recyclerview
                         recyclerView.setAdapter(adapter);
