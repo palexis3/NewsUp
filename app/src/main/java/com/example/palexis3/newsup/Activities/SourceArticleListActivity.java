@@ -86,7 +86,6 @@ public class SourceArticleListActivity extends AppCompatActivity {
         } else {
             showErrorMessage();
         }
-
     }
 
     // initialize method to going back home

@@ -142,7 +142,7 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
 
                     @Override
                     public void onFailure(Call<NewsArticleResponse> call, Throwable t) {
-                        Log.d("Source", call.request().body().toString());
+                        Log.d("Source", t.toString());
                         Toast.makeText(context, "Cannot get articles at the moment!", Toast.LENGTH_LONG).show();
                     }
                 });
