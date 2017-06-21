@@ -65,6 +65,22 @@ public class SourceArticleListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // swipe refresh layout callback
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                setViewsEmpty();
+                setUp();
+            }
+        });
+
+        // call setup for initialization
+        setUp();
+    }
+
+    // initialize all necessary items
+    private void setUp() {
+
         // check if device can connect to internet
         if(Utility.isOnline() && Utility.isNetworkAvailable(this)) {
             // initialize views
@@ -72,6 +88,9 @@ public class SourceArticleListActivity extends AppCompatActivity {
         } else {
             // set progress bar to invisible
             pgLoadingIndication.setVisibility(View.GONE);
+
+            // Now we call setRefreshing(false) to signal refresh has finished
+            swipeRefreshLayout.setRefreshing(false);
 
             // show error message
             showErrorMessage();
@@ -115,11 +134,18 @@ public class SourceArticleListActivity extends AppCompatActivity {
 
                         recyclerView.setAdapter(adapter);
 
+                        // Now we call setRefreshing(false) to signal refresh has finished
+                        swipeRefreshLayout.setRefreshing(false);
+
                     } else {
+                        // Now we call setRefreshing(false) to signal refresh has finished
+                        swipeRefreshLayout.setRefreshing(false);
                         showErrorMessage();
                     }
 
                 } else{
+                    // Now we call setRefreshing(false) to signal refresh has finished
+                    swipeRefreshLayout.setRefreshing(false);
                     Log.d("Source", call.request().body().toString());
                     Toast.makeText(SourceArticleListActivity.this, "Cannot get articles at the moment!", Toast.LENGTH_LONG).show();
                 }
@@ -127,6 +153,8 @@ public class SourceArticleListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<NewsArticleResponse> call, Throwable t) {
+                // Now we call setRefreshing(false) to signal refresh has finished
+                swipeRefreshLayout.setRefreshing(false);
                 Log.d("Source", t.toString());
                 Toast.makeText(SourceArticleListActivity.this, "Cannot get articles at the moment!", Toast.LENGTH_LONG).show();
             }
@@ -143,6 +171,12 @@ public class SourceArticleListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // sets all views invisible
+    private void setViewsEmpty() {
+        recyclerView.setVisibility(View.GONE);
+        mErrorMessage.setVisibility(View.GONE);
     }
 
     // show the json data and remove error message

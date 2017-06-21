@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
     public void onListItemClick(int clickedItem) {
     }
 
-    // set all views invisible
+    // sets all views invisible
     private void setViewsEmpty() {
         mErrorMessage.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
