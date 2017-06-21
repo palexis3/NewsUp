@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.palexis3.newsup.Adapters.ArticlesAdapter;
 import com.example.palexis3.newsup.Models.Articles;
 import com.example.palexis3.newsup.R;
+import com.example.palexis3.newsup.Utilities.Utility;
 
 import org.parceler.Parcels;
 
@@ -23,22 +24,20 @@ import butterknife.ButterKnife;
 
 public class SourceArticleListActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     private ArrayList<Articles> articlesArrayList;
     private String name;
 
     @BindView(R.id.tv_error_message) TextView mErrorMessage;
     @BindView(R.id.pg_loading_indication) ProgressBar pgLoadingIndication;
+    @BindView(R.id.sourceRecyclerview) RecyclerView recyclerView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sources);
         ButterKnife.bind(this);
-
-        // Find the toolbar view inside the activity layout
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         // Sets the Toolbar to act as the ActionBar for this Activity window.
         // Make sure the toolbar exists in the activity and is not null
@@ -54,14 +53,20 @@ public class SourceArticleListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // initialize views
-        initViews();
+        // check if device can connect to internet
+        if(Utility.isOnline() && Utility.isNetworkAvailable(this)) {
+            // initialize views
+            initViews();
+        } else {
+            // set progress bar to invisible
+            pgLoadingIndication.setVisibility(View.GONE);
+
+            // show error message
+            showErrorMessage();
+        }
     }
 
     public void initViews() {
-
-        // set necessary recyclerview items
-        recyclerView = (RecyclerView) findViewById(R.id.sourceRecyclerview);
 
         // set recycler view invisible
         recyclerView.setVisibility(View.GONE);
@@ -96,11 +101,13 @@ public class SourceArticleListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // show the json data and remove error message
     private void showJsonData() {
         recyclerView.setVisibility(View.VISIBLE);
         mErrorMessage.setVisibility(View.GONE);
     }
 
+    // show the error message and don't show the json data
     private void showErrorMessage() {
         mErrorMessage.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);

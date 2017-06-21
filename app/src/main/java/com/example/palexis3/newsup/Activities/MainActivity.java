@@ -29,13 +29,12 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<Sources> sourcesArrayList;
 
-
     @BindView(R.id.tv_error_message) TextView mErrorMessage;
     @BindView(R.id.pg_loading_indication) ProgressBar mLoadingIndication;
+    @BindView(R.id.recyclerview) RecyclerView recyclerView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,15 +50,20 @@ public class MainActivity extends AppCompatActivity {
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
 
-        // check if we're
-        if(Utility.isOnline()) {
+        // check if device can connect to internet
+        if(Utility.isOnline() && Utility.isNetworkAvailable(this)) {
+            initViews();
+        } else {
+            // set progress bar to invisible
+            mLoadingIndication.setVisibility(View.GONE);
 
+            // show error message
+            showErrorMessage();
         }
-        initViews();
     }
 
     public void initViews() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+
         recyclerView.setHasFixedSize(true);
 
         // apply grid layout manager with 3 columns
