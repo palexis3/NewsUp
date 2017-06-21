@@ -26,7 +26,8 @@
         </activity>
         <activity android:name=".Activities.SourceArticleListActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Activities.ArticleWebViewActivity"></activity>
+        <activity android:name=".Activities.ArticleWebViewActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
