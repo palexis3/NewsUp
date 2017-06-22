@@ -1,22 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/filter"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:layout_gravity="center" android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/tv_filter_title"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:text="@string/filter"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:textStyle="bold"
+        android:layout_marginLeft="40dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
     <Spinner
         android:id="@+id/spinnerCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="150dp"
+        android:layout_marginLeft="70dp"
+        android:padding="5dp"
+        android:layout_below="@id/tv_filter_title"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:spinnerMode="dialog"
+        android:prompt="@string/category_prompt"/>
 
     <Spinner
         android:id="@+id/spinnerCountry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_below="@id/spinnerCategory"
+        android:padding="5dp"
+        android:layout_gravity="center"
+        android:spinnerMode="dialog"
+        android:prompt="@string/country_prompt"/>
 
     <Spinner
         android:id="@+id/spinnerLanguage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@id/spinnerCountry"
+        android:padding="5dp"
+        android:spinnerMode="dialog"
+        android:layout_gravity="center"
+        android:prompt="@string/language_prompt"/>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_okay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginLeft="150dp"
+        android:layout_below="@id/spinnerLanguage"
+        android:layout_alignRight="@+id/spinnerLanguage"
+        android:layout_alignEnd="@+id/spinnerLanguage"
+        android:layout_margin="5dp"
+        android:text="@string/okay"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginLeft="19dp"
+        android:layout_alignBaseline="@+id/tv_okay"
+        android:layout_alignBottom="@+id/tv_okay"
+        android:layout_toRightOf="@+id/tv_filter_title"
+        android:layout_toEndOf="@+id/tv_filter_title"
+        android:layout_marginStart="19dp" />
+
+</RelativeLayout>
