@@ -17,35 +17,69 @@
         android:layout_marginLeft="40dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
+    <TextView
+        android:id="@+id/tvSpinnerCategory"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:padding="5dp"
+        android:textStyle="bold"
+        android:layout_below="@id/tv_filter_title"
+        android:text="@string/category"/>
+
     <Spinner
         android:id="@+id/spinnerCategory"
         android:layout_width="150dp"
-        android:layout_marginLeft="70dp"
+        android:layout_marginLeft="8dp"
         android:padding="5dp"
         android:layout_below="@id/tv_filter_title"
+        android:layout_toRightOf="@id/tvSpinnerCategory"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:spinnerMode="dialog"
         android:prompt="@string/category_prompt"/>
 
+
+    <TextView
+        android:id="@+id/tvSpinnerCountry"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:padding="5dp"
+        android:textStyle="bold"
+        android:layout_below="@id/spinnerCategory"
+        android:text="@string/country"/>
+
     <Spinner
         android:id="@+id/spinnerCountry"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="70dp"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@id/tvSpinnerCountry"
         android:layout_below="@id/spinnerCategory"
         android:padding="5dp"
         android:layout_gravity="center"
         android:spinnerMode="dialog"
         android:prompt="@string/country_prompt"/>
 
+    <TextView
+        android:id="@+id/tvSpinnerLanguage"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:padding="5dp"
+        android:textStyle="bold"
+        android:layout_below="@id/spinnerCountry"
+        android:text="@string/language"/>
+
     <Spinner
         android:id="@+id/spinnerLanguage"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="70dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginBottom="15dp"
         android:layout_below="@id/spinnerCountry"
+        android:layout_toRightOf="@id/tvSpinnerLanguage"
         android:padding="5dp"
         android:spinnerMode="dialog"
         android:layout_gravity="center"
@@ -57,9 +91,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
         android:layout_marginLeft="150dp"
-        android:layout_below="@id/spinnerLanguage"
-        android:layout_alignRight="@+id/spinnerLanguage"
-        android:layout_alignEnd="@+id/spinnerLanguage"
+        android:layout_marginTop="6dp"
+        android:layout_below="@id/tvSpinnerLanguage"
+        android:layout_alignRight="@+id/tvSpinnerLanguage"
+        android:layout_alignEnd="@+id/tvSpinnerLanguage"
         android:layout_margin="5dp"
         android:text="@string/okay"
         android:textSize="18sp"
@@ -72,6 +107,7 @@
         android:text="@string/cancel"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
+        android:layout_marginTop="6dp"
         android:layout_marginLeft="19dp"
         android:layout_alignBaseline="@+id/tv_okay"
         android:layout_alignBottom="@+id/tv_okay"

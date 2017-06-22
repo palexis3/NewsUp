@@ -3,6 +3,9 @@
     <string name="temp">Temp</string>
     <string name="error_message">No results, please try again.</string>
     <string name="filter">Filter</string>
+    <string name="category">Category:</string>
+    <string name="language">Language:</string>
+    <string name="country">Country:</string>
     <string name="category_prompt">Categories</string>
     <string name="language_prompt">Languages</string>
     <string name="country_prompt">Countries</string>
