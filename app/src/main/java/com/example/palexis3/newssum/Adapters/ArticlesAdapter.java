@@ -3,7 +3,10 @@ package com.example.palexis3.newssum.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.palexis3.newssum.Activities.ArticleWebViewActivity;
 import com.example.palexis3.newssum.Models.Articles;
 import com.example.palexis3.newssum.R;
 import com.example.palexis3.newssum.Utilities.Utility;
@@ -22,8 +24,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -192,17 +192,11 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 public void onClick(View v) {
                     int position = getAdapterPosition();
 
-                    /** TODO: USE DAGGER INSTEAD OF CONTEXT FOR SPAWNING INTENT */
                     if(position != RecyclerView.NO_POSITION && Utility.isNetworkAvailable(context) && Utility.isOnline()) {
 
-                        // launch article intent
+                        // launch article chrome function
                         final Articles article = articlesArrayList.get(position);
-                        Intent i = new Intent(context, ArticleWebViewActivity.class);  // <- USE DAGGER FOR DEPENDENCY INJECTION
-                        i.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                        i.putExtra("title", article.getTitle());
-                        i.putExtra("url", article.getUrl());
-
-                        context.startActivity(i); // <- USE DAGGER FOR DEPENDENCY INJECTION
+                        getArticle(article.getUrl());
 
                     } else {
                          /*  place a snack bar that request cannot be made */
@@ -218,7 +212,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @BindView(R.id.tvArticleTitle) TextView title;
         @BindView(R.id.cvArticlesNoPic) CardView cv;
-        //@BindView(R.id.tvArticleDescription) TextView description;
         @BindView(R.id.tvArticleAuthor) TextView author;
         @BindView(R.id.iv_share) ImageView share;
 
@@ -234,18 +227,11 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 public void onClick(View v) {
                     int position = getAdapterPosition();
 
-                    /** TODO: USE DAGGER INSTEAD OF CONTEXT FOR SPAWNING INTENT */
                     if(position != RecyclerView.NO_POSITION && Utility.isNetworkAvailable(context) && Utility.isOnline()) {
 
-                        // launch article intent
+                        // launch article chrome function
                         final Articles article = articlesArrayList.get(position);
-                        Intent i = new Intent(context, ArticleWebViewActivity.class);  // <- USE DAGGER FOR DEPENDENCY INJECTION
-                        i.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                        i.putExtra("title", article.getTitle());
-                        i.putExtra("url", article.getUrl());
-
-                        context.startActivity(i); // <- USE DAGGER FOR DEPENDENCY INJECTION
-
+                        getArticle(article.getUrl());
                     } else {
                         /*  place a snack bar that request cannot be made */
                         Snackbar.make(v, R.string.error_message, Snackbar.LENGTH_LONG)
@@ -255,5 +241,23 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
 
         }
+    }
+
+    // method launches a chrome tab
+    public void getArticle(String url) {
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+
+        // set toolbar color and/or setting custom actions before invoking build()
+        // Once ready, call CustomTabsIntent.Builder.build() to create a CustomTabsIntent
+        CustomTabsIntent customTabsIntent = builder.build();
+
+        // set toolbar color
+        builder.setToolbarColor(ContextCompat.getColor(context, R.color.amber));
+
+        // add share action to menu list
+        builder.addDefaultShareMenuItem();
+
+        // and launch the desired Url with CustomTabsIntent.launchUrl()
+        customTabsIntent.launchUrl(context, Uri.parse(url));
     }
 }
