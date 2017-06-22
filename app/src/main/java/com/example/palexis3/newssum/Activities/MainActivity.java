@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.palexis3.newssum.Adapters.SourcesAdapter;
 import com.example.palexis3.newssum.Fragments.FilterDialogFragment;
@@ -33,7 +32,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements SourcesAdapter.ListItemClickListener, FilterDialogFragment.FilterDialogListener {
+public class MainActivity extends AppCompatActivity implements SourcesAdapter.ListItemClickListener,
+        FilterDialogFragment.FilterDialogListener {
 
     private RecyclerView.Adapter adapter;
     private ArrayList<Sources> sourcesArrayList;
@@ -98,14 +98,25 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
         recyclerView.setVisibility(View.GONE);
 
         // get json items from server
-        getJson();
+        getJson("");
     }
 
-    private void getJson() {
+    private void getJson(String data) {
 
         // create an instance of our news client
         NewsClient client = ServiceGenerator.createService(NewsClient.class);
         Call<NewsSourceResponse> call = client.getSources();
+
+        // check if we should get specific sources
+        if(!data.equals("") && data.contains(",")) {
+            String[] arr = data.split(",");
+            if(arr.length == 3) {
+                String language = Utility.getLangSources(arr[0]);
+                String country = Utility.getCountrySources(arr[1]);
+                String category = Utility.getCategorySources(arr[2]);
+                call = client.getSpecificSources(language, country, category);
+            }
+        }
 
         call.enqueue(new Callback<NewsSourceResponse>() {
             @Override
@@ -207,6 +218,6 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
     // Access the data result passed to the activity here
     @Override
     public void onFinishFilter(String data) {
-        Toast.makeText(this, data, Toast.LENGTH_LONG).show();
+        getJson(data);
     }
 }

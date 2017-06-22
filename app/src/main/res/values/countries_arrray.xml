@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="countries_array">
+        <item>--</item>
         <item>Australia</item>
         <item>Germany</item>
         <item>Great Britain</item>

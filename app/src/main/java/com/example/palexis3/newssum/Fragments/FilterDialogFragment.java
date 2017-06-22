@@ -79,8 +79,17 @@ public class FilterDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String language = languageSpinner.getSelectedItem().toString();
+                if(language.equals("--")) {
+                    language = "";
+                }
                 String country = countrySpinner.getSelectedItem().toString();
+                if(country.equals("--")) {
+                    country = "";
+                }
                 String category = categorySpinner.getSelectedItem().toString();
+                if(category.equals("--")) {
+                    category = "";
+                }
                 String res = String.format("%s,%s,%s", language, country, category);
 
                 // implement listener to return back to parent activity

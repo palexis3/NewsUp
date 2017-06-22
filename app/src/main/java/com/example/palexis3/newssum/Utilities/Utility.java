@@ -73,6 +73,53 @@ public class Utility {
         return res;
     }
 
+    public static String getLangSources(String lang) {
+
+        if(lang == null || lang.length() == 0) return "";
+
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put("English", "en");
+        map.put("German", "de");
+        map.put("French", "fr");
+
+        return map.get(lang);
+    }
+
+    public static String getCountrySources(String country) {
+
+        if(country == null || country.length() == 0) return "";
+
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put("Australia", "au");
+        map.put("Germany", "de");
+        map.put("India", "in");
+        map.put("Italy", "it");
+        map.put("USA", "us");
+
+        return map.get(country);
+    }
+
+    public static String getCategorySources(String category) {
+
+        if(category == null ||category.length() == 0) return "";
+
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put("Business", "business");
+        map.put("Entertainment", "entertainment");
+        map.put("Gaming", "gaming");
+        map.put("General", "general");
+        map.put("Music", "music");
+        map.put("Politics", "politics");
+        map.put("Science and Nature", "science-and-nature");
+        map.put("Sport", "sport");
+        map.put("Technology", "technology");
+
+        return map.get(category);
+    }
+
     // this method checks if there is internet connectivity on the device
     public static boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
@@ -85,6 +132,7 @@ public class Utility {
         return false;
     }
 
+    // additional method to check connectivity
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

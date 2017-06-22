@@ -19,4 +19,11 @@ public interface NewsClient {
                 @Query("apiKey") String key
         );
 
+        @GET("/v1/sources")
+        Call<NewsSourceResponse> getSpecificSources(
+                @Query("language") String language,
+                @Query("country") String country,
+                @Query("category") String category
+        );
+
 }
