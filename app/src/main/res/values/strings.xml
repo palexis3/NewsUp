@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">News Hero!</string>
     <string name="temp">Temp</string>
-    <string name="error_message">Failed to get results, please try again.</string>
+    <string name="error_message">No results, please try again.</string>
     <string name="filter">Filter</string>
     <string name="category_prompt">Categories</string>
     <string name="language_prompt">Languages</string>

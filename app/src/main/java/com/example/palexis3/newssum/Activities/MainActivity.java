@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.palexis3.newssum.Adapters.SourcesAdapter;
 import com.example.palexis3.newssum.Fragments.FilterDialogFragment;
@@ -32,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements SourcesAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements SourcesAdapter.ListItemClickListener, FilterDialogFragment.FilterDialogListener {
 
     private RecyclerView.Adapter adapter;
     private ArrayList<Sources> sourcesArrayList;
@@ -200,5 +201,12 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
         FragmentManager fm = getSupportFragmentManager();
         FilterDialogFragment filterDialogFragment = FilterDialogFragment.newInstance("Filter");
         filterDialogFragment.show(fm, "filter");
+    }
+
+    // This method is invoked in the activity when the listener is triggered
+    // Access the data result passed to the activity here
+    @Override
+    public void onFinishFilter(String data) {
+        Toast.makeText(this, data, Toast.LENGTH_LONG).show();
     }
 }

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.palexis3.newssum.R;
 
@@ -25,6 +24,11 @@ public class FilterDialogFragment extends DialogFragment {
     // empty constructor
     public FilterDialogFragment() {};
 
+    // define a listener interface to pass data back
+    public interface FilterDialogListener {
+        void onFinishFilter(String data);
+    }
+
     public static FilterDialogFragment newInstance(String title) {
         FilterDialogFragment frag = new FilterDialogFragment();
         Bundle args = new Bundle();
@@ -38,38 +42,6 @@ public class FilterDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_filter, container);
     }
-
-    /*
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        String title = getArguments().getString("title");
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title);
-        builder.setMessage("Filter");
-
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(R.layout.fragment_filter, null);
-        builder.setView(view);
-
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        return builder.create();
-    }
-    */
 
 
     @Override
@@ -109,8 +81,14 @@ public class FilterDialogFragment extends DialogFragment {
                 String language = languageSpinner.getSelectedItem().toString();
                 String country = countrySpinner.getSelectedItem().toString();
                 String category = categorySpinner.getSelectedItem().toString();
-                String res = String.format("Language: %s, Country: %s, Category: %s", language, country, category);
-                Toast.makeText(getContext(), res, Toast.LENGTH_LONG).show();
+                String res = String.format("%s,%s,%s", language, country, category);
+
+                // implement listener to return back to parent activity
+                FilterDialogListener listener = (FilterDialogListener) getActivity();
+                listener.onFinishFilter(res);
+
+                // close the dialog and return back to parent activity
+                dismiss();
             }
         });
 
