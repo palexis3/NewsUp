@@ -2,6 +2,7 @@ package com.example.palexis3.newssum.Activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,11 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.palexis3.newssum.Adapters.SourcesAdapter;
+import com.example.palexis3.newssum.Fragments.FilterDialogFragment;
 import com.example.palexis3.newssum.Models.Sources;
 import com.example.palexis3.newssum.Networking.NewsClient;
 import com.example.palexis3.newssum.Networking.ServiceGenerator;
@@ -178,5 +181,24 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.miFilter:
+                showFilterDialog();
+                return true;
+            default:
+                super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    // method shows the filter dialog
+    private void showFilterDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        FilterDialogFragment filterDialogFragment = FilterDialogFragment.newInstance("Filter");
+        filterDialogFragment.show(fm, "filter");
     }
 }

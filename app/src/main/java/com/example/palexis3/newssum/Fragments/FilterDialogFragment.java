@@ -12,14 +12,7 @@ import android.widget.Spinner;
 
 import com.example.palexis3.newssum.R;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class FilterDialogFragment extends DialogFragment {
-
-    @BindView(R.id.spinnerCountry) Spinner countrySpinner;
-    @BindView(R.id.spinnerLanguage) Spinner languageSpinner;
-    @BindView(R.id.spinnerCategory) Spinner categorySpinner;
 
     // empty constructor
     public FilterDialogFragment() {};
@@ -41,7 +34,10 @@ public class FilterDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(getActivity());
+
+        Spinner countrySpinner = (Spinner) view.findViewById(R.id.spinnerCountry);
+        Spinner languageSpinner = (Spinner) view.findViewById(R.id.spinnerLanguage);
+        Spinner categorySpinner = (Spinner) view.findViewById(R.id.spinnerCategory);
 
         // create adapters for populating spinners with appropriate items
         ArrayAdapter<CharSequence> countryAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.countries_array,
