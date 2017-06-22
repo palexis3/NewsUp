@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.example.palexis3.newssum.R;
 
 public class FilterDialogFragment extends DialogFragment {

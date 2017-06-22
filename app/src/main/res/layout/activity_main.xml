@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:text="@string/error_message"
             android:textSize="20sp"
-            android:layout_below="@id/toolbar"
             android:layout_gravity="center"
             android:textColor="@color/black"
             android:visibility="invisible"/>
@@ -38,8 +37,8 @@
                 android:minHeight="?attr/actionBarSize"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:titleTextColor="@android:color/black"
-                android:background="@color/amber"
+                app:titleTextColor="@color/black"
+                android:background="@color/baby_blue"
                 android:fitsSystemWindows="true">
             </android.support.v7.widget.Toolbar>
 

@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
-        <item name="android:windowBackground">@color/white_shade</item>
-        <item name="android:colorBackground">@color/white_shade</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:colorBackground">@color/white</item>
 
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -24,7 +24,7 @@
         <!-- Define window properties as desired -->
         <item name="android:windowNoTitle">false</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@color/light_amber</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
 

@@ -252,7 +252,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         CustomTabsIntent customTabsIntent = builder.build();
 
         // set toolbar color
-        builder.setToolbarColor(ContextCompat.getColor(context, R.color.amber));
+        builder.setToolbarColor(ContextCompat.getColor(context, R.color.baby_blue));
 
         // add share action to menu list
         builder.addDefaultShareMenuItem();
