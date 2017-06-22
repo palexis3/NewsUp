@@ -3,6 +3,7 @@ package com.example.palexis3.newssum.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.palexis3.newssum.Activities.SourceArticleListActivity;
@@ -119,7 +119,8 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
                 context.startActivity(i); // <-- PROBABLY SHOULD BE USING DAGGER
             } else {
                 /** TODO: Place a snackbar notifying the user, request cannot be made */
-                Toast.makeText(context, "Hello", Toast.LENGTH_LONG).show();
+                Snackbar.make(v, R.string.error_message, Snackbar.LENGTH_LONG)
+                        .show();
             }
         }
     }

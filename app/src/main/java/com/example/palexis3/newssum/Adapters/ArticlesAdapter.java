@@ -3,6 +3,7 @@ package com.example.palexis3.newssum.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -185,14 +186,14 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             // bind views via butterknife
             ButterKnife.bind(this, v);
 
-            // attach an on click listenr for this article
+            // attach an on click listener for this article
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
 
                     /** TODO: USE DAGGER INSTEAD OF CONTEXT FOR SPAWNING INTENT */
-                    if(position != RecyclerView.NO_POSITION) {
+                    if(position != RecyclerView.NO_POSITION && Utility.isNetworkAvailable(context) && Utility.isOnline()) {
 
                         // launch article intent
                         final Articles article = articlesArrayList.get(position);
@@ -205,6 +206,8 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     } else {
                         /** TODO: place a snack bar that request cannot be made */
+                        Snackbar.make(v, R.string.error_message, Snackbar.LENGTH_LONG)
+                                .show();
                     }
                 }
             });
@@ -225,14 +228,14 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             // bind views via butterknife
             ButterKnife.bind(this, v);
 
-            // attach an on click listenr for this article
+            // attach an on click listener for this article
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
 
                     /** TODO: USE DAGGER INSTEAD OF CONTEXT FOR SPAWNING INTENT */
-                    if(position != RecyclerView.NO_POSITION) {
+                    if(position != RecyclerView.NO_POSITION && Utility.isNetworkAvailable(context) && Utility.isOnline()) {
 
                         // launch article intent
                         final Articles article = articlesArrayList.get(position);
@@ -245,6 +248,8 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     } else {
                         /** TODO: place a snack bar that request cannot be made */
+                        Snackbar.make(v, R.string.error_message, Snackbar.LENGTH_LONG)
+                                .show();
                     }
                 }
             });
