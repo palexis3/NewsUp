@@ -100,7 +100,7 @@
         android:textStyle="bold"
         android:textSize="18sp"
         android:layout_marginBottom="10dp"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/black"
         android:layout_alignBaseline="@+id/tv_cancel"
         android:layout_alignBottom="@+id/tv_cancel"
         android:layout_centerHorizontal="true" />
@@ -112,7 +112,7 @@
         android:text="@string/cancel"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/black"
         android:layout_marginTop="6dp"
         android:layout_marginLeft="19dp"
         android:layout_marginBottom="10dp"
