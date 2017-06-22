@@ -1,8 +1,8 @@
-package com.example.palexis3.newsup.Networking;
+package com.example.palexis3.newssum.Networking;
 
 
-import com.example.palexis3.newsup.Responses.NewsArticleResponse;
-import com.example.palexis3.newsup.Responses.NewsSourceResponse;
+import com.example.palexis3.newssum.Responses.NewsArticleResponse;
+import com.example.palexis3.newssum.Responses.NewsSourceResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

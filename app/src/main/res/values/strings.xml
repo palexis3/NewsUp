@@ -1,5 +1,9 @@
 <resources>
-    <string name="app_name">NewsUp!</string>
+    <string name="app_name">NewsSum!</string>
     <string name="temp">Temp</string>
     <string name="error_message">Failed to get results, please try again.</string>
+    <string name="filter">Filter</string>
+    <string name="category_prompt">Categories</string>
+    <string name="language_prompt">Languages</string>
+    <string name="country_prompt">Countries</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.palexis3.newsup.Activities;
+package com.example.palexis3.newssum.Activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,17 +8,18 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.palexis3.newsup.Adapters.SourcesAdapter;
-import com.example.palexis3.newsup.Models.Sources;
-import com.example.palexis3.newsup.Networking.NewsClient;
-import com.example.palexis3.newsup.Networking.ServiceGenerator;
-import com.example.palexis3.newsup.R;
-import com.example.palexis3.newsup.Responses.NewsSourceResponse;
-import com.example.palexis3.newsup.Utilities.Utility;
+import com.example.palexis3.newssum.Adapters.SourcesAdapter;
+import com.example.palexis3.newssum.Models.Sources;
+import com.example.palexis3.newssum.Networking.NewsClient;
+import com.example.palexis3.newssum.Networking.ServiceGenerator;
+import com.example.palexis3.newssum.R;
+import com.example.palexis3.newssum.Responses.NewsSourceResponse;
+import com.example.palexis3.newssum.Utilities.Utility;
 
 import java.util.ArrayList;
 
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
         // set our list item click listener
         listener = this;
 
+        // call setup for initialization
+        setUp();
+
         // swipe refresh layout callback
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -61,9 +65,6 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
                 setUp();
             }
         });
-
-        // call setup for initialization
-        setUp();
     }
 
     private void setUp() {
@@ -170,5 +171,12 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
     private void showErrorMessage() {
         recyclerView.setVisibility(View.GONE);
         mErrorMessage.setVisibility(View.VISIBLE);
+    }
+
+    // Inflate the menu; this adds items to the action bar if it is present.
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.palexis3.newsup.Activities;
+package com.example.palexis3.newssum.Activities;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -11,13 +11,11 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.example.palexis3.newsup.R;
+import com.example.palexis3.newssum.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
-/** TODO: ADD INTERNET CONNECTIVITY ROBUSTNESS WITH A PROGRESS DIALOG */
 
 public class ArticleWebViewActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.palexis3.newsup.Networking;
+package com.example.palexis3.newssum.Networking;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -1,4 +1,4 @@
-package com.example.palexis3.newsup;
+package com.example.palexis3.newssum;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package com.example.palexis3.newsup.Adapters;
+package com.example.palexis3.newssum.Adapters;
 
 
 import android.content.Context;
@@ -12,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.palexis3.newsup.Activities.ArticleWebViewActivity;
-import com.example.palexis3.newsup.Models.Articles;
-import com.example.palexis3.newsup.R;
-import com.example.palexis3.newsup.Utilities.Utility;
+import com.example.palexis3.newssum.Activities.ArticleWebViewActivity;
+import com.example.palexis3.newssum.Models.Articles;
+import com.example.palexis3.newssum.R;
+import com.example.palexis3.newssum.Utilities.Utility;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.example.palexis3.newsup.Activities;
+package com.example.palexis3.newssum.Activities;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,14 +13,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.palexis3.newsup.Adapters.ArticlesAdapter;
-import com.example.palexis3.newsup.Models.Articles;
-import com.example.palexis3.newsup.Models.Sources;
-import com.example.palexis3.newsup.Networking.NewsClient;
-import com.example.palexis3.newsup.Networking.ServiceGenerator;
-import com.example.palexis3.newsup.R;
-import com.example.palexis3.newsup.Responses.NewsArticleResponse;
-import com.example.palexis3.newsup.Utilities.Utility;
+import com.example.palexis3.newssum.Adapters.ArticlesAdapter;
+import com.example.palexis3.newssum.Models.Articles;
+import com.example.palexis3.newssum.Models.Sources;
+import com.example.palexis3.newssum.Networking.NewsClient;
+import com.example.palexis3.newssum.Networking.ServiceGenerator;
+import com.example.palexis3.newssum.R;
+import com.example.palexis3.newssum.Responses.NewsArticleResponse;
+import com.example.palexis3.newssum.Utilities.Utility;
 
 import org.parceler.Parcels;
 

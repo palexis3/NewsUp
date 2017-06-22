@@ -1,4 +1,4 @@
-package com.example.palexis3.newsup.Utilities;
+package com.example.palexis3.newssum.Utilities;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

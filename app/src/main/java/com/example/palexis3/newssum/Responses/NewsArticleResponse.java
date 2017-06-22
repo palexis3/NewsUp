@@ -1,7 +1,7 @@
-package com.example.palexis3.newsup.Responses;
+package com.example.palexis3.newssum.Responses;
 
 
-import com.example.palexis3.newsup.Models.Articles;
+import com.example.palexis3.newssum.Models.Articles;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;

@@ -1,4 +1,4 @@
-package com.example.palexis3.newsup.Models;
+package com.example.palexis3.newssum.Models;
 
 import org.parceler.Parcel;
 
