@@ -205,7 +205,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         context.startActivity(i); // <- USE DAGGER FOR DEPENDENCY INJECTION
 
                     } else {
-                        /** TODO: place a snack bar that request cannot be made */
+                         /*  place a snack bar that request cannot be made */
                         Snackbar.make(v, R.string.error_message, Snackbar.LENGTH_LONG)
                                 .show();
                     }
@@ -247,7 +247,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         context.startActivity(i); // <- USE DAGGER FOR DEPENDENCY INJECTION
 
                     } else {
-                        /** TODO: place a snack bar that request cannot be made */
+                        /*  place a snack bar that request cannot be made */
                         Snackbar.make(v, R.string.error_message, Snackbar.LENGTH_LONG)
                                 .show();
                     }

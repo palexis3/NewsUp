@@ -118,7 +118,7 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
                 i.putExtra("title", source.getName());
                 context.startActivity(i); // <-- PROBABLY SHOULD BE USING DAGGER
             } else {
-                /** TODO: Place a snackbar notifying the user, request cannot be made */
+                /*Place a snackbar notifying the user, request cannot be made */
                 Snackbar.make(v, R.string.error_message, Snackbar.LENGTH_LONG)
                         .show();
             }
