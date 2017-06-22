@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.palexis3.newssum.R;
 
@@ -17,6 +19,8 @@ public class FilterDialogFragment extends DialogFragment {
     private Spinner countrySpinner;
     private Spinner languageSpinner;
     private Spinner categorySpinner;
+    private TextView tvOkay;
+    private TextView tvCancel;
 
     // empty constructor
     public FilterDialogFragment() {};
@@ -52,11 +56,7 @@ public class FilterDialogFragment extends DialogFragment {
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String language = languageSpinner.getSelectedItem().toString();
-                String country = countrySpinner.getSelectedItem().toString();
-                String category = categorySpinner.getSelectedItem().toString();
-                String res = String.format("Language: %s, Country: %s, Category: %s", language, country, category);
-                Toast.makeText(getContext(), res, Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -79,6 +79,8 @@ public class FilterDialogFragment extends DialogFragment {
         countrySpinner = (Spinner) view.findViewById(R.id.spinnerCountry);
         languageSpinner = (Spinner) view.findViewById(R.id.spinnerLanguage);
         categorySpinner = (Spinner) view.findViewById(R.id.spinnerCategory);
+        tvOkay = (TextView) view.findViewById(R.id.tv_okay);
+        tvCancel = (TextView) view.findViewById(R.id.tv_cancel);
 
         // create adapters for populating spinners with appropriate items
         ArrayAdapter<CharSequence> countryAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.countries_array,
@@ -99,6 +101,25 @@ public class FilterDialogFragment extends DialogFragment {
         countrySpinner.setAdapter(countryAdapter);
         languageSpinner.setAdapter(languageAdapter);
         categorySpinner.setAdapter(categoryAdapter);
+
+        // set onclick listeners for the 'ok' and 'cancel' textviews
+        tvOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String language = languageSpinner.getSelectedItem().toString();
+                String country = countrySpinner.getSelectedItem().toString();
+                String category = categorySpinner.getSelectedItem().toString();
+                String res = String.format("Language: %s, Country: %s, Category: %s", language, country, category);
+                Toast.makeText(getContext(), res, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDialog().dismiss();
+            }
+        });
 
     }
 }
