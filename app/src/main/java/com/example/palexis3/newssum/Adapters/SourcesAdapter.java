@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
 import com.example.palexis3.newssum.Activities.SourceArticleListActivity;
 import com.example.palexis3.newssum.Models.Sources;
 import com.example.palexis3.newssum.R;
@@ -65,10 +66,8 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
         ImageView imageView = holder.imageView;
         imageView.setImageResource(0);
 
-        /** TODO: Using the MyAppGlideModule class, improve the quality of icons using Glide and improve alignment of textviews in cardviews */
         String url = String.format(PHOTO_URL, source.getUrl());
-        Glide.with(context).load(url).into(imageView);
-        //Picasso.with(context).load(url).into(imageView);
+        Glide.with(context).load(url).asBitmap().format(DecodeFormat.PREFER_ARGB_8888).override(110, 80).into(imageView);
     }
 
     // get the list of sources list

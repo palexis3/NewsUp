@@ -6,8 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <meta-data
-        android:name="com.example.palexis3.newssum.MyAppGlideModule"
-        android:value="AppGlideModule" />
+        android:name="com.example.palexis3.newssum.GlideConfiguration"
+        android:value="GlideModule" />
 
     <application
         android:allowBackup="true"

@@ -30,7 +30,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     compile 'org.parceler:parceler-api:1.1.6'
-    compile 'com.github.bumptech.glide:glide:4.0.0-RC0'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.android.support:customtabs:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:multidex:1.0.0'
