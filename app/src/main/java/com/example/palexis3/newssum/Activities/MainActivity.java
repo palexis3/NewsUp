@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -152,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
                     // Now we call setRefreshing(false) to signal refresh has finished
                     swipeRefreshLayout.setRefreshing(false);
                     showErrorMessage();
-                    Log.d("Call", call.request().body().toString());
                 }
             }
 
@@ -161,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
                 // Now we call setRefreshing(false) to signal refresh has finished
                 swipeRefreshLayout.setRefreshing(false);
                 showErrorMessage();
-                Log.d("Call", t.getMessage());
             }
         });
     }

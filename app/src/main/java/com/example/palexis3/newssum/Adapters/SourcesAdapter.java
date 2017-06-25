@@ -72,6 +72,8 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
                 .format(DecodeFormat.PREFER_ARGB_8888)
                 .override(90, 90)
                 .placeholder(R.drawable.playstore_icon)
+                .override(80, 80)
+                .dontAnimate()
                 .error(R.drawable.playstore_icon)
                 .into(imageView);
     }
