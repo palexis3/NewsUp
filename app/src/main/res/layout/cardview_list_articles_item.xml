@@ -4,7 +4,8 @@
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:id="@+id/cvArticles"
     android:orientation="vertical"
-    app:cardCornerRadius="2dp"
+    app:cardElevation="8dp"
+    app:cardCornerRadius="1dp"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
@@ -29,7 +30,7 @@
             android:layout_marginLeft="4dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/red"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:padding="3dp"
             android:text="@string/temp"/>

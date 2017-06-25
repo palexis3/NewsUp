@@ -144,7 +144,10 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         poster.setImageResource(0);
 
         // load poster image
-        Glide.with(context).load(article.getUrlToImage()).into(poster);
+        Glide.with(context).load(article.getUrlToImage())
+                .placeholder(R.drawable.playstore_icon)
+                .error(R.drawable.playstore_icon)
+                .into(poster);
 
         // set up sharing listener
         ImageView share = holder.share;
@@ -252,7 +255,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         CustomTabsIntent customTabsIntent = builder.build();
 
         // set toolbar color
-        builder.setToolbarColor(ContextCompat.getColor(context, R.color.baby_blue));
+        builder.setToolbarColor(ContextCompat.getColor(context, R.color.red));
 
         // add share action to menu list
         builder.addDefaultShareMenuItem();

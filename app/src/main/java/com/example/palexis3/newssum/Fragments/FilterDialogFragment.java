@@ -55,18 +55,19 @@ public class FilterDialogFragment extends DialogFragment {
 
         // create adapters for populating spinners with appropriate items
         ArrayAdapter<CharSequence> countryAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.countries_array,
-                android.R.layout.simple_spinner_item);
+                android.R.layout.simple_spinner_dropdown_item);
 
         ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.languages_array,
-                android.R.layout.simple_spinner_item);
+                android.R.layout.simple_spinner_dropdown_item);
 
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.categories_array,
-                android.R.layout.simple_spinner_item);
+                android.R.layout.simple_spinner_dropdown_item);
 
         // Specify the layout to use when the list of choices appears
-        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        languageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        countryAdapter.setDropDownViewResource(R.layout.my_spinner_item);
+        languageAdapter.setDropDownViewResource(R.layout.my_spinner_item);
+        categoryAdapter.setDropDownViewResource(R.layout.my_spinner_item);
+
 
         // Apply the adapters to the spinners
         countrySpinner.setAdapter(countryAdapter);
@@ -89,6 +90,7 @@ public class FilterDialogFragment extends DialogFragment {
                 if(category.equals("--")) {
                     category = "";
                 }
+
                 String res = String.format("%s,%s,%s", language, country, category);
 
                 // implement listener to return back to parent activity

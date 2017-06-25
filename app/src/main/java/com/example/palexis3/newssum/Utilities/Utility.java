@@ -5,8 +5,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
 
 public class Utility {
 
@@ -41,7 +44,6 @@ public class Utility {
         countryMap.put("au", "Australia");
         countryMap.put("it", "Italy");
 
-
         return countryMap.containsKey(key) ? countryMap.get(key) : key;
     }
 
@@ -68,9 +70,25 @@ public class Utility {
         map.put("11", "November");
         map.put("12", "December");
 
-        String month = arr[1].charAt(0) == '0' ? arr[1].substring(1) : arr[1];
-        String res = String.format("%s %s, %s", map.get(month), arr[2], arr[0]);
+        // not a valid date, so just return the current date
+        if(arr[0].equals("0001")) {
+            DateFormat dateFormat = new SimpleDateFormat("MM dd yyyy");
+            Date date = new Date();
+
+            String format = dateFormat.format(date);
+            String[] temp_arr = format.split(" ");
+
+            String ret = String.format("%s %s, %s", map.get(getMonth(temp_arr[0])), temp_arr[1], temp_arr[2]);
+
+            return ret;
+        }
+
+        String res = String.format("%s %s, %s", map.get(getMonth(arr[1])), arr[2], arr[0]);
         return res;
+    }
+
+    public static String getMonth(String str) {
+        return str.charAt(0) == '0' ? str.substring(1) : str;
     }
 
     public static String getLangSources(String lang) {
@@ -139,5 +157,4 @@ public class Utility {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
-
 }

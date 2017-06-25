@@ -67,7 +67,13 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
         imageView.setImageResource(0);
 
         String url = String.format(PHOTO_URL, source.getUrl());
-        Glide.with(context).load(url).asBitmap().format(DecodeFormat.PREFER_ARGB_8888).override(110, 80).into(imageView);
+        Glide.with(context).load(url)
+                .asBitmap()
+                .format(DecodeFormat.PREFER_ARGB_8888)
+                .override(90, 90)
+                .placeholder(R.drawable.playstore_icon)
+                .error(R.drawable.playstore_icon)
+                .into(imageView);
     }
 
     // get the list of sources list

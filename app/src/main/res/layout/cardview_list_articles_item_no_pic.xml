@@ -4,7 +4,8 @@
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:id="@+id/cvArticlesNoPic"
     android:orientation="vertical"
-    app:cardCornerRadius="2dp"
+    app:cardElevation="8dp"
+    app:cardCornerRadius="1dp"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
@@ -19,21 +20,20 @@
             android:layout_marginLeft="4dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/red"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:padding="4dp"
             android:text="@string/temp"/>
 
-
         <TextView
             android:id="@+id/tvArticleAuthor"
-            android:layout_width="300dp"
+            android:layout_width="306dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvArticleTitle"
             android:textStyle="italic|bold"
             android:textSize="13sp"
             android:layout_marginTop="3dp"
-            android:layout_marginLeft="15dp"/>
+            android:layout_marginLeft="9dp"/>
 
         <ImageView
             android:id="@+id/iv_share"

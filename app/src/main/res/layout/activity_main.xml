@@ -37,8 +37,8 @@
                 android:minHeight="?attr/actionBarSize"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:titleTextColor="@color/black"
-                android:background="@color/baby_blue"
+                app:titleTextColor="@color/white"
+                android:background="@color/red"
                 android:fitsSystemWindows="true">
             </android.support.v7.widget.Toolbar>
 
