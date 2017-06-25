@@ -139,8 +139,10 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
 
                         // add adapter to recyclerview
                         recyclerView.setAdapter(adapter);
+
                         // Now we call setRefreshing(false) to signal refresh has finished
                         swipeRefreshLayout.setRefreshing(false);
+
                     } else {
                         // Now we call setRefreshing(false) to signal refresh has finished
                         swipeRefreshLayout.setRefreshing(false);
@@ -192,6 +194,14 @@ public class MainActivity extends AppCompatActivity implements SourcesAdapter.Li
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.miFilter);
+
+        // change the color for the filter menu icon
+        if(menuItem != null) {
+            Utility.tintMenuIcon(MainActivity.this, menuItem, R.color.white);
+        }
+
         return true;
     }
 

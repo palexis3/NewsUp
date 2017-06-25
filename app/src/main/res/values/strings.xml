@@ -9,6 +9,6 @@
     <string name="category_prompt">Categories</string>
     <string name="language_prompt">Languages</string>
     <string name="country_prompt">Countries</string>
-    <string name="okay">Ok</string>
+    <string name="okay">OK</string>
     <string name="cancel">Cancel</string>
 </resources>
