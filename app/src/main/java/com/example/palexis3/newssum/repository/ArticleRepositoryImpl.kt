@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+// TODO: Bind ArticleRepositoryImpl to ArticleRepository interface in Hilt module
 class ArticleRepositoryImpl @Inject constructor(
     private val newsApi: NewsApi
 ) : ArticleRepository {
