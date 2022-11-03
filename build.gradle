@@ -11,6 +11,7 @@ buildscript {
         lifecycle_compose_version = '2.6.0-alpha02'
         logging_interceptor = '4.10.0'
         coil_compose_version = '2.2.2'
+        mavericks_airbnb_version = '3.0.1'
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.1.3'

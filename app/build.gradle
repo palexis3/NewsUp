@@ -7,6 +7,9 @@ plugins {
     id 'kotlin-parcelize'
 }
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdkVersion 33
     defaultConfig {
@@ -18,9 +21,14 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         // Enabling multidex support.
         multiDexEnabled true
+
+        buildConfigField("String", "NEWS_API_KEY", "\"" + localProperties['NEWS_API_KEY'] + "\"")
     }
+
     buildTypes {
         release {
+            resValue("string", "NEWS_API_KEY", localProperties['NEWS_API_KEY'])
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -80,4 +88,16 @@ dependencies {
 
     // Coil - Image Loading
     implementation "io.coil-kt:coil-compose:$coil_compose_version"
+
+    // Mavericks
+    implementation "com.airbnb.android:mavericks:$mavericks_airbnb_version"
+    implementation "com.airbnb.android:mavericks-compose:$mavericks_airbnb_version"
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
+    androidTestImplementation "androidx.navigation:navigation-testing:$compose_navigation_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
 }

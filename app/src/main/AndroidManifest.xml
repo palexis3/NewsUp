@@ -5,10 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <meta-data
-        android:name="com.example.palexis3.newssum.GlideConfiguration"
-        android:value="GlideModule" />
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/playstore_icon"
@@ -16,16 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.palexis3.newssum.Activities.MainActivity"
-            android:screenOrientation="portrait">
+        <activity android:name="com.example.palexis3.newssum.MainActivity"
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.palexis3.newssum.Activities.SourceArticleListActivity"
-            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
