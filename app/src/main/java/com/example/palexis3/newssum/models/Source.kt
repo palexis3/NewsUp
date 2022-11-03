@@ -11,7 +11,7 @@ data class Source(
     val category: String,
     val language: String,
     val country: String
-) : MavericksState
+)
 
 @JsonClass(generateAdapter = true)
 data class SourceId(
