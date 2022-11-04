@@ -55,11 +55,11 @@ fun HomeScreen() {
         Spacer(Modifier.height(8.dp))
         ShowHeadlinesState(articlesState = articlesState)
 
-        Spacer(Modifier.height(56.dp))
+        Spacer(Modifier.height(88.dp))
 
         TitleHeader(title = R.string.sources_title)
         Spacer(Modifier.height(8.dp))
-        ShowNewsSources(sourcesState = sourcesState)
+//        ShowNewsSources(sourcesState = sourcesState)
     }
 }
 
@@ -95,37 +95,47 @@ fun ShowNewsSources(sourcesState: SourcesState) {
 @Composable
 fun SourceCard(source: Source) {
     Card(
-        Modifier.padding(12.dp),
+        Modifier
+            .padding(12.dp)
+            .fillMaxHeight(),
         elevation = 10.dp
     ) {
         Column(Modifier.padding(12.dp)) {
-            Text(
-                text = source.name,
-                style = MaterialTheme.typography.h6,
-                fontWeight = FontWeight.ExtraBold,
-                maxLines = 1
-            )
-            Spacer(Modifier.height(4.dp))
+            val name = source.name
+            if (name != null) {
+                Text(
+                    text = source.name,
+                    style = MaterialTheme.typography.h6,
+                    fontWeight = FontWeight.ExtraBold,
+                    maxLines = 1
+                )
+                Spacer(Modifier.height(4.dp))
+            }
 
-            Text(text = source.description, style = MaterialTheme.typography.body1)
+            val description = source.description
+            if (description != null) {
+                Text(text = description, style = MaterialTheme.typography.body1)
+                Spacer(Modifier.height(4.dp))
+            }
 
-            Spacer(Modifier.height(4.dp))
-
-            Chip(
-                onClick = {},
-                border = BorderStroke(
-                    ChipDefaults.OutlinedBorderSize,
-                    Color.Green
-                ),
-                colors = ChipDefaults.chipColors(
-                    backgroundColor = Color.White,
-                    contentColor = Color.Black
-                ),
-                modifier = Modifier
-                    .height(24.dp)
-                    .padding(2.dp)
-            ) {
-                Text(text = source.category)
+            val category = source.category
+            if (category != null) {
+                Chip(
+                    onClick = {},
+                    border = BorderStroke(
+                        ChipDefaults.OutlinedBorderSize,
+                        Color.Green
+                    ),
+                    colors = ChipDefaults.chipColors(
+                        backgroundColor = Color.White,
+                        contentColor = Color.Black
+                    ),
+                    modifier = Modifier
+                        .height(24.dp)
+                        .padding(2.dp)
+                ) {
+                    Text(text = category)
+                }
             }
         }
     }
@@ -145,7 +155,7 @@ fun ShowHeadlinesState(articlesState: ArticlesState) {
             if (items.isEmpty()) {
                 ErrorText(title = R.string.header_error)
             } else {
-                LazyRow(modifier = Modifier.fillMaxWidth()) {
+                LazyRow {
                     items(items, itemContent = { article ->
                         HeadlineCard(article = article)
                     })
@@ -159,31 +169,43 @@ fun ShowHeadlinesState(articlesState: ArticlesState) {
 @Composable
 fun HeadlineCard(article: Article) {
     Card(
-        modifier = Modifier.padding(12.dp),
+        modifier = Modifier
+            .padding(12.dp)
+            .aspectRatio(1f),
         elevation = 10.dp
     ) {
         Column(Modifier.padding(12.dp)) {
             AsyncImage(
                 model = article.urlToImage,
                 contentDescription = "Headline Image",
-                modifier = Modifier.height(56.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
             )
             Spacer(Modifier.height(8.dp))
 
-            Text(
-                text = article.title,
-                style = MaterialTheme.typography.h6,
-                fontWeight = FontWeight.ExtraBold,
-                maxLines = 1
-            )
-            Spacer(Modifier.height(4.dp))
+            val title = article.title
+            if (title != null) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.h6,
+                    fontWeight = FontWeight.ExtraBold,
+                    maxLines = 1
+                )
+                Spacer(Modifier.height(4.dp))
+            }
 
-            val date = article.publishedAt.toDate().formatToReadableDate()
-            Text(text = date, style = MaterialTheme.typography.body1)
+            val publishedAt = article.publishedAt
+            if (publishedAt != null) {
+                val date = publishedAt.toDate().formatToReadableDate()
+                Text(text = date, style = MaterialTheme.typography.body1)
+                Spacer(Modifier.height(4.dp))
+            }
 
-            Spacer(Modifier.height(4.dp))
-
-            Text(text = article.description, style = MaterialTheme.typography.body1)
+            val description = article.description
+            if (description != null) {
+                Text(text = description, style = MaterialTheme.typography.body1)
+            }
         }
     }
 }

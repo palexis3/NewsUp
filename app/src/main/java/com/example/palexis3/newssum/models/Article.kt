@@ -4,20 +4,20 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Article(
-    val author: String,
-    val source: SourceObj,
-    val title: String,
-    val description: String,
-    val url: String,
-    val urlToImage: String,
-    val publishedAt: String,
-    val content: String
+    val author: String?,
+    val source: SourceObj?,
+    val title: String?,
+    val description: String?,
+    val url: String?,
+    val urlToImage: String?,
+    val publishedAt: String?,
+    val content: String?
 )
 
 @JsonClass(generateAdapter = true)
 data class SourceObj(
-    val id: String,
-    val name: String
+    val id: String?,
+    val name: String?
 )
 
 data class HeadlinesResponse(
