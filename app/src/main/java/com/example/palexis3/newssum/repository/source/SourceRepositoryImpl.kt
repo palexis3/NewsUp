@@ -18,7 +18,7 @@ class SourceRepositoryImpl @Inject constructor(
         flow {
             val response = newsApi.getSources(category, language, country)
             val items = if (response.status == "ok") {
-                response.items
+                response.sources
             } else {
                 listOf()
             }

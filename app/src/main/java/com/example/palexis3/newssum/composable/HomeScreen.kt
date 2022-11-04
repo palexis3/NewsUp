@@ -81,7 +81,7 @@ fun ShowNewsSources(sourcesState: SourcesState) {
                     rows = GridCells.Fixed(3),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    items(state.invoke()) { source ->
+                    items(items) { source ->
                         SourceCard(source)
                     }
                 }
@@ -146,7 +146,7 @@ fun ShowHeadlinesState(articlesState: ArticlesState) {
                 ErrorText(title = R.string.header_error)
             } else {
                 LazyRow(modifier = Modifier.fillMaxWidth()) {
-                    items(state.invoke(), itemContent = { article ->
+                    items(items, itemContent = { article ->
                         HeadlineCard(article = article)
                     })
                 }
