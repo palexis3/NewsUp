@@ -14,8 +14,7 @@ class SourceRepositoryImpl @Inject constructor(
         category: String?,
         language: String?
     ): Flow<List<Source>> =
-        newsApi
-            .getSources(category, language)
+        newsApi.getSources(category, language)
             .map { response ->
                 if (response.status == "ok") {
                     response.items
