@@ -1,4 +1,4 @@
-package com.example.palexis3.newssum.repository
+package com.example.palexis3.newssum.repository.article
 
 import com.example.palexis3.newssum.models.Article
 import com.example.palexis3.newssum.networking.NewsApi
@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-// TODO: Bind ArticleRepositoryImpl to ArticleRepository interface in Hilt module
 class ArticleRepositoryImpl @Inject constructor(
     private val newsApi: NewsApi
 ) : ArticleRepository {

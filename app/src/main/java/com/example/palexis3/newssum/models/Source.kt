@@ -1,6 +1,5 @@
 package com.example.palexis3.newssum.models
 
-import com.airbnb.mvrx.MavericksState
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)

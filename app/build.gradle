@@ -92,6 +92,7 @@ dependencies {
     // Mavericks
     implementation "com.airbnb.android:mavericks:$mavericks_airbnb_version"
     implementation "com.airbnb.android:mavericks-compose:$mavericks_airbnb_version"
+    implementation "com.airbnb.android:mavericks-hilt:$mavericks_airbnb_version"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
