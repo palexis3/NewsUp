@@ -15,4 +15,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(ArticleViewModel::class)
     fun articleViewModelFactory(factory: ArticleViewModel.Factory): AssistedViewModelFactory<*, *>
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SourceViewModel::class)
+    fun sourceViewModelFactory(factory: SourceViewModel.Factory): AssistedViewModelFactory<*, *>
 }

@@ -15,7 +15,10 @@ interface NewsApi {
     ): Flow<HeadlinesResponse>
 
     @GET("/v2/top-headlines/sources")
-    fun getSources(@Query("category") category: String?): Flow<SourcesResponse>
+    fun getSources(
+        @Query("category") category: String?,
+        @Query("language") language: String?
+    ): Flow<SourcesResponse>
 
     @GET("/v2/top-headlines")
     fun getHeadlines(

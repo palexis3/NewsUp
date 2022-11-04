@@ -21,6 +21,12 @@ class ArticleViewModel @AssistedInject constructor(
             .execute { copy(articles = it) }
     }
 
+    fun getEverything(keyword: String? = null, sortBy: String? = null) {
+        articleRepository
+            .getEverything(keyword, sortBy)
+            .execute { copy(articles = it) }
+    }
+
     @AssistedFactory
     interface Factory : AssistedViewModelFactory<ArticleViewModel, ArticlesState> {
         override fun create(state: ArticlesState): ArticleViewModel
