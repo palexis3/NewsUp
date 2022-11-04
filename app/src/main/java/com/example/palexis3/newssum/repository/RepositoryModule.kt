@@ -1,5 +1,6 @@
 package com.example.palexis3.newssum.repository
 
+import com.airbnb.mvrx.hilt.MavericksViewModelComponent
 import com.example.palexis3.newssum.repository.article.ArticleRepository
 import com.example.palexis3.newssum.repository.article.ArticleRepositoryImpl
 import com.example.palexis3.newssum.repository.source.SourceRepository
@@ -7,17 +8,13 @@ import com.example.palexis3.newssum.repository.source.SourceRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
-interface RepositoryModule {
+@InstallIn(MavericksViewModelComponent::class)
+abstract class RepositoryModule {
     @Binds
-    @Singleton
-    fun bindArticleRepository(articleRepositoryImpl: ArticleRepositoryImpl): ArticleRepository
+    abstract fun bindArticleRepository(impl: ArticleRepositoryImpl): ArticleRepository
 
     @Binds
-    @Singleton
-    fun bindSourceRepository(sourceRepositoryImpl: SourceRepositoryImpl): SourceRepository
+    abstract fun bindSourceRepository(impl: SourceRepositoryImpl): SourceRepository
 }

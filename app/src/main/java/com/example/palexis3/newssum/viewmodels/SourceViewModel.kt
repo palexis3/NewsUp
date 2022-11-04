@@ -11,13 +11,17 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 
 class SourceViewModel @AssistedInject constructor(
-    @Assisted initialState: SourcesState,
-    private val sourceRepository: SourceRepository
+    private val sourceRepository: SourceRepository,
+    @Assisted initialState: SourcesState
 ) : MavericksViewModel<SourcesState>(initialState) {
 
-    fun getSources(category: String? = null, language: String? = null) {
+    fun getSources(
+        category: String? = null,
+        language: String? = "en",
+        country: String? = "us"
+    ) {
         sourceRepository
-            .getSources(category, language)
+            .getSources(category, language, country)
             .execute { copy(sources = it) }
     }
 
