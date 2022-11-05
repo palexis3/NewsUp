@@ -8,9 +8,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -75,9 +73,9 @@ fun ShowNewsSources(sourcesState: SourcesState) {
         }
         is Success -> {
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 200.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 val items = state.invoke()
                 if (items.isEmpty()) {
@@ -100,24 +98,43 @@ fun ShowNewsSources(sourcesState: SourcesState) {
 fun SourceCard(source: Source) {
     Card(
         Modifier
-            .padding(12.dp)
-            .aspectRatio(1f),
+            .aspectRatio(1f)
+            .padding(12.dp),
         elevation = 10.dp
     ) {
-        Column(Modifier.padding(12.dp)) {
-            val name = source.name
-            if (name != null) {
+        Column(Modifier
+            .padding(12.dp)
+        ) {
+            if (source.name != null) {
+                var name by remember{ mutableStateOf(source.name) }
+                val minLines = 2
                 Text(
-                    text = source.name,
+                    text = name,
                     style = MaterialTheme.typography.h6,
-                    fontWeight = FontWeight.ExtraBold
+                    fontWeight = FontWeight.ExtraBold,
+                    maxLines = minLines,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { textLayoutResult ->
+                        // This will recompose to ensure that the text item will occupy two lines
+                        // although some strings only require 1. This is to make sure the source cards
+                        // consist with of the same paddings and height.
+                        // Reference: https://stackoverflow.com/a/72639044/3681456
+                        if((textLayoutResult.lineCount) < minLines) {
+                            name = source.name + "\n ".repeat(minLines - textLayoutResult.lineCount)
+                        }
+                    }
                 )
                 Spacer(Modifier.height(4.dp))
             }
 
             val description = source.description
             if (description != null) {
-                Text(text = description, style = MaterialTheme.typography.body1, maxLines = 3)
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.body1,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
                 Spacer(Modifier.height(4.dp))
             }
 
@@ -134,10 +151,15 @@ fun SourceCard(source: Source) {
                         contentColor = Color.Black
                     ),
                     modifier = Modifier
-                        .height(24.dp)
-                        .padding(2.dp)
+                        .height(32.dp)
+                        .align(Alignment.CenterHorizontally)
                 ) {
-                    Text(text = category)
+                    Text(
+                        text = category,
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically),
+                        maxLines = 1
+                    )
                 }
             }
         }
