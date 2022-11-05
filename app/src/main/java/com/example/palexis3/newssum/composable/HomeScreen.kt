@@ -4,18 +4,19 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.airbnb.mvrx.Fail
@@ -48,18 +49,18 @@ fun HomeScreen() {
 
     Column(
         Modifier
+            .fillMaxSize()
             .padding(12.dp)
-            .verticalScroll(rememberScrollState())
     ) {
         TitleHeader(title = R.string.header_title)
         Spacer(Modifier.height(8.dp))
         ShowHeadlinesState(articlesState = articlesState)
 
-        Spacer(Modifier.height(88.dp))
+        Spacer(Modifier.height(72.dp))
 
         TitleHeader(title = R.string.sources_title)
         Spacer(Modifier.height(8.dp))
-//        ShowNewsSources(sourcesState = sourcesState)
+        ShowNewsSources(sourcesState = sourcesState)
     }
 }
 
@@ -73,14 +74,17 @@ fun ShowNewsSources(sourcesState: SourcesState) {
             ErrorText(title = R.string.sources_error)
         }
         is Success -> {
-            val items = state.invoke()
-            if (items.isEmpty()) {
-                ErrorText(title = R.string.sources_error)
-            } else {
-                LazyHorizontalGrid(
-                    rows = GridCells.Fixed(3),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 200.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                val items = state.invoke()
+                if (items.isEmpty()) {
+                    item {
+                        ErrorText(title = R.string.sources_error)
+                    }
+                } else {
                     items(items) { source ->
                         SourceCard(source)
                     }
@@ -97,7 +101,7 @@ fun SourceCard(source: Source) {
     Card(
         Modifier
             .padding(12.dp)
-            .fillMaxHeight(),
+            .aspectRatio(1f),
         elevation = 10.dp
     ) {
         Column(Modifier.padding(12.dp)) {
@@ -106,15 +110,14 @@ fun SourceCard(source: Source) {
                 Text(
                     text = source.name,
                     style = MaterialTheme.typography.h6,
-                    fontWeight = FontWeight.ExtraBold,
-                    maxLines = 1
+                    fontWeight = FontWeight.ExtraBold
                 )
                 Spacer(Modifier.height(4.dp))
             }
 
             val description = source.description
             if (description != null) {
-                Text(text = description, style = MaterialTheme.typography.body1)
+                Text(text = description, style = MaterialTheme.typography.body1, maxLines = 3)
                 Spacer(Modifier.height(4.dp))
             }
 
@@ -151,11 +154,17 @@ fun ShowHeadlinesState(articlesState: ArticlesState) {
             ErrorText(title = R.string.header_error)
         }
         is Success -> {
-            val items = state.invoke()
-            if (items.isEmpty()) {
-                ErrorText(title = R.string.header_error)
-            } else {
-                LazyRow {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(350.dp)
+            ) {
+                val items = state.invoke()
+                if (items.isEmpty()) {
+                    item {
+                        ErrorText(title = R.string.header_error)
+                    }
+                } else {
                     items(items, itemContent = { article ->
                         HeadlineCard(article = article)
                     })
@@ -174,37 +183,48 @@ fun HeadlineCard(article: Article) {
             .aspectRatio(1f),
         elevation = 10.dp
     ) {
-        Column(Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
                 model = article.urlToImage,
                 contentDescription = "Headline Image",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .height(150.dp),
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center
             )
+
             Spacer(Modifier.height(8.dp))
 
-            val title = article.title
-            if (title != null) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.h6,
-                    fontWeight = FontWeight.ExtraBold,
-                    maxLines = 1
-                )
-                Spacer(Modifier.height(4.dp))
-            }
+            Column(modifier = Modifier.padding(12.dp)) {
+                val title = article.title
+                if (title != null) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.h6,
+                        fontWeight = FontWeight.ExtraBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(Modifier.height(4.dp))
+                }
 
-            val publishedAt = article.publishedAt
-            if (publishedAt != null) {
-                val date = publishedAt.toDate().formatToReadableDate()
-                Text(text = date, style = MaterialTheme.typography.body1)
-                Spacer(Modifier.height(4.dp))
-            }
+                val publishedAt = article.publishedAt
+                if (publishedAt != null) {
+                    val date = publishedAt.toDate().formatToReadableDate()
+                    Text(text = date, style = MaterialTheme.typography.body1)
+                    Spacer(Modifier.height(4.dp))
+                }
 
-            val description = article.description
-            if (description != null) {
-                Text(text = description, style = MaterialTheme.typography.body1)
+                val description = article.description
+                if (description != null) {
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.body1,
+                        maxLines = 4,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }
