@@ -16,7 +16,7 @@ class ArticleViewModel @AssistedInject constructor(
 ) : MavericksViewModel<ArticlesState>(initialState) {
 
     fun getHeadlines(
-        category: String? = "business",
+        category: String?,
         keyword: String? = null,
         sources: String? = null,
         country: String? = "us"
