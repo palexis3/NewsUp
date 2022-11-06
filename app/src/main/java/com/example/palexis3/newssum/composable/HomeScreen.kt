@@ -2,10 +2,8 @@ package com.example.palexis3.newssum.composable
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -13,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.airbnb.mvrx.Fail
@@ -31,6 +31,9 @@ import com.example.palexis3.newssum.state.ArticlesState
 import com.example.palexis3.newssum.state.SourcesState
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.example.palexis3.newssum.viewmodels.SourceViewModel
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.MainAxisAlignment
+import com.google.accompanist.flowlayout.SizeMode
 
 @Composable
 fun HomeScreen() {
@@ -45,20 +48,22 @@ fun HomeScreen() {
     val articlesState by articleViewModel.collectAsState()
     val sourcesState by sourceViewModel.collectAsState()
 
-    Column(
-        Modifier
-            .fillMaxSize()
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(12.dp)
     ) {
-        TitleHeader(title = R.string.header_title)
-        Spacer(Modifier.height(8.dp))
-        ShowHeadlinesState(articlesState = articlesState)
+        item {
+            TitleHeader(title = R.string.header_title)
+            Spacer(Modifier.height(8.dp))
+            ShowHeadlinesState(articlesState = articlesState)
 
-        Spacer(Modifier.height(72.dp))
+            Spacer(Modifier.height(72.dp))
 
-        TitleHeader(title = R.string.sources_title)
-        Spacer(Modifier.height(8.dp))
-        ShowNewsSources(sourcesState = sourcesState)
+            TitleHeader(title = R.string.sources_title)
+            Spacer(Modifier.height(8.dp))
+            ShowNewsSources(sourcesState = sourcesState)
+        }
     }
 }
 
@@ -72,19 +77,18 @@ fun ShowNewsSources(sourcesState: SourcesState) {
             ErrorText(title = R.string.sources_error)
         }
         is Success -> {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+            val cellWidthSize: Dp = LocalConfiguration.current.screenWidthDp.dp / 3
+
+            FlowRow(
+                mainAxisSize = SizeMode.Expand,
+                mainAxisAlignment = MainAxisAlignment.SpaceBetween
             ) {
                 val items = state.invoke()
                 if (items.isEmpty()) {
-                    item {
-                        ErrorText(title = R.string.sources_error)
-                    }
+                    ErrorText(title = R.string.sources_error)
                 } else {
-                    items(items) { source ->
-                        SourceCard(source)
+                    items.forEach { source ->
+                        SourceCard(source, Modifier.width(cellWidthSize))
                     }
                 }
             }
@@ -95,18 +99,18 @@ fun ShowNewsSources(sourcesState: SourcesState) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SourceCard(source: Source) {
+fun SourceCard(source: Source, modifier: Modifier = Modifier) {
     Card(
-        Modifier
-            .aspectRatio(1f)
-            .padding(12.dp),
+        modifier = modifier
+            .padding(bottom = 20.dp),
         elevation = 10.dp
     ) {
-        Column(Modifier
-            .padding(12.dp)
+        Column(
+            Modifier
+                .padding(12.dp)
         ) {
             if (source.name != null) {
-                var name by remember{ mutableStateOf(source.name) }
+                var name by remember { mutableStateOf(source.name) }
                 val minLines = 2
                 Text(
                     text = name,
@@ -119,7 +123,7 @@ fun SourceCard(source: Source) {
                         // although some strings only require 1. This is to make sure the source cards
                         // consist with of the same paddings and height.
                         // Reference: https://stackoverflow.com/a/72639044/3681456
-                        if((textLayoutResult.lineCount) < minLines) {
+                        if ((textLayoutResult.lineCount) < minLines) {
                             name = source.name + "\n ".repeat(minLines - textLayoutResult.lineCount)
                         }
                     }
@@ -132,7 +136,7 @@ fun SourceCard(source: Source) {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.body1,
-                    maxLines = 3,
+                    maxLines = 6,
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(Modifier.height(4.dp))
