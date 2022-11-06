@@ -11,13 +11,18 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 
 class ArticleViewModel @AssistedInject constructor(
-    @Assisted initialState: ArticlesState,
-    private val articleRepository: ArticleRepository
+    private val articleRepository: ArticleRepository,
+    @Assisted initialState: ArticlesState
 ) : MavericksViewModel<ArticlesState>(initialState) {
 
-    fun getHeadlines(category: String? = null, keyword: String? = null, sources: String? = null) {
+    fun getHeadlines(
+        category: String?,
+        keyword: String? = null,
+        sources: String? = null,
+        country: String? = "us"
+    ) {
         articleRepository
-            .getHeadlines(category, keyword, sources)
+            .getHeadlines(category, keyword, sources, country)
             .execute { copy(articles = it) }
     }
 

@@ -2,15 +2,32 @@ package com.example.palexis3.newssum.models
 
 import com.squareup.moshi.JsonClass
 
+val NEWS_CATEGORY_TYPES = listOf(
+    "business",
+    "entertainment",
+    "general",
+    "health",
+    "science",
+    "sports",
+    "technology"
+)
+
 @JsonClass(generateAdapter = true)
 data class Article(
-    val source: SourceId,
-    val author: String,
-    val title: String,
-    val description: String,
-    val urlToImage: String,
-    val publishedAt: String,
-    val content: String
+    val author: String?,
+    val source: SourceObj?,
+    val title: String?,
+    val description: String?,
+    val url: String?,
+    val urlToImage: String?,
+    val publishedAt: String?,
+    val content: String?
+)
+
+@JsonClass(generateAdapter = true)
+data class SourceObj(
+    val id: String?,
+    val name: String?
 )
 
 data class HeadlinesResponse(

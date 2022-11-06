@@ -9,6 +9,11 @@
     <string name="category_prompt">Categories</string>
     <string name="language_prompt">Languages</string>
     <string name="country_prompt">Countries</string>
-    <string name="okay">OK</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
+    <string name="header_error">Error fetching headlines. Try refreshing</string>
+    <string name="header_title">Headlines</string>
+    <string name="sources_error">Error fetching news sources. Try refreshing</string>
+    <string name="sources_title">News Sources</string>
 </resources>
