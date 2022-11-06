@@ -271,6 +271,7 @@ fun ShowHeadlinesState(articlesState: ArticlesState) {
 fun HeadlineCard(article: Article) {
     Card(
         modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
             .padding(12.dp)
             .aspectRatio(1f),
         elevation = 10.dp
