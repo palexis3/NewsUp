@@ -3,9 +3,9 @@ package com.example.palexis3.newssum.composable
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +26,7 @@ fun LoadingIcon(modifier: Modifier = Modifier) {
 fun TitleHeader(@StringRes title: Int) {
     Text(
         text = stringResource(id = title),
-        style = MaterialTheme.typography.h4,
+        style = MaterialTheme.typography.headlineLarge,
         fontWeight = FontWeight.ExtraBold
     )
 }
@@ -37,7 +37,7 @@ fun ErrorText(
 ) {
     Text(
         text = stringResource(id = title),
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.headlineMedium,
         fontWeight = FontWeight.Bold
     )
 }

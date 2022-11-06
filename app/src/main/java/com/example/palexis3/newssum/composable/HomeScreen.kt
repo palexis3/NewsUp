@@ -6,7 +6,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -101,7 +103,7 @@ fun SourcesTitleRow(selectedCategory: (String) -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryMenuBox(
     initialValue: String = "",
@@ -127,13 +129,14 @@ fun CategoryMenuBox(
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             NEWS_CATEGORY_TYPES.forEach { selectionOption ->
-                DropdownMenuItem(onClick = {
-                    selectedOptionText = selectionOption
-                    selectedCategory(selectionOption)
-                    expanded = false
-                }) {
-                    Text(text = selectionOption)
-                }
+                DropdownMenuItem(
+                    text = { Text(text = selectionOption) },
+                    onClick = {
+                        selectedOptionText = selectionOption
+                        selectedCategory(selectionOption)
+                        expanded = false
+                    }
+                )
             }
         }
     }
@@ -149,10 +152,10 @@ fun ShowNewsSources(sourcesState: SourcesState) {
             ErrorText(title = R.string.sources_error)
         }
         is Success -> {
-            val cellWidthSize: Dp = LocalConfiguration.current.screenWidthDp.dp / 3
+            val cellWidthSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 3) + 20.dp
 
             FlowRow(
-                mainAxisSize = SizeMode.Expand, mainAxisAlignment = MainAxisAlignment.SpaceBetween
+                mainAxisSize = SizeMode.Expand, mainAxisAlignment = MainAxisAlignment.SpaceEvenly
             ) {
                 val items = state.invoke()
                 if (items.isEmpty()) {
@@ -168,11 +171,11 @@ fun ShowNewsSources(sourcesState: SourcesState) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SourceCard(source: Source, modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier.padding(bottom = 20.dp), elevation = 10.dp
+        modifier = modifier.padding(bottom = 20.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
         Column(
             Modifier.padding(12.dp)
@@ -182,7 +185,7 @@ fun SourceCard(source: Source, modifier: Modifier = Modifier) {
                 val minLines = 2
                 Text(
                     text = name,
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.ExtraBold,
                     maxLines = minLines,
                     overflow = TextOverflow.Ellipsis,
@@ -203,7 +206,7 @@ fun SourceCard(source: Source, modifier: Modifier = Modifier) {
             if (description != null) {
                 Text(
                     text = description,
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.bodyMedium,
                     maxLines = 6,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -212,21 +215,18 @@ fun SourceCard(source: Source, modifier: Modifier = Modifier) {
 
             val category = source.category
             if (category != null) {
-                Chip(
-                    onClick = {},
+                OutlinedCard(
                     border = BorderStroke(
-                        ChipDefaults.OutlinedBorderSize, Color.Green
+                        width = 1.dp, color = Color.Black
                     ),
-                    colors = ChipDefaults.chipColors(
-                        backgroundColor = Color.White, contentColor = Color.Black
-                    ),
+                    shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
                         .height(32.dp)
                         .align(Alignment.CenterHorizontally)
                 ) {
                     Text(
                         text = category,
-                        modifier = Modifier.align(Alignment.CenterVertically),
+                        modifier = Modifier.padding(4.dp),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -274,7 +274,7 @@ fun HeadlineCard(article: Article) {
             .clip(RoundedCornerShape(8.dp))
             .padding(12.dp)
             .aspectRatio(1f),
-        elevation = 10.dp
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
@@ -294,7 +294,7 @@ fun HeadlineCard(article: Article) {
                 if (title != null) {
                     Text(
                         text = title,
-                        style = MaterialTheme.typography.h6,
+                        style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.ExtraBold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -305,7 +305,7 @@ fun HeadlineCard(article: Article) {
                 val publishedAt = article.publishedAt
                 if (publishedAt != null) {
                     val date = publishedAt.toDate().formatToReadableDate()
-                    Text(text = date, style = MaterialTheme.typography.body1)
+                    Text(text = date, style = MaterialTheme.typography.bodyMedium)
                     Spacer(Modifier.height(4.dp))
                 }
 
@@ -313,7 +313,7 @@ fun HeadlineCard(article: Article) {
                 if (description != null) {
                     Text(
                         text = description,
-                        style = MaterialTheme.typography.body1,
+                        style = MaterialTheme.typography.bodyMedium,
                         maxLines = 4,
                         overflow = TextOverflow.Ellipsis
                     )

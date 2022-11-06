@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.palexis3.newssum.composable.HomeScreen
 import com.example.palexis3.newssum.navigation.HomeScreen
+import com.example.palexis3.newssum.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,7 +18,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ShowNewsApp()
+            AppTheme {
+                ShowNewsApp()
+            }
         }
     }
 }
