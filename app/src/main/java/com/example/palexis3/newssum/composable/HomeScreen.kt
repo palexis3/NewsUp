@@ -162,7 +162,8 @@ fun SourceCard(source: Source, modifier: Modifier = Modifier) {
                         text = category,
                         modifier = Modifier
                             .align(Alignment.CenterVertically),
-                        maxLines = 1
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
