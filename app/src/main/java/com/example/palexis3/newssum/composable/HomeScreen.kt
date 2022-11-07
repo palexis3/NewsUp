@@ -118,6 +118,7 @@ fun CategoryMenuBox(
         modifier = Modifier.clip(RoundedCornerShape(8.dp))
     ) {
         TextField(
+            modifier = Modifier.menuAnchor(),
             value = selectedOptionText,
             onValueChange = {},
             readOnly = true,
