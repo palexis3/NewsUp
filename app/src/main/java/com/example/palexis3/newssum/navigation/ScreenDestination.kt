@@ -7,3 +7,7 @@ interface ScreenDestination {
 object HomeScreen : ScreenDestination {
     override val route = "Home"
 }
+
+object ArticleDetailsScreen : ScreenDestination {
+    override val route = "ArticleDetails"
+}
