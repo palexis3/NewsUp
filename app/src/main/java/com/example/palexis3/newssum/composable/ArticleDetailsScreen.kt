@@ -117,7 +117,7 @@ fun ShowArticleState(article: Article, closeScreen: () -> Unit) {
                     Spacer(Modifier.height(12.dp))
                     Text(text = content, style = MaterialTheme.typography.bodyLarge)
                 } else {
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(20.dp))
                     Text(
                         text = stringResource(id = R.string.article_content_error),
                         style = MaterialTheme.typography.labelMedium,
