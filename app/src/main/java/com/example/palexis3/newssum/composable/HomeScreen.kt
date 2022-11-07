@@ -1,6 +1,7 @@
 package com.example.palexis3.newssum.composable
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -26,7 +27,6 @@ import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
-import com.airbnb.mvrx.compose.mavericksViewModel
 import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.helper.formatToReadableDate
 import com.example.palexis3.newssum.helper.toDate
@@ -42,10 +42,11 @@ import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 
 @Composable
-fun HomeScreen() {
-    val articleViewModel: ArticleViewModel = mavericksViewModel()
-    val sourceViewModel: SourceViewModel = mavericksViewModel()
-
+fun HomeScreen(
+    articleViewModel: ArticleViewModel,
+    sourceViewModel: SourceViewModel,
+    goToArticleDetailsScreen: () -> Unit
+) {
     var headlineCategory by rememberSaveable { mutableStateOf(NEWS_CATEGORY_TYPES[0]) }
     var sourceCategory by rememberSaveable { mutableStateOf("") }
 
@@ -70,7 +71,13 @@ fun HomeScreen() {
                 headlineCategory = category
             })
             Spacer(Modifier.height(8.dp))
-            ShowHeadlinesState(articlesState = articlesState)
+            ShowHeadlinesState(
+                articlesState = articlesState,
+                articleSelected = { article ->
+                    articleViewModel.setCurrentArticle(article)
+                    goToArticleDetailsScreen()
+                }
+            )
 
             Spacer(Modifier.height(72.dp))
 
@@ -238,7 +245,10 @@ fun SourceCard(source: Source, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ShowHeadlinesState(articlesState: ArticlesState) {
+fun ShowHeadlinesState(
+    articlesState: ArticlesState,
+    articleSelected: (Article) -> Unit
+) {
     when (val state = articlesState.articles) {
         is Loading -> {
             LoadingIcon()
@@ -259,7 +269,10 @@ fun ShowHeadlinesState(articlesState: ArticlesState) {
                     }
                 } else {
                     items(items, itemContent = { article ->
-                        HeadlineCard(article = article)
+                        HeadlineCard(
+                            article = article,
+                            articleSelected = articleSelected
+                        )
                     })
                 }
             }
@@ -269,12 +282,16 @@ fun ShowHeadlinesState(articlesState: ArticlesState) {
 }
 
 @Composable
-fun HeadlineCard(article: Article) {
+fun HeadlineCard(
+    article: Article,
+    articleSelected: (Article) -> Unit
+) {
     Card(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
             .padding(12.dp)
-            .aspectRatio(1f),
+            .aspectRatio(1f)
+            .clickable { articleSelected(article) },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
