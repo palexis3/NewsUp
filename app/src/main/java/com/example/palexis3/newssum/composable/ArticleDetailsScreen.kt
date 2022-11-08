@@ -57,7 +57,7 @@ fun ShowArticleState(article: Article, closeScreen: () -> Unit) {
                         .fillMaxWidth()
                         .height(250.dp),
                     contentScale = ContentScale.Crop,
-                    alignment = Alignment.Center
+                    alignment = Center
                 )
                 IconButton(
                     onClick = closeScreen,
