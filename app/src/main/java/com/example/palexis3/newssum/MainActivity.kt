@@ -10,9 +10,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.mvrx.compose.mavericksViewModel
 import com.example.palexis3.newssum.composable.ArticleDetailsScreen
-import com.example.palexis3.newssum.composable.HomeScreen
-import com.example.palexis3.newssum.navigation.ArticleDetailsScreen
-import com.example.palexis3.newssum.navigation.HomeScreen
+import com.example.palexis3.newssum.composable.HeadlineScreen
+import com.example.palexis3.newssum.composable.NewsSourcesScreen
+import com.example.palexis3.newssum.navigation.ScreenDestinations
 import com.example.palexis3.newssum.navigation.navigateSingleTopTo
 import com.example.palexis3.newssum.theme.AppTheme
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
@@ -45,25 +45,28 @@ fun ShowNewsApp() {
 
     NavHost(
         navController = navController,
-        startDestination = HomeScreen.route
+        startDestination = ScreenDestinations.Headlines.route
     ) {
-        composable(route = HomeScreen.route) {
-            HomeScreen(
+        composable(route = ScreenDestinations.Headlines.route) {
+            HeadlineScreen(
                 articleViewModel = articleViewModel,
-                sourceViewModel = sourceViewModel,
                 goToArticleDetailsScreen = {
-                    navController.navigateSingleTopTo(ArticleDetailsScreen.route)
+                    navController.navigateSingleTopTo(ScreenDestinations.ArticleDetails.route)
                 }
             )
         }
 
-        composable(route = ArticleDetailsScreen.route) {
+        composable(route = ScreenDestinations.ArticleDetails.route) {
             ArticleDetailsScreen(
                 articleViewModel = articleViewModel,
                 closeScreen = {
                     navController.popBackStack()
                 }
             )
+        }
+
+        composable(route = ScreenDestinations.NewsSources.route) {
+            NewsSourcesScreen(sourceViewModel = sourceViewModel)
         }
     }
 }
