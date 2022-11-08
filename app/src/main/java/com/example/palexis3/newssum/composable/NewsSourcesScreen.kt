@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -26,17 +24,13 @@ import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.models.NEWS_CATEGORY_TYPES
 import com.example.palexis3.newssum.models.Source
 import com.example.palexis3.newssum.state.SourcesState
-import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.example.palexis3.newssum.viewmodels.SourceViewModel
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 
 @Composable
-fun HomeScreen(
-    articleViewModel: ArticleViewModel,
+fun NewsSourcesScreen(
     sourceViewModel: SourceViewModel,
-    goToArticleDetailsScreen: () -> Unit
 ) {
     var sourceCategory by rememberSaveable { mutableStateOf("") }
 
@@ -64,7 +58,7 @@ fun HomeScreen(
 @Composable
 fun SourcesTitleRow(selectedCategory: (String) -> Unit) {
     Column {
-        TitleHeader(title = R.string.sources_title)
+        TitleHeader(title = R.string.news_sources)
         Spacer(modifier = Modifier.height(4.dp))
         CategoryMenuBox(selectedCategory = selectedCategory)
     }
@@ -120,10 +114,10 @@ fun ShowNewsSources(sourcesState: SourcesState) {
             ErrorText(title = R.string.sources_error)
         }
         is Success -> {
-            val cellWidthSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 3) + 20.dp
+            val cellWidthSize: Dp = LocalConfiguration.current.screenWidthDp.dp / 3
 
             FlowRow(
-                mainAxisSize = SizeMode.Expand, mainAxisAlignment = MainAxisAlignment.SpaceEvenly
+                mainAxisSize = SizeMode.Expand
             ) {
                 val items = state.invoke()
                 if (items.isEmpty()) {

@@ -7,9 +7,10 @@
     <string name="cancel">Cancel</string>
 
     <string name="header_error">Error fetching headlines. Try refreshing</string>
-    <string name="header_title">Headlines</string>
+    <string name="headlines">Headlines</string>
     <string name="sources_error">Error fetching news sources. Try refreshing</string>
-    <string name="sources_title">News Sources</string>
+    <string name="news_sources">News Sources</string>
+    <string name="article_details">Article Details</string>
 
     <string name="article_content_error">Could not get article content. Try again</string>
 </resources>
