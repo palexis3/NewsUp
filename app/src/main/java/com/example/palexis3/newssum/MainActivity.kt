@@ -3,16 +3,24 @@ package com.example.palexis3.newssum
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.mvrx.compose.mavericksViewModel
 import com.example.palexis3.newssum.composable.ArticleDetailsScreen
 import com.example.palexis3.newssum.composable.HeadlineScreen
 import com.example.palexis3.newssum.composable.NewsSourcesScreen
-import com.example.palexis3.newssum.navigation.ScreenDestinations
+import com.example.palexis3.newssum.navigation.Screen
+import com.example.palexis3.newssum.navigation.bottomNavItems
 import com.example.palexis3.newssum.navigation.navigateSingleTopTo
 import com.example.palexis3.newssum.theme.AppTheme
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
@@ -31,6 +39,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun ShowNewsApp() {
@@ -43,30 +52,50 @@ fun ShowNewsApp() {
 
     val navController = rememberNavController()
 
-    NavHost(
-        navController = navController,
-        startDestination = ScreenDestinations.Headlines.route
-    ) {
-        composable(route = ScreenDestinations.Headlines.route) {
-            HeadlineScreen(
-                articleViewModel = articleViewModel,
-                goToArticleDetailsScreen = {
-                    navController.navigateSingleTopTo(ScreenDestinations.ArticleDetails.route)
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+                bottomNavItems.forEach { screen ->
+                    NavigationBarItem(
+                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                        onClick = {
+                            navController.navigateSingleTopTo(screen.route)
+                        },
+                        label = { Text(stringResource(id = screen.title)) },
+                        icon = {}
+                    )
                 }
-            )
+            }
         }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = Screen.Headlines.route,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(route = Screen.Headlines.route) {
+                HeadlineScreen(
+                    articleViewModel = articleViewModel,
+                    goToArticleDetailsScreen = {
+                        navController.navigateSingleTopTo(Screen.ArticleDetails.route)
+                    }
+                )
+            }
 
-        composable(route = ScreenDestinations.ArticleDetails.route) {
-            ArticleDetailsScreen(
-                articleViewModel = articleViewModel,
-                closeScreen = {
-                    navController.popBackStack()
-                }
-            )
-        }
+            composable(route = Screen.ArticleDetails.route) {
+                ArticleDetailsScreen(
+                    articleViewModel = articleViewModel,
+                    closeScreen = {
+                        navController.popBackStack()
+                    }
+                )
+            }
 
-        composable(route = ScreenDestinations.NewsSources.route) {
-            NewsSourcesScreen(sourceViewModel = sourceViewModel)
+            composable(route = Screen.NewsSources.route) {
+                NewsSourcesScreen(sourceViewModel = sourceViewModel)
+            }
         }
     }
 }

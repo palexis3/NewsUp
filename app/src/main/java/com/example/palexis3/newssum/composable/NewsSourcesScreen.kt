@@ -58,7 +58,7 @@ fun NewsSourcesScreen(
 @Composable
 fun SourcesTitleRow(selectedCategory: (String) -> Unit) {
     Column {
-        TitleHeader(title = R.string.sources_title)
+        TitleHeader(title = R.string.news_sources)
         Spacer(modifier = Modifier.height(4.dp))
         CategoryMenuBox(selectedCategory = selectedCategory)
     }
