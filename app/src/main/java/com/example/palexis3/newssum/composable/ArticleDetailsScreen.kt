@@ -2,6 +2,8 @@ package com.example.palexis3.newssum.composable
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.*
@@ -16,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -120,37 +121,55 @@ fun ShowArticleState(article: Article, closeScreen: () -> Unit) {
 
                 Spacer(Modifier.height(20.dp))
 
-                val content = article.content
                 val articleUrl = article.url
+                val content = article.content
 
                 if (articleUrl != null) {
-                    ShowWebView(url = articleUrl)
-                } else if (content != null) {
-                    Text(text = content, style = MaterialTheme.typography.bodyLarge)
+                    var showWebView by remember { mutableStateOf(true) }
+                    if (showWebView) {
+                        ShowWebView(
+                            url = articleUrl,
+                            webErrorOccurred = { showWebView = false }
+                        )
+                    } else {
+                        ShowContentSection(content)
+                    }
                 } else {
-                    Text(
-                        text = stringResource(id = R.string.article_content_error),
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.align(CenterHorizontally)
-                    )
+                    ShowContentSection(content)
                 }
             }
         }
     }
 }
 
+@Composable
+fun ShowContentSection(content: String?) {
+    if (content != null) {
+        Text(text = content, style = MaterialTheme.typography.bodyLarge)
+    } else {
+        Box {
+            Text(
+                text = stringResource(id = R.string.article_content_error),
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.align(Center)
+            )
+        }
+    }
+}
+
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun ShowWebView(url: String) {
+fun ShowWebView(url: String, webErrorOccurred: () -> Unit) {
     val context = LocalContext.current
     var isLoadingIconVisible by remember { mutableStateOf(false) }
 
     Box {
         AndroidView(factory = {
             WebView(context).apply {
-                val loadingWebViewClient = LoadingWebViewClient { isLoading ->
-                    isLoadingIconVisible = isLoading
-                }
+                val loadingWebViewClient = LoadingWebViewClient(
+                    loadingState = { isLoading -> isLoadingIconVisible = isLoading },
+                    webErrorOccurred = webErrorOccurred
+                )
                 webViewClient = loadingWebViewClient
                 loadUrl(url)
                 settings.javaScriptEnabled = true
@@ -163,11 +182,19 @@ fun ShowWebView(url: String) {
     }
 }
 
-/**
- *  TODO: Add a lambda to capture whether or not the webview was able to successfully load URL else
- *  send an exception state to turn the Webview box visibility to false
- */
-class LoadingWebViewClient(private val loadingState: (Boolean) -> Unit) : WebViewClient() {
+class LoadingWebViewClient(
+    private val loadingState: (Boolean) -> Unit,
+    private val webErrorOccurred: () -> Unit
+) : WebViewClient() {
+
+    override fun onReceivedError(
+        view: WebView?,
+        request: WebResourceRequest?,
+        error: WebResourceError?
+    ) {
+        webErrorOccurred.invoke()
+        super.onReceivedError(view, request, error)
+    }
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
