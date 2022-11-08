@@ -93,8 +93,9 @@ dependencies {
     implementation "com.airbnb.android:mavericks-compose:$mavericks_airbnb_version"
     implementation "com.airbnb.android:mavericks-hilt:$mavericks_airbnb_version"
 
-    // Flowlayout
-    implementation "com.google.accompanist:accompanist-flowlayout:$accompanist_flowlayout_version"
+    // Accompanist
+    implementation "com.google.accompanist:accompanist-flowlayout:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
 
     // Material
     implementation "androidx.compose.material3:material3:$material3_version"
