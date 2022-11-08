@@ -1,11 +1,8 @@
 package com.example.palexis3.newssum.composable
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -16,24 +13,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
-import com.example.palexis3.newssum.helper.formatToReadableDate
-import com.example.palexis3.newssum.helper.toDate
-import com.example.palexis3.newssum.models.Article
 import com.example.palexis3.newssum.models.NEWS_CATEGORY_TYPES
 import com.example.palexis3.newssum.models.Source
-import com.example.palexis3.newssum.state.ArticlesState
 import com.example.palexis3.newssum.state.SourcesState
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.example.palexis3.newssum.viewmodels.SourceViewModel
@@ -47,18 +38,12 @@ fun HomeScreen(
     sourceViewModel: SourceViewModel,
     goToArticleDetailsScreen: () -> Unit
 ) {
-    var headlineCategory by rememberSaveable { mutableStateOf(NEWS_CATEGORY_TYPES[0]) }
     var sourceCategory by rememberSaveable { mutableStateOf("") }
-
-    LaunchedEffect(key1 = headlineCategory) {
-        articleViewModel.getHeadlines(category = headlineCategory)
-    }
 
     LaunchedEffect(key1 = sourceCategory) {
         sourceViewModel.getSources(category = sourceCategory)
     }
 
-    val articlesState by articleViewModel.collectAsState()
     val sourcesState by sourceViewModel.collectAsState()
 
     LazyColumn(
@@ -67,37 +52,12 @@ fun HomeScreen(
             .padding(12.dp)
     ) {
         item {
-            HeadlineTitleRow(selectedCategory = { category ->
-                headlineCategory = category
-            })
-            Spacer(Modifier.height(8.dp))
-            ShowHeadlinesState(
-                articlesState = articlesState,
-                articleSelected = { article ->
-                    articleViewModel.setCurrentArticle(article)
-                    goToArticleDetailsScreen()
-                }
-            )
-
-            Spacer(Modifier.height(72.dp))
-
             SourcesTitleRow(selectedCategory = { category ->
                 sourceCategory = category
             })
             Spacer(Modifier.height(16.dp))
             ShowNewsSources(sourcesState = sourcesState)
         }
-    }
-}
-
-@Composable
-fun HeadlineTitleRow(selectedCategory: (String) -> Unit) {
-    Column {
-        TitleHeader(title = R.string.header_title)
-        Spacer(modifier = Modifier.height(4.dp))
-        CategoryMenuBox(
-            NEWS_CATEGORY_TYPES[0], selectedCategory = selectedCategory
-        )
     }
 }
 
@@ -236,103 +196,6 @@ fun SourceCard(source: Source, modifier: Modifier = Modifier) {
                         text = category,
                         modifier = Modifier.padding(4.dp),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ShowHeadlinesState(
-    articlesState: ArticlesState,
-    articleSelected: (Article) -> Unit
-) {
-    when (val state = articlesState.articles) {
-        is Loading -> {
-            LoadingIcon()
-        }
-        is Fail -> {
-            ErrorText(title = R.string.header_error)
-        }
-        is Success -> {
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(350.dp)
-            ) {
-                val items = state.invoke()
-                if (items.isEmpty()) {
-                    item {
-                        ErrorText(title = R.string.header_error)
-                    }
-                } else {
-                    items(items, itemContent = { article ->
-                        HeadlineCard(
-                            article = article,
-                            articleSelected = articleSelected
-                        )
-                    })
-                }
-            }
-        }
-        else -> {}
-    }
-}
-
-@Composable
-fun HeadlineCard(
-    article: Article,
-    articleSelected: (Article) -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .padding(12.dp)
-            .aspectRatio(1f)
-            .clickable { articleSelected(article) },
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
-    ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            AsyncImage(
-                model = article.urlToImage,
-                contentDescription = "Headline Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
-            )
-
-            Spacer(Modifier.height(8.dp))
-
-            Column(modifier = Modifier.padding(12.dp)) {
-                val title = article.title
-                if (title != null) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.ExtraBold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(Modifier.height(4.dp))
-                }
-
-                val publishedAt = article.publishedAt
-                if (publishedAt != null) {
-                    val date = publishedAt.toDate().formatToReadableDate()
-                    Text(text = date, style = MaterialTheme.typography.bodyMedium)
-                    Spacer(Modifier.height(4.dp))
-                }
-
-                val description = article.description
-                if (description != null) {
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 4,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
