@@ -51,15 +51,18 @@ fun ShowArticleState(article: Article, closeScreen: () -> Unit) {
     LazyColumn {
         item {
             Box(Modifier.fillMaxWidth()) {
-                AsyncImage(
-                    model = article.urlToImage,
-                    contentDescription = "Article Image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp),
-                    contentScale = ContentScale.Crop,
-                    alignment = Center
-                )
+                val urlImage = article.urlToImage
+                if (urlImage != null) {
+                    AsyncImage(
+                        model = urlImage,
+                        contentDescription = "Article Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp),
+                        contentScale = ContentScale.Crop,
+                        alignment = Center
+                    )
+                }
                 IconButton(
                     onClick = closeScreen,
                     modifier = Modifier
@@ -69,7 +72,7 @@ fun ShowArticleState(article: Article, closeScreen: () -> Unit) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Go Back",
-                        tint = Color.White
+                        tint = if (urlImage != null) Color.White else Color.Unspecified
                     )
                 }
             }
@@ -119,12 +122,11 @@ fun ShowArticleState(article: Article, closeScreen: () -> Unit) {
                     Spacer(Modifier.height(2.dp))
                 }
 
-                Spacer(Modifier.height(20.dp))
-
                 val articleUrl = article.url
                 val content = article.content
 
                 if (articleUrl != null) {
+                    Spacer(Modifier.height(20.dp))
                     var showWebView by remember { mutableStateOf(true) }
                     if (showWebView) {
                         ShowWebView(
@@ -147,13 +149,10 @@ fun ShowContentSection(content: String?) {
     if (content != null) {
         Text(text = content, style = MaterialTheme.typography.bodyLarge)
     } else {
-        Box {
-            Text(
-                text = stringResource(id = R.string.article_content_error),
-                style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.align(Center)
-            )
-        }
+        Text(
+            text = stringResource(id = R.string.article_content_error),
+            style = MaterialTheme.typography.labelMedium
+        )
     }
 }
 

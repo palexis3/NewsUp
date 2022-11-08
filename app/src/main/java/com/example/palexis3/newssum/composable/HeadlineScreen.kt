@@ -7,8 +7,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -20,6 +20,7 @@ import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
+import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.helper.formatToReadableDate
 import com.example.palexis3.newssum.helper.toDate
 import com.example.palexis3.newssum.models.Article
@@ -39,8 +40,47 @@ fun HeadlineScreen(
     articleViewModel: ArticleViewModel,
     goToArticleDetailsScreen: () -> Unit
 ) {
-    var headlineCategory by rememberSaveable { mutableStateOf(NEWS_CATEGORY_TYPES[0]) }
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
 
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        TitleHeader(
+            modifier = Modifier.align(CenterHorizontally),
+            title = R.string.headlines
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        HorizontalTabs(
+            scope = coroutineScope,
+            pagerState = pagerState
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        HorizontalPager(
+            modifier = Modifier.padding(12.dp),
+            count = NEWS_CATEGORY_TYPES.size,
+            state = pagerState
+        ) { currentPage ->
+
+            ShowPagerState(
+                headlineCategory = NEWS_CATEGORY_TYPES[currentPage],
+                articleViewModel = articleViewModel,
+                goToArticleDetailsScreen = goToArticleDetailsScreen
+            )
+        }
+    }
+}
+
+@Composable
+fun ShowPagerState(
+    headlineCategory: String,
+    articleViewModel: ArticleViewModel,
+    goToArticleDetailsScreen: () -> Unit
+) {
     LaunchedEffect(key1 = headlineCategory) {
         articleViewModel.getHeadlines(category = headlineCategory)
     }
@@ -48,41 +88,15 @@ fun HeadlineScreen(
     val articlesState by articleViewModel.collectAsState()
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
-
-        val pagerState = rememberPagerState()
-        val coroutineScope = rememberCoroutineScope()
-
-        // TODO: Add headline title and change padding for tabs
-
-        HorizontalTabs(scope = coroutineScope, pagerState = pagerState)
-
-        // TODO: Add space between tabs and pager
-
-        HorizontalPager(
-            count = NEWS_CATEGORY_TYPES.size,
-            state = pagerState
-        ) { currentPage ->
-            // TODO: Fix horizontal pager jank by setting this value in the HorizontalTab selection lambda
-            // setting the headline category will help fetch the list of headlines
-            // for a respective category since it's a key in our LaunchedEffect
-            headlineCategory = NEWS_CATEGORY_TYPES[currentPage]
-
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                ShowHeadlinesState(
-                    articlesState = articlesState,
-                    articleSelected = { article ->
-                        articleViewModel.setCurrentArticle(article)
-                        goToArticleDetailsScreen()
-                    }
-                )
+        ShowHeadlinesState(
+            articlesState = articlesState,
+            articleSelected = { article ->
+                articleViewModel.setCurrentArticle(article)
+                goToArticleDetailsScreen()
             }
-        }
+        )
     }
 }
 
@@ -93,17 +107,21 @@ fun ShowHeadlinesState(
 ) {
     when (val state = articlesState.articles) {
         is Loading -> {
-            LoadingIcon()
+            Box {
+                LoadingIcon()
+            }
         }
         is Fail -> {
-            ErrorText(title = com.example.palexis3.newssum.R.string.header_error)
+            Box {
+                ErrorText(title = R.string.header_error)
+            }
         }
         is Success -> {
             LazyColumn {
                 val items = state.invoke()
                 if (items.isEmpty()) {
                     item {
-                        ErrorText(title = com.example.palexis3.newssum.R.string.header_error)
+                        ErrorText(title = R.string.header_error)
                     }
                 } else {
                     items(items, itemContent = { article ->
@@ -133,17 +151,19 @@ fun HeadlineCard(
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            AsyncImage(
-                model = article.urlToImage,
-                contentDescription = "Headline Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
-            )
-
-            Spacer(Modifier.height(8.dp))
+            val urlImage = article.urlToImage
+            if (urlImage != null) {
+                AsyncImage(
+                    model = urlImage,
+                    contentDescription = "Headline Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center
+                )
+                Spacer(Modifier.height(8.dp))
+            }
 
             Column(modifier = Modifier.padding(12.dp)) {
                 val title = article.title
