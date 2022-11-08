@@ -163,6 +163,10 @@ fun ShowWebView(url: String) {
     }
 }
 
+/**
+ *  TODO: Add a lambda to capture whether or not the webview was able to successfully load URL else
+ *  send an exception state to turn the Webview box visibility to false
+ */
 class LoadingWebViewClient(private val loadingState: (Boolean) -> Unit) : WebViewClient() {
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {

@@ -116,6 +116,7 @@ fun ShowNewsSources(sourcesState: SourcesState) {
         is Success -> {
             val cellWidthSize: Dp = LocalConfiguration.current.screenWidthDp.dp / 3
 
+            // TODO: Fix FlowRow card alignment
             FlowRow(
                 mainAxisSize = SizeMode.Expand
             ) {

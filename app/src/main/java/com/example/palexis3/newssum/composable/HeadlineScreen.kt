@@ -56,12 +56,17 @@ fun HeadlineScreen(
         val pagerState = rememberPagerState()
         val coroutineScope = rememberCoroutineScope()
 
+        // TODO: Add headline title and change padding for tabs
+
         HorizontalTabs(scope = coroutineScope, pagerState = pagerState)
+
+        // TODO: Add space between tabs and pager
 
         HorizontalPager(
             count = NEWS_CATEGORY_TYPES.size,
             state = pagerState
         ) { currentPage ->
+            // TODO: Fix horizontal pager jank by setting this value in the HorizontalTab selection lambda
             // setting the headline category will help fetch the list of headlines
             // for a respective category since it's a key in our LaunchedEffect
             headlineCategory = NEWS_CATEGORY_TYPES[currentPage]
