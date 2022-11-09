@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -120,24 +120,29 @@ fun ShowArticleState(
 
                 val articleUrl = article.url ?: ""
                 if (articleUrl.isNotEmpty()) {
+                    Spacer(Modifier.height(4.dp))
                     ElevatedButton(
+                        modifier = Modifier.align(End),
                         elevation = ButtonDefaults.buttonElevation(6.dp),
                         onClick = { goToWebView(articleUrl) }
                     ) {
-                        Icon(imageVector = Icons.Default.Check, contentDescription = "")
-                        Spacer(Modifier.width(2.dp))
-                        Text(text = stringResource(id = R.string.article_source))
+                        Text(text = stringResource(id = R.string.open_web_version))
                     }
                 }
 
+                Spacer(Modifier.height(20.dp))
+
                 val content = article.content ?: ""
-                if (content.isEmpty()) {
-                    Text(text = content, style = MaterialTheme.typography.bodyLarge)
-                } else {
-                    Text(
-                        text = stringResource(id = R.string.article_content_error),
-                        style = MaterialTheme.typography.labelMedium
-                    )
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    if (content.isNotEmpty()) {
+                        Text(text = content, style = MaterialTheme.typography.bodyLarge)
+                    } else {
+                        Text(
+                            text = stringResource(id = R.string.article_content_error),
+                            style = MaterialTheme.typography.labelMedium,
+                            modifier = Modifier.align(Center)
+                        )
+                    }
                 }
             }
         }
