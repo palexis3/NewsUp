@@ -19,9 +19,11 @@ import com.airbnb.mvrx.compose.mavericksViewModel
 import com.example.palexis3.newssum.composable.ArticleDetailsScreen
 import com.example.palexis3.newssum.composable.HeadlineScreen
 import com.example.palexis3.newssum.composable.NewsSourcesScreen
+import com.example.palexis3.newssum.composable.WebViewScreen
 import com.example.palexis3.newssum.navigation.Screen
 import com.example.palexis3.newssum.navigation.bottomNavItems
 import com.example.palexis3.newssum.navigation.navigateSingleTopTo
+import com.example.palexis3.newssum.navigation.navigateToWebView
 import com.example.palexis3.newssum.theme.AppTheme
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.example.palexis3.newssum.viewmodels.SourceViewModel
@@ -89,12 +91,28 @@ fun ShowNewsApp() {
                     articleViewModel = articleViewModel,
                     closeScreen = {
                         navController.popBackStack()
+                    },
+                    goToWebView = { url ->
+                        navController.navigateToWebView(url)
                     }
                 )
             }
 
             composable(route = Screen.NewsSources.route) {
                 NewsSourcesScreen(sourceViewModel = sourceViewModel)
+            }
+
+            composable(
+                route = Screen.WebView.routeWithArg,
+                arguments = Screen.WebView.arguments
+            ) { navBackStackEntry ->
+                val webUrl = navBackStackEntry.arguments?.getString(Screen.WebView.webUrlArg)
+                if (webUrl != null) {
+                    WebViewScreen(
+                        url = webUrl,
+                        closeScreen = { navController.popBackStack() }
+                    )
+                }
             }
         }
     }

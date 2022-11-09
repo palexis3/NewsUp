@@ -11,3 +11,6 @@ fun NavHostController.navigateSingleTopTo(route: String) =
         launchSingleTop = true
         restoreState = true
     }
+
+fun NavHostController.navigateToWebView(url: String) =
+    this.navigateSingleTopTo("${Screen.WebView.route}/$url")
