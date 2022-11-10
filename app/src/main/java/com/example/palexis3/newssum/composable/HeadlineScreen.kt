@@ -43,6 +43,15 @@ fun HeadlineScreen(
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            val category = NEWS_CATEGORY_TYPES[page]
+            articleViewModel.getHeadlines(category = category)
+        }
+    }
+
+    val articlesState by articleViewModel.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,39 +73,15 @@ fun HeadlineScreen(
             modifier = Modifier.padding(12.dp),
             count = NEWS_CATEGORY_TYPES.size,
             state = pagerState
-        ) { currentPage ->
-
-            ShowPagerState(
-                headlineCategory = NEWS_CATEGORY_TYPES[currentPage],
-                articleViewModel = articleViewModel,
-                goToArticleDetailsScreen = goToArticleDetailsScreen
+        ) {
+            ShowHeadlinesState(
+                articlesState = articlesState,
+                articleSelected = { article ->
+                    articleViewModel.setCurrentArticle(article)
+                    goToArticleDetailsScreen()
+                }
             )
         }
-    }
-}
-
-@Composable
-fun ShowPagerState(
-    headlineCategory: String,
-    articleViewModel: ArticleViewModel,
-    goToArticleDetailsScreen: () -> Unit
-) {
-    LaunchedEffect(key1 = headlineCategory) {
-        articleViewModel.getHeadlines(category = headlineCategory)
-    }
-
-    val articlesState by articleViewModel.collectAsState()
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        ShowHeadlinesState(
-            articlesState = articlesState,
-            articleSelected = { article ->
-                articleViewModel.setCurrentArticle(article)
-                goToArticleDetailsScreen()
-            }
-        )
     }
 }
 
@@ -106,11 +91,7 @@ fun ShowHeadlinesState(
     articleSelected: (Article) -> Unit
 ) {
     when (val state = articlesState.articles) {
-        is Loading -> {
-            Box {
-                LoadingIcon()
-            }
-        }
+        is Loading -> {}
         is Fail -> {
             Box {
                 ErrorText(title = R.string.header_error)
@@ -146,7 +127,6 @@ fun HeadlineCard(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
             .padding(12.dp)
-            .aspectRatio(1f)
             .clickable { articleSelected(article) },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
