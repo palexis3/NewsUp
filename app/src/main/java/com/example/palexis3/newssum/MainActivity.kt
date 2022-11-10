@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,21 +55,36 @@ fun ShowNewsApp() {
     val sourceViewModel: SourceViewModel = mavericksViewModel()
 
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    val bottomBarVisible = rememberSaveable { mutableStateOf(true) }
+    when (navBackStackEntry?.destination?.route) {
+        Screen.WebView.routeWithArgs -> {
+            bottomBarVisible.value = false
+        }
+        Screen.ArticleDetails.route -> {
+            bottomBarVisible.value = false
+        }
+        else -> {
+            bottomBarVisible.value = true
+        }
+    }
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                bottomNavItems.forEach { screen ->
-                    NavigationBarItem(
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigateSingleTopTo(screen.route)
-                        },
-                        label = { Text(stringResource(id = screen.title)) },
-                        icon = {}
-                    )
+            if (bottomBarVisible.value) {
+                NavigationBar {
+                    val currentDestination = navBackStackEntry?.destination
+                    bottomNavItems.forEach { screen ->
+                        NavigationBarItem(
+                            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                            onClick = {
+                                navController.navigateSingleTopTo(screen.route)
+                            },
+                            label = { Text(stringResource(id = screen.title)) },
+                            icon = {}
+                        )
+                    }
                 }
             }
         }
@@ -103,7 +120,7 @@ fun ShowNewsApp() {
             }
 
             composable(
-                route = Screen.WebView.routeWithArg,
+                route = Screen.WebView.routeWithArgs,
                 arguments = Screen.WebView.arguments
             ) { navBackStackEntry ->
                 val webUrl = navBackStackEntry.arguments?.getString(Screen.WebView.webUrlArg)

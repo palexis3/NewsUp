@@ -12,20 +12,25 @@ sealed class Screen {
         override val route: String = "Headlines"
         override val title: Int = R.string.headlines
     }
+
     object ArticleDetails : Screen() {
         override val route: String = "ArticleDetails"
         override val title: Int = R.string.article_details
     }
+
     object NewsSources : Screen() {
         override val route: String = "NewsSources"
         override val title: Int = R.string.news_sources
     }
+
     object WebView : Screen() {
         override val route: String = "WebView"
         override val title: Int = R.string.webview
-        const val webUrlArg: String = "web_url"
-        val routeWithArg = "$route/{$webUrlArg}"
-        val arguments = listOf(navArgument(webUrlArg) { type = NavType.StringType })
+        const val webUrlArg = "web_url"
+        val routeWithArgs = "$route/{$webUrlArg}"
+        val arguments = listOf(
+            navArgument(webUrlArg) { type = NavType.StringType }
+        )
     }
 }
 
