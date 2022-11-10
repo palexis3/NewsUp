@@ -21,7 +21,7 @@ class ArticleViewModel @AssistedInject constructor(
         private set
 
     fun getHeadlines(
-        category: String?,
+        category: String? = null,
         keyword: String? = null,
         sources: String? = null,
         country: String? = "us"

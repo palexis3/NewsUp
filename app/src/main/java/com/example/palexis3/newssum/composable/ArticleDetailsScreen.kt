@@ -33,8 +33,8 @@ fun ArticleDetailsScreen(
     val article by remember { articleViewModel.currentArticle }
 
     // Close the screen automatically if the article is null
-    article?.let { it ->
-        ShowArticleState(it, closeScreen, goToWebView)
+    article?.let { item ->
+        ShowArticleState(item, closeScreen, goToWebView)
     } ?: closeScreen()
 }
 
