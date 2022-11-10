@@ -7,14 +7,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
@@ -26,6 +25,7 @@ import com.example.palexis3.newssum.models.Source
 import com.example.palexis3.newssum.state.SourcesState
 import com.example.palexis3.newssum.viewmodels.SourceViewModel
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 
 @Composable
@@ -40,33 +40,36 @@ fun NewsSourcesScreen(
 
     val sourcesState by sourceViewModel.collectAsState()
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp)
-    ) {
+    LazyColumn {
         item {
-            SourcesTitleRow(selectedCategory = { category ->
-                sourceCategory = category
-            })
-            Spacer(Modifier.height(16.dp))
-            ShowNewsSources(sourcesState = sourcesState)
-        }
-    }
-}
+            Column(modifier = Modifier.fillMaxWidth()) {
+                TitleHeader(
+                    modifier = Modifier.align(CenterHorizontally), title = R.string.news_sources
+                )
 
-@Composable
-fun SourcesTitleRow(selectedCategory: (String) -> Unit) {
-    Column {
-        TitleHeader(title = R.string.news_sources)
-        Spacer(modifier = Modifier.height(4.dp))
-        CategoryMenuBox(selectedCategory = selectedCategory)
+                Spacer(modifier = Modifier.height(12.dp))
+
+                CategoryMenuBox(
+                    modifier = Modifier.padding(12.dp),
+                    selectedCategory = { selectedCategory ->
+                        sourceCategory = selectedCategory
+                    }
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                ShowNewsSources(
+                    modifier = Modifier.padding(12.dp), sourcesState = sourcesState
+                )
+            }
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryMenuBox(
+    modifier: Modifier = Modifier,
     initialValue: String = "",
     selectedCategory: (String) -> Unit
 ) {
@@ -76,7 +79,7 @@ fun CategoryMenuBox(
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = Modifier.clip(RoundedCornerShape(8.dp))
+        modifier = modifier.clip(RoundedCornerShape(8.dp))
     ) {
         TextField(
             modifier = Modifier.menuAnchor(),
@@ -91,41 +94,46 @@ fun CategoryMenuBox(
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             NEWS_CATEGORY_TYPES.forEach { selectionOption ->
-                DropdownMenuItem(
-                    text = { Text(text = selectionOption) },
-                    onClick = {
-                        selectedOptionText = selectionOption
-                        selectedCategory(selectionOption)
-                        expanded = false
-                    }
-                )
+                DropdownMenuItem(text = { Text(text = selectionOption) }, onClick = {
+                    selectedOptionText = selectionOption
+                    selectedCategory(selectionOption)
+                    expanded = false
+                })
             }
         }
     }
 }
 
 @Composable
-fun ShowNewsSources(sourcesState: SourcesState) {
+fun ShowNewsSources(
+    modifier: Modifier = Modifier,
+    sourcesState: SourcesState
+) {
     when (val state = sourcesState.sources) {
         is Loading -> {
-            LoadingIcon()
+            Box {
+                LoadingIcon(modifier = Modifier.align(Center))
+            }
         }
         is Fail -> {
-            ErrorText(title = R.string.sources_error)
+            Box {
+                ErrorText(
+                    modifier = Modifier.align(Center), title = R.string.sources_error
+                )
+            }
         }
         is Success -> {
-            val cellWidthSize: Dp = LocalConfiguration.current.screenWidthDp.dp / 3
-
-            // TODO: Fix FlowRow card alignment
             FlowRow(
-                mainAxisSize = SizeMode.Expand
+                modifier = modifier,
+                mainAxisSize = SizeMode.Expand,
+                mainAxisAlignment = MainAxisAlignment.Start
             ) {
                 val items = state.invoke()
                 if (items.isEmpty()) {
                     ErrorText(title = R.string.sources_error)
                 } else {
                     items.forEach { source ->
-                        SourceCard(source, Modifier.width(cellWidthSize))
+                        SourceCard(source)
                     }
                 }
             }
@@ -137,30 +145,22 @@ fun ShowNewsSources(sourcesState: SourcesState) {
 @Composable
 fun SourceCard(source: Source, modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier.padding(bottom = 20.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
         Column(
             Modifier.padding(12.dp)
         ) {
-            if (source.name != null) {
-                var name by remember { mutableStateOf(source.name) }
-                val minLines = 2
+            val name = source.name
+            if (name != null) {
                 Text(
                     text = name,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.ExtraBold,
-                    maxLines = minLines,
-                    overflow = TextOverflow.Ellipsis,
-                    onTextLayout = { textLayoutResult ->
-                        // This will recompose to ensure that the text item will occupy two lines
-                        // although some strings only require 1. This is to make sure the source cards
-                        // consist with of the same paddings and height.
-                        // Reference: https://stackoverflow.com/a/72639044/3681456
-                        if ((textLayoutResult.lineCount) < minLines) {
-                            name = source.name + "\n ".repeat(minLines - textLayoutResult.lineCount)
-                        }
-                    }
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(Modifier.height(4.dp))
             }
@@ -183,13 +183,11 @@ fun SourceCard(source: Source, modifier: Modifier = Modifier) {
                         width = 1.dp, color = Color.Black
                     ),
                     shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier
-                        .height(32.dp)
-                        .align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(CenterHorizontally)
                 ) {
                     Text(
                         text = category,
-                        modifier = Modifier.padding(4.dp),
+                        modifier = Modifier.padding(8.dp),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )

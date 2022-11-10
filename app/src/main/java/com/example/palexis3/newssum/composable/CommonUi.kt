@@ -34,9 +34,11 @@ fun TitleHeader(modifier: Modifier = Modifier, @StringRes title: Int) {
 
 @Composable
 fun ErrorText(
+    modifier: Modifier = Modifier,
     @StringRes title: Int
 ) {
     Text(
+        modifier = modifier,
         text = stringResource(id = title),
         style = MaterialTheme.typography.headlineMedium,
         fontWeight = FontWeight.Bold
