@@ -1,6 +1,6 @@
 package com.example.palexis3.newssum.composable
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -31,6 +30,7 @@ import com.google.accompanist.flowlayout.SizeMode
 @Composable
 fun NewsSourcesScreen(
     newsSourcesViewModel: NewsSourcesViewModel,
+    goToNewsSourcesDetailsScreen: () -> Unit
 ) {
     var newsSourceCategory by rememberSaveable { mutableStateOf("") }
 
@@ -38,7 +38,7 @@ fun NewsSourcesScreen(
         newsSourcesViewModel.getNewsSources(category = newsSourceCategory)
     }
 
-    val sourcesState by newsSourcesViewModel.collectAsState()
+    val newsSourcesState by newsSourcesViewModel.collectAsState()
 
     LazyColumn {
         item {
@@ -59,7 +59,12 @@ fun NewsSourcesScreen(
                 Spacer(Modifier.height(8.dp))
 
                 ShowNewsSources(
-                    modifier = Modifier.padding(12.dp), sourcesState = sourcesState
+                    modifier = Modifier.padding(12.dp),
+                    newsSourcesState = newsSourcesState,
+                    newsSourceSelected = { newsSource ->
+                        newsSourcesViewModel.setCurrentNewsSource(newsSource)
+                        goToNewsSourcesDetailsScreen()
+                    }
                 )
             }
         }
@@ -107,9 +112,10 @@ fun CategoryMenuBox(
 @Composable
 fun ShowNewsSources(
     modifier: Modifier = Modifier,
-    sourcesState: NewsSourcesState
+    newsSourcesState: NewsSourcesState,
+    newsSourceSelected: (NewsSource) -> Unit
 ) {
-    when (val state = sourcesState.newsSources) {
+    when (val state = newsSourcesState.newsSources) {
         is Loading -> {
             Box {
                 LoadingIcon(modifier = Modifier.align(Center))
@@ -132,8 +138,11 @@ fun ShowNewsSources(
                 if (items.isEmpty()) {
                     ErrorText(title = R.string.sources_error)
                 } else {
-                    items.forEach { source ->
-                        NewsSourceCard(source)
+                    items.forEach { newsSource ->
+                        NewsSourceCard(
+                            newsSource,
+                            newsSourceSelected = newsSourceSelected
+                        )
                     }
                 }
             }
@@ -143,18 +152,23 @@ fun ShowNewsSources(
 }
 
 @Composable
-fun NewsSourceCard(source: NewsSource, modifier: Modifier = Modifier) {
+fun NewsSourceCard(
+    newsSource: NewsSource,
+    newsSourceSelected: (NewsSource) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 20.dp),
+            .padding(bottom = 20.dp)
+            .clickable { newsSourceSelected(newsSource) },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
         Column(
             Modifier.padding(12.dp)
         ) {
-            val name = source.name
-            if (name != null) {
+            val name = newsSource.name ?: ""
+            if (name.isNotEmpty()) {
                 Text(
                     text = name,
                     style = MaterialTheme.typography.headlineSmall,
@@ -165,8 +179,8 @@ fun NewsSourceCard(source: NewsSource, modifier: Modifier = Modifier) {
                 Spacer(Modifier.height(4.dp))
             }
 
-            val description = source.description
-            if (description != null) {
+            val description = newsSource.description ?: ""
+            if (description.isNotEmpty()) {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
@@ -176,22 +190,12 @@ fun NewsSourceCard(source: NewsSource, modifier: Modifier = Modifier) {
                 Spacer(Modifier.height(4.dp))
             }
 
-            val category = source.category
-            if (category != null) {
-                OutlinedCard(
-                    border = BorderStroke(
-                        width = 1.dp, color = Color.Black
-                    ),
-                    shape = RoundedCornerShape(16.dp),
+            val category = newsSource.category ?: ""
+            if (category.isNotEmpty()) {
+                CategoryOutlinedText(
+                    category = category,
                     modifier = Modifier.align(CenterHorizontally)
-                ) {
-                    Text(
-                        text = category,
-                        modifier = Modifier.padding(8.dp),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                )
             }
         }
     }

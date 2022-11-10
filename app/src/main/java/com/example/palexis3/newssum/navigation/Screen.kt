@@ -32,6 +32,11 @@ sealed class Screen {
             navArgument(webUrlArg) { type = NavType.StringType }
         )
     }
+
+    object NewsSourceDetails : Screen() {
+        override val route: String = "NewsSourceDetails"
+        override val title: Int = R.string.news_sources_details
+    }
 }
 
 val bottomNavItems = listOf(

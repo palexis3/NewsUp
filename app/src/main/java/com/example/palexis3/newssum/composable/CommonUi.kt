@@ -1,6 +1,7 @@
 package com.example.palexis3.newssum.composable
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,7 +56,7 @@ fun ErrorText(
     Text(
         modifier = modifier,
         text = stringResource(id = title),
-        style = MaterialTheme.typography.headlineMedium,
+        style = MaterialTheme.typography.labelMedium,
         fontWeight = FontWeight.Bold
     )
 }
@@ -69,11 +71,7 @@ fun ShowArticlesState(
     articleSelected: (Article) -> Unit
 ) {
     when (val state = articlesState.articles) {
-        is Loading -> {
-            Box {
-                LoadingIcon()
-            }
-        }
+        is Loading -> {}
         is Fail -> {
             Box {
                 ErrorText(title = R.string.header_error)
@@ -158,5 +156,23 @@ fun ArticleCard(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CategoryOutlinedText(category: String, modifier: Modifier = Modifier) {
+    OutlinedCard(
+        border = BorderStroke(
+            width = 1.dp, color = Color.Black
+        ),
+        shape = RoundedCornerShape(20.dp),
+        modifier = modifier
+    ) {
+        Text(
+            text = category,
+            modifier = Modifier.padding(8.dp),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }

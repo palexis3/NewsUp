@@ -13,6 +13,7 @@
     <string name="webview">WebView</string>
     <string name="open_web_version">Open Web Version</string>
     <string name="articles">Articles</string>
+    <string name="news_sources_details">News Sources Details</string>
 
     <string name="header_error">Error fetching headlines. Try refreshing</string>
     <string name="sources_error">Error fetching news sources. Try refreshing</string>
