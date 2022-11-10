@@ -1,9 +1,5 @@
 package com.example.palexis3.newssum.composable
 
-import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -11,20 +7,16 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.helper.formatToReadableDate
@@ -35,30 +27,38 @@ import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 @Composable
 fun ArticleDetailsScreen(
     articleViewModel: ArticleViewModel,
-    closeScreen: () -> Unit
+    closeScreen: () -> Unit,
+    goToWebView: (String) -> Unit
 ) {
     val article by remember { articleViewModel.currentArticle }
 
     // Close the screen automatically if the article is null
     article?.let { it ->
-        ShowArticleState(it, closeScreen = closeScreen)
+        ShowArticleState(it, closeScreen, goToWebView)
     } ?: closeScreen()
 }
 
 @Composable
-fun ShowArticleState(article: Article, closeScreen: () -> Unit) {
+fun ShowArticleState(
+    article: Article,
+    closeScreen: () -> Unit,
+    goToWebView: (String) -> Unit
+) {
     LazyColumn {
         item {
             Box(Modifier.fillMaxWidth()) {
-                AsyncImage(
-                    model = article.urlToImage,
-                    contentDescription = "Article Image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp),
-                    contentScale = ContentScale.Crop,
-                    alignment = Center
-                )
+                val urlImage = article.urlToImage
+                if (urlImage != null) {
+                    AsyncImage(
+                        model = urlImage,
+                        contentDescription = "Article Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp),
+                        contentScale = ContentScale.Crop,
+                        alignment = Center
+                    )
+                }
                 IconButton(
                     onClick = closeScreen,
                     modifier = Modifier
@@ -68,7 +68,7 @@ fun ShowArticleState(article: Article, closeScreen: () -> Unit) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Go Back",
-                        tint = Color.White
+                        tint = if (urlImage != null) Color.White else Color.Unspecified
                     )
                 }
             }
@@ -118,60 +118,33 @@ fun ShowArticleState(article: Article, closeScreen: () -> Unit) {
                     Spacer(Modifier.height(2.dp))
                 }
 
+                val articleUrl = article.url ?: ""
+                if (articleUrl.isNotEmpty()) {
+                    Spacer(Modifier.height(4.dp))
+                    ElevatedButton(
+                        modifier = Modifier.align(End),
+                        elevation = ButtonDefaults.buttonElevation(6.dp),
+                        onClick = { goToWebView(articleUrl) }
+                    ) {
+                        Text(text = stringResource(id = R.string.open_web_version))
+                    }
+                }
+
                 Spacer(Modifier.height(20.dp))
 
-                val content = article.content
-                val articleUrl = article.url
-
-                if (articleUrl != null) {
-                    ShowWebView(url = articleUrl)
-                } else if (content != null) {
-                    Text(text = content, style = MaterialTheme.typography.bodyLarge)
-                } else {
-                    Text(
-                        text = stringResource(id = R.string.article_content_error),
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.align(CenterHorizontally)
-                    )
+                val content = article.content ?: ""
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    if (content.isNotEmpty()) {
+                        Text(text = content, style = MaterialTheme.typography.bodyLarge)
+                    } else {
+                        Text(
+                            text = stringResource(id = R.string.article_content_error),
+                            style = MaterialTheme.typography.labelMedium,
+                            modifier = Modifier.align(Center)
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-@SuppressLint("SetJavaScriptEnabled")
-@Composable
-fun ShowWebView(url: String) {
-    val context = LocalContext.current
-    var isLoadingIconVisible by remember { mutableStateOf(false) }
-
-    Box {
-        AndroidView(factory = {
-            WebView(context).apply {
-                val loadingWebViewClient = LoadingWebViewClient { isLoading ->
-                    isLoadingIconVisible = isLoading
-                }
-                webViewClient = loadingWebViewClient
-                loadUrl(url)
-                settings.javaScriptEnabled = true
-            }
-        })
-
-        if (isLoadingIconVisible) {
-            CircularProgressIndicator(Modifier.align(Center))
-        }
-    }
-}
-
-class LoadingWebViewClient(private val loadingState: (Boolean) -> Unit) : WebViewClient() {
-
-    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-        super.onPageStarted(view, url, favicon)
-        loadingState(true)
-    }
-
-    override fun onPageFinished(view: WebView?, url: String?) {
-        loadingState(false)
-        super.onPageFinished(view, url)
     }
 }

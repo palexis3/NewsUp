@@ -1,12 +1,37 @@
 package com.example.palexis3.newssum.navigation
 
-import androidx.annotation.StringRes
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.example.palexis3.newssum.R
 
-sealed class Screen(val route: String, @StringRes val title: Int) {
-    object Headlines : Screen("Headlines", R.string.headlines)
-    object ArticleDetails : Screen("ArticleDetails", R.string.article_details)
-    object NewsSources : Screen("NewsSources", R.string.news_sources)
+sealed class Screen {
+    abstract val route: String
+    abstract val title: Int
+
+    object Headlines : Screen() {
+        override val route: String = "Headlines"
+        override val title: Int = R.string.headlines
+    }
+
+    object ArticleDetails : Screen() {
+        override val route: String = "ArticleDetails"
+        override val title: Int = R.string.article_details
+    }
+
+    object NewsSources : Screen() {
+        override val route: String = "NewsSources"
+        override val title: Int = R.string.news_sources
+    }
+
+    object WebView : Screen() {
+        override val route: String = "WebView"
+        override val title: Int = R.string.webview
+        const val webUrlArg = "web_url"
+        val routeWithArgs = "$route/{$webUrlArg}"
+        val arguments = listOf(
+            navArgument(webUrlArg) { type = NavType.StringType }
+        )
+    }
 }
 
 val bottomNavItems = listOf(

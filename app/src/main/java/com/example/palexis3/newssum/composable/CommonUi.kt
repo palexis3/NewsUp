@@ -23,8 +23,9 @@ fun LoadingIcon(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TitleHeader(@StringRes title: Int) {
+fun TitleHeader(modifier: Modifier = Modifier, @StringRes title: Int) {
     Text(
+        modifier = modifier,
         text = stringResource(id = title),
         style = MaterialTheme.typography.headlineLarge,
         fontWeight = FontWeight.ExtraBold
@@ -33,9 +34,11 @@ fun TitleHeader(@StringRes title: Int) {
 
 @Composable
 fun ErrorText(
+    modifier: Modifier = Modifier,
     @StringRes title: Int
 ) {
     Text(
+        modifier = modifier,
         text = stringResource(id = title),
         style = MaterialTheme.typography.headlineMedium,
         fontWeight = FontWeight.Bold
