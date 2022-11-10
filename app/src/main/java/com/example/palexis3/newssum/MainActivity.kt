@@ -28,7 +28,7 @@ import com.example.palexis3.newssum.navigation.navigateSingleTopTo
 import com.example.palexis3.newssum.navigation.navigateToWebView
 import com.example.palexis3.newssum.theme.AppTheme
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
-import com.example.palexis3.newssum.viewmodels.SourceViewModel
+import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -52,7 +52,7 @@ fun ShowNewsApp() {
      * the NewsApi doesn't support fetching objects via an id.
      */
     val articleViewModel: ArticleViewModel = mavericksViewModel()
-    val sourceViewModel: SourceViewModel = mavericksViewModel()
+    val sourceViewModel: NewsSourcesViewModel = mavericksViewModel()
 
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -116,7 +116,7 @@ fun ShowNewsApp() {
             }
 
             composable(route = Screen.NewsSources.route) {
-                NewsSourcesScreen(sourceViewModel = sourceViewModel)
+                NewsSourcesScreen(newsSourcesViewModel = sourceViewModel)
             }
 
             composable(

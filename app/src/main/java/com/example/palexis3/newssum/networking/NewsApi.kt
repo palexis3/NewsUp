@@ -1,7 +1,7 @@
 package com.example.palexis3.newssum.networking
 
 import com.example.palexis3.newssum.models.HeadlinesResponse
-import com.example.palexis3.newssum.models.SourcesResponse
+import com.example.palexis3.newssum.models.NewsSourcesResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,11 +14,11 @@ interface NewsApi {
     ): HeadlinesResponse
 
     @GET("/v2/top-headlines/sources")
-    suspend fun getSources(
+    suspend fun getNewsSources(
         @Query("category") category: String?,
         @Query("language") language: String?,
         @Query("country") country: String?
-    ): SourcesResponse
+    ): NewsSourcesResponse
 
     @GET("/v2/top-headlines")
     suspend fun getHeadlines(

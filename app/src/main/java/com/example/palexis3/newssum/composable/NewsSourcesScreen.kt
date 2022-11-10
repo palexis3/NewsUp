@@ -21,24 +21,24 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.models.NEWS_CATEGORY_TYPES
-import com.example.palexis3.newssum.models.Source
-import com.example.palexis3.newssum.state.SourcesState
-import com.example.palexis3.newssum.viewmodels.SourceViewModel
+import com.example.palexis3.newssum.models.NewsSource
+import com.example.palexis3.newssum.state.NewsSourcesState
+import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 
 @Composable
 fun NewsSourcesScreen(
-    sourceViewModel: SourceViewModel,
+    newsSourcesViewModel: NewsSourcesViewModel,
 ) {
-    var sourceCategory by rememberSaveable { mutableStateOf("") }
+    var newsSourceCategory by rememberSaveable { mutableStateOf("") }
 
-    LaunchedEffect(key1 = sourceCategory) {
-        sourceViewModel.getSources(category = sourceCategory)
+    LaunchedEffect(key1 = newsSourceCategory) {
+        newsSourcesViewModel.getNewsSources(category = newsSourceCategory)
     }
 
-    val sourcesState by sourceViewModel.collectAsState()
+    val sourcesState by newsSourcesViewModel.collectAsState()
 
     LazyColumn {
         item {
@@ -52,7 +52,7 @@ fun NewsSourcesScreen(
                 CategoryMenuBox(
                     modifier = Modifier.padding(12.dp),
                     selectedCategory = { selectedCategory ->
-                        sourceCategory = selectedCategory
+                        newsSourceCategory = selectedCategory
                     }
                 )
 
@@ -107,9 +107,9 @@ fun CategoryMenuBox(
 @Composable
 fun ShowNewsSources(
     modifier: Modifier = Modifier,
-    sourcesState: SourcesState
+    sourcesState: NewsSourcesState
 ) {
-    when (val state = sourcesState.sources) {
+    when (val state = sourcesState.newsSources) {
         is Loading -> {
             Box {
                 LoadingIcon(modifier = Modifier.align(Center))
@@ -133,7 +133,7 @@ fun ShowNewsSources(
                     ErrorText(title = R.string.sources_error)
                 } else {
                     items.forEach { source ->
-                        SourceCard(source)
+                        NewsSourceCard(source)
                     }
                 }
             }
@@ -143,7 +143,7 @@ fun ShowNewsSources(
 }
 
 @Composable
-fun SourceCard(source: Source, modifier: Modifier = Modifier) {
+fun NewsSourceCard(source: NewsSource, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()

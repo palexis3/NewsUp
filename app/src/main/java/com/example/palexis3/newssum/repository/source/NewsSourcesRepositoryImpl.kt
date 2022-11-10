@@ -1,22 +1,22 @@
 package com.example.palexis3.newssum.repository.source
 
-import com.example.palexis3.newssum.models.Source
+import com.example.palexis3.newssum.models.NewsSource
 import com.example.palexis3.newssum.networking.NewsApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class SourceRepositoryImpl @Inject constructor(
+class NewsSourcesRepositoryImpl @Inject constructor(
     private val newsApi: NewsApi
-) : SourceRepository {
+) : NewsSourcesRepository {
 
-    override fun getSources(
+    override fun getNewsSources(
         category: String?,
         language: String?,
         country: String?
-    ): Flow<List<Source>> =
+    ): Flow<List<NewsSource>> =
         flow {
-            val response = newsApi.getSources(category, language, country)
+            val response = newsApi.getNewsSources(category, language, country)
             val items = if (response.status == "ok") {
                 response.sources
             } else {
