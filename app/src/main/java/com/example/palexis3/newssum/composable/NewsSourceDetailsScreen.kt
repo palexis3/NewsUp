@@ -14,8 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
-import com.example.palexis3.newssum.models.Article
-import com.example.palexis3.newssum.models.NewsSource
+import com.example.palexis3.newssum.models.news_api.NewsApiArticle
+import com.example.palexis3.newssum.models.news_api.NewsApiNewsSource
 import com.example.palexis3.newssum.state.ArticlesState
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
@@ -28,7 +28,7 @@ fun NewsSourceDetailsScreen(
     goToArticleDetailsScreen: () -> Unit,
     goToWebView: (String) -> Unit
 ) {
-    val newsSource by remember { newsSourcesViewModel.currentNewsSource }
+    val newsSource by remember { newsSourcesViewModel.currentNewsApiNewsSource }
 
     newsSource?.let { source ->
         // Get the headline article for this news source
@@ -53,10 +53,10 @@ fun NewsSourceDetailsScreen(
 @Composable
 fun ShowNewsSourceDetails(
     closeScreen: () -> Unit,
-    newsSource: NewsSource,
+    newsApiNewsSource: NewsApiNewsSource,
     articlesState: ArticlesState,
     goToWebView: (String) -> Unit,
-    articleSelected: (Article) -> Unit
+    articleSelected: (NewsApiArticle) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -70,7 +70,7 @@ fun ShowNewsSourceDetails(
             )
         }
 
-        val name = newsSource.name ?: ""
+        val name = newsApiNewsSource.name ?: ""
         if (name.isNotEmpty()) {
             Text(
                 text = name,
@@ -80,13 +80,13 @@ fun ShowNewsSourceDetails(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        val description = newsSource.description ?: ""
+        val description = newsApiNewsSource.description ?: ""
         if (description.isNotEmpty()) {
             Text(text = description, style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(4.dp))
         }
 
-        val newsSourceUrl = newsSource.url ?: ""
+        val newsSourceUrl = newsApiNewsSource.url ?: ""
         if (newsSourceUrl.isNotEmpty()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

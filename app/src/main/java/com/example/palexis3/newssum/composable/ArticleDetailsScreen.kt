@@ -21,7 +21,7 @@ import coil.compose.AsyncImage
 import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.helper.formatToReadableDate
 import com.example.palexis3.newssum.helper.toDate
-import com.example.palexis3.newssum.models.Article
+import com.example.palexis3.newssum.models.news_api.NewsApiArticle
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 
 @Composable
@@ -30,7 +30,7 @@ fun ArticleDetailsScreen(
     closeScreen: () -> Unit,
     goToWebView: (String) -> Unit
 ) {
-    val article by remember { articleViewModel.currentArticle }
+    val article by remember { articleViewModel.currentNewsApiArticle }
 
     // Close the screen automatically if the article is null
     article?.let { item ->
@@ -40,14 +40,14 @@ fun ArticleDetailsScreen(
 
 @Composable
 fun ShowArticleState(
-    article: Article,
+    newsApiArticle: NewsApiArticle,
     closeScreen: () -> Unit,
     goToWebView: (String) -> Unit
 ) {
     LazyColumn {
         item {
             Box(Modifier.fillMaxWidth()) {
-                val urlImage = article.urlToImage
+                val urlImage = newsApiArticle.urlToImage
                 if (urlImage != null) {
                     AsyncImage(
                         model = urlImage,
@@ -79,13 +79,13 @@ fun ShowArticleState(
                     .fillMaxWidth()
                     .padding(12.dp)
             ) {
-                val title = article.title
+                val title = newsApiArticle.title
                 if (title != null) {
                     Text(text = title, style = MaterialTheme.typography.titleLarge)
                     Spacer(Modifier.height(12.dp))
                 }
 
-                val publishedAt = article.publishedAt
+                val publishedAt = newsApiArticle.publishedAt
                 if (publishedAt != null) {
                     val date = publishedAt.toDate().formatToReadableDate()
                     Text(
@@ -96,7 +96,7 @@ fun ShowArticleState(
                     Spacer(Modifier.height(2.dp))
                 }
 
-                val newsSource = article.source?.name
+                val newsSource = newsApiArticle.source?.name
                 if (newsSource != null) {
                     val newsSourceText = "News source: $newsSource"
                     Text(
@@ -107,7 +107,7 @@ fun ShowArticleState(
                     Spacer(Modifier.height(2.dp))
                 }
 
-                val author = article.author
+                val author = newsApiArticle.author
                 if (author != null) {
                     val authorText = "Written by: $author"
                     Text(
@@ -118,7 +118,7 @@ fun ShowArticleState(
                     Spacer(Modifier.height(2.dp))
                 }
 
-                val articleUrl = article.url ?: ""
+                val articleUrl = newsApiArticle.url ?: ""
                 if (articleUrl.isNotEmpty()) {
                     Spacer(Modifier.height(4.dp))
                     ElevatedButton(
@@ -132,7 +132,7 @@ fun ShowArticleState(
 
                 Spacer(Modifier.height(20.dp))
 
-                val content = article.content ?: ""
+                val content = newsApiArticle.content ?: ""
                 Box(modifier = Modifier.fillMaxWidth()) {
                     if (content.isNotEmpty()) {
                         Text(text = content, style = MaterialTheme.typography.bodyLarge)

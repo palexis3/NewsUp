@@ -1,6 +1,6 @@
 package com.example.palexis3.newssum.repository.source
 
-import com.example.palexis3.newssum.models.NewsSource
+import com.example.palexis3.newssum.models.news_api.NewsApiNewsSource
 import com.example.palexis3.newssum.networking.NewsApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,7 +14,7 @@ class NewsSourcesRepositoryImpl @Inject constructor(
         category: String?,
         language: String?,
         country: String?
-    ): Flow<List<NewsSource>> =
+    ): Flow<List<NewsApiNewsSource>> =
         flow {
             val response = newsApi.getNewsSources(category, language, country)
             val items = if (response.status == "ok") {

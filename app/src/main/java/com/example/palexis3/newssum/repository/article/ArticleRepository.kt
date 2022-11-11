@@ -1,6 +1,6 @@
 package com.example.palexis3.newssum.repository.article
 
-import com.example.palexis3.newssum.models.Article
+import com.example.palexis3.newssum.models.news_api.NewsApiArticle
 import kotlinx.coroutines.flow.Flow
 
 interface ArticleRepository {
@@ -9,7 +9,7 @@ interface ArticleRepository {
         keyword: String?,
         sources: String?,
         country: String?
-    ): Flow<List<Article>>
+    ): Flow<List<NewsApiArticle>>
 
-    fun getEverything(keyword: String?, sortBy: String?): Flow<List<Article>>
+    fun getEverything(keyword: String?, sortBy: String?): Flow<List<NewsApiArticle>>
 }

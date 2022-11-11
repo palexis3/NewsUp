@@ -14,7 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
-private const val BASE_URL = "https://newsapi.org/"
+private const val NEWS_API_BASE_URL = "https://newsapi.org/"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -39,7 +39,7 @@ object NetworkModule {
         }.build()
 
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(NEWS_API_BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
             .client(client)
             .build()

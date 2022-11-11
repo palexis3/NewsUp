@@ -1,7 +1,7 @@
 package com.example.palexis3.newssum.networking
 
-import com.example.palexis3.newssum.models.HeadlinesResponse
-import com.example.palexis3.newssum.models.NewsSourcesResponse
+import com.example.palexis3.newssum.models.news_api.NewsApiArticlesResponse
+import com.example.palexis3.newssum.models.news_api.NewsApiNewsSourcesResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -11,14 +11,14 @@ interface NewsApi {
     suspend fun getEverything(
         @Query("q") keyword: String?,
         @Query("sortBy") sortBy: String?
-    ): HeadlinesResponse
+    ): NewsApiArticlesResponse
 
     @GET("/v2/top-headlines/sources")
     suspend fun getNewsSources(
         @Query("category") category: String?,
         @Query("language") language: String?,
         @Query("country") country: String?
-    ): NewsSourcesResponse
+    ): NewsApiNewsSourcesResponse
 
     @GET("/v2/top-headlines")
     suspend fun getArticles(
@@ -26,5 +26,5 @@ interface NewsApi {
         @Query("sources") sources: String?,
         @Query("q") keyword: String?,
         @Query("country") country: String?
-    ): HeadlinesResponse
+    ): NewsApiArticlesResponse
 }

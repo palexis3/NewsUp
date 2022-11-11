@@ -1,9 +1,9 @@
-package com.example.palexis3.newssum.models
+package com.example.palexis3.newssum.models.news_api
 
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Article(
+data class NewsApiArticle(
     val author: String?,
     val source: SourceObj?,
     val title: String?,
@@ -20,8 +20,8 @@ data class SourceObj(
     val name: String?
 )
 
-data class HeadlinesResponse(
+data class NewsApiArticlesResponse(
     val status: String,
     val totalResults: Int,
-    val articles: List<Article>
+    val newsApiArticles: List<NewsApiArticle>
 )

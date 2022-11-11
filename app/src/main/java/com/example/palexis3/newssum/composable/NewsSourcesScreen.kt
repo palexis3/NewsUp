@@ -20,7 +20,7 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.models.NEWS_API_CATEGORY_TYPES
-import com.example.palexis3.newssum.models.NewsSource
+import com.example.palexis3.newssum.models.news_api.NewsApiNewsSource
 import com.example.palexis3.newssum.state.NewsSourcesState
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
 import com.google.accompanist.flowlayout.FlowRow
@@ -97,9 +97,9 @@ fun CategoryChipGroup(
 fun ShowNewsSources(
     modifier: Modifier = Modifier,
     newsSourcesState: NewsSourcesState,
-    newsSourceSelected: (NewsSource) -> Unit
+    newsSourceSelected: (NewsApiNewsSource) -> Unit
 ) {
-    when (val state = newsSourcesState.newsSources) {
+    when (val state = newsSourcesState.newsApiNewsSources) {
         is Loading -> {
             Box {
                 LoadingIcon(modifier = Modifier.align(Center))
@@ -135,21 +135,21 @@ fun ShowNewsSources(
 
 @Composable
 fun NewsSourceCard(
-    newsSource: NewsSource,
-    newsSourceSelected: (NewsSource) -> Unit,
+    newsApiNewsSource: NewsApiNewsSource,
+    newsSourceSelected: (NewsApiNewsSource) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 20.dp)
-            .clickable { newsSourceSelected(newsSource) },
+            .clickable { newsSourceSelected(newsApiNewsSource) },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
         Column(
             Modifier.padding(12.dp)
         ) {
-            val name = newsSource.name ?: ""
+            val name = newsApiNewsSource.name ?: ""
             if (name.isNotEmpty()) {
                 Text(
                     text = name,
@@ -161,7 +161,7 @@ fun NewsSourceCard(
                 Spacer(Modifier.height(4.dp))
             }
 
-            val description = newsSource.description ?: ""
+            val description = newsApiNewsSource.description ?: ""
             if (description.isNotEmpty()) {
                 Text(
                     text = description,

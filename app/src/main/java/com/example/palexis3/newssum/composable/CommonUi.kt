@@ -25,7 +25,7 @@ import com.airbnb.mvrx.Success
 import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.helper.formatToReadableDate
 import com.example.palexis3.newssum.helper.toDate
-import com.example.palexis3.newssum.models.Article
+import com.example.palexis3.newssum.models.news_api.NewsApiArticle
 import com.example.palexis3.newssum.state.ArticlesState
 
 @Composable
@@ -68,7 +68,7 @@ fun ErrorText(
 @Composable
 fun ShowArticlesState(
     articlesState: ArticlesState,
-    articleSelected: (Article) -> Unit
+    articleSelected: (NewsApiArticle) -> Unit
 ) {
     when (val state = articlesState.articles) {
         is Loading -> {}
@@ -87,7 +87,7 @@ fun ShowArticlesState(
                 } else {
                     items(items, itemContent = { article ->
                         ArticleCard(
-                            article = article,
+                            newsApiArticle = article,
                             articleSelected = articleSelected
                         )
                     })
@@ -100,18 +100,18 @@ fun ShowArticlesState(
 
 @Composable
 fun ArticleCard(
-    article: Article,
-    articleSelected: (Article) -> Unit
+    newsApiArticle: NewsApiArticle,
+    articleSelected: (NewsApiArticle) -> Unit
 ) {
     Card(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
             .padding(12.dp)
-            .clickable { articleSelected(article) },
+            .clickable { articleSelected(newsApiArticle) },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            val urlImage = article.urlToImage ?: ""
+            val urlImage = newsApiArticle.urlToImage ?: ""
             if (urlImage.isNotEmpty()) {
                 AsyncImage(
                     model = urlImage,
@@ -126,7 +126,7 @@ fun ArticleCard(
             }
 
             Column(modifier = Modifier.padding(12.dp)) {
-                val title = article.title ?: ""
+                val title = newsApiArticle.title ?: ""
                 if (title.isNotEmpty()) {
                     Text(
                         text = title,
@@ -138,14 +138,14 @@ fun ArticleCard(
                     Spacer(Modifier.height(4.dp))
                 }
 
-                val publishedAt = article.publishedAt ?: ""
+                val publishedAt = newsApiArticle.publishedAt ?: ""
                 if (publishedAt.isNotEmpty()) {
                     val date = publishedAt.toDate().formatToReadableDate()
                     Text(text = date, style = MaterialTheme.typography.bodyMedium)
                     Spacer(Modifier.height(4.dp))
                 }
 
-                val description = article.description ?: ""
+                val description = newsApiArticle.description ?: ""
                 if (description.isNotEmpty()) {
                     Text(
                         text = description,
