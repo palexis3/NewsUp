@@ -3,7 +3,7 @@ package com.example.palexis3.newssum.models
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Source(
+data class NewsSource(
     val id: String?,
     val name: String?,
     val description: String?,
@@ -13,7 +13,7 @@ data class Source(
     val country: String?
 )
 
-data class SourcesResponse(
+data class NewsSourcesResponse(
     val status: String,
-    val sources: List<Source>
+    val sources: List<NewsSource>
 )

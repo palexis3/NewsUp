@@ -4,7 +4,7 @@ import com.example.palexis3.newssum.models.Article
 import kotlinx.coroutines.flow.Flow
 
 interface ArticleRepository {
-    fun getHeadlines(
+    fun getArticles(
         category: String?,
         keyword: String?,
         sources: String?,

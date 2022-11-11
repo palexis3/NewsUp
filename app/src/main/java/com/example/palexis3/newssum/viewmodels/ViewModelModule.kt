@@ -18,6 +18,6 @@ interface ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SourceViewModel::class)
-    fun sourceViewModelFactory(factory: SourceViewModel.Factory): AssistedViewModelFactory<*, *>
+    @ViewModelKey(NewsSourcesViewModel::class)
+    fun newsSourceViewModelFactory(factory: NewsSourcesViewModel.Factory): AssistedViewModelFactory<*, *>
 }

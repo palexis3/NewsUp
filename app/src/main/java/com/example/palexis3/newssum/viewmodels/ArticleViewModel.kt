@@ -20,14 +20,14 @@ class ArticleViewModel @AssistedInject constructor(
     var currentArticle = mutableStateOf<Article?>(null)
         private set
 
-    fun getHeadlines(
-        category: String?,
+    fun getArticles(
+        category: String? = null,
         keyword: String? = null,
         sources: String? = null,
         country: String? = "us"
     ) {
         articleRepository
-            .getHeadlines(category, keyword, sources, country)
+            .getArticles(category, keyword, sources, country)
             .execute { copy(articles = it) }
     }
 

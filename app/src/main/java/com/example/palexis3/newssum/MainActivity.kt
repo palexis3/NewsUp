@@ -18,17 +18,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.mvrx.compose.mavericksViewModel
-import com.example.palexis3.newssum.composable.ArticleDetailsScreen
-import com.example.palexis3.newssum.composable.HeadlineScreen
-import com.example.palexis3.newssum.composable.NewsSourcesScreen
-import com.example.palexis3.newssum.composable.WebViewScreen
 import com.example.palexis3.newssum.navigation.Screen
 import com.example.palexis3.newssum.navigation.bottomNavItems
 import com.example.palexis3.newssum.navigation.navigateSingleTopTo
 import com.example.palexis3.newssum.navigation.navigateToWebView
 import com.example.palexis3.newssum.theme.AppTheme
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
-import com.example.palexis3.newssum.viewmodels.SourceViewModel
+import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -52,7 +48,7 @@ fun ShowNewsApp() {
      * the NewsApi doesn't support fetching objects via an id.
      */
     val articleViewModel: ArticleViewModel = mavericksViewModel()
-    val sourceViewModel: SourceViewModel = mavericksViewModel()
+    val newsSourcesViewModel: NewsSourcesViewModel = mavericksViewModel()
 
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -63,6 +59,9 @@ fun ShowNewsApp() {
             bottomBarVisible.value = false
         }
         Screen.ArticleDetails.route -> {
+            bottomBarVisible.value = false
+        }
+        Screen.NewsSourceDetails.route -> {
             bottomBarVisible.value = false
         }
         else -> {
@@ -116,7 +115,12 @@ fun ShowNewsApp() {
             }
 
             composable(route = Screen.NewsSources.route) {
-                NewsSourcesScreen(sourceViewModel = sourceViewModel)
+                NewsSourcesScreen(
+                    newsSourcesViewModel = newsSourcesViewModel,
+                    goToNewsSourcesDetailsScreen = {
+                        navController.navigateSingleTopTo(Screen.NewsSourceDetails.route)
+                    }
+                )
             }
 
             composable(
@@ -130,6 +134,16 @@ fun ShowNewsApp() {
                         closeScreen = { navController.popBackStack() }
                     )
                 }
+            }
+
+            composable(route = Screen.NewsSourceDetails.route) {
+                NewsSourceDetailsScreen(
+                    closeScreen = { navController.popBackStack() },
+                    newsSourcesViewModel = newsSourcesViewModel,
+                    articleViewModel = articleViewModel,
+                    goToArticleDetailsScreen = { navController.navigateSingleTopTo(Screen.ArticleDetails.route) },
+                    goToWebView = { url -> navController.navigateToWebView(url) }
+                )
             }
         }
     }

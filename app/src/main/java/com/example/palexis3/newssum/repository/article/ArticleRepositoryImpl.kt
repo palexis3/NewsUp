@@ -10,14 +10,14 @@ class ArticleRepositoryImpl @Inject constructor(
     private val newsApi: NewsApi
 ) : ArticleRepository {
 
-    override fun getHeadlines(
+    override fun getArticles(
         category: String?,
         keyword: String?,
         sources: String?,
         country: String?
     ): Flow<List<Article>> =
         flow {
-            val response = newsApi.getHeadlines(category, keyword, sources, country)
+            val response = newsApi.getArticles(category, keyword, sources, country)
             val items = if (response.status == "ok") {
                 response.articles
             } else {

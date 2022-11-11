@@ -28,7 +28,7 @@ fun WebViewScreen(
     closeScreen: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        Column {
+        Column(modifier = Modifier.fillMaxWidth()) {
             IconButton(onClick = closeScreen) {
                 Icon(
                     modifier = Modifier.padding(12.dp),
@@ -45,7 +45,6 @@ fun WebViewScreen(
                     text = stringResource(R.string.webview_loading_error),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier
-                        .fillMaxWidth()
                         .align(CenterHorizontally)
                 )
             } else {
