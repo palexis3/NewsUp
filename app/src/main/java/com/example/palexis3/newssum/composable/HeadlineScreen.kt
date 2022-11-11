@@ -43,7 +43,7 @@ fun HeadlineScreen(
             modifier = Modifier.align(CenterHorizontally),
             title = R.string.headlines
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         HorizontalTabs(
             scope = coroutineScope,
@@ -79,6 +79,7 @@ fun HorizontalTabs(
     ) {
         NEWS_CATEGORY_TYPES.forEachIndexed { index, category ->
             Tab(
+                modifier = Modifier.padding(8.dp),
                 selected = pagerState.currentPage == index,
                 onClick = {
                     scope.launch {

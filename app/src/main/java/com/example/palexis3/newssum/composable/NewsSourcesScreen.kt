@@ -3,14 +3,14 @@ package com.example.palexis3.newssum.composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -24,8 +24,6 @@ import com.example.palexis3.newssum.models.NewsSource
 import com.example.palexis3.newssum.state.NewsSourcesState
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
-import com.google.accompanist.flowlayout.SizeMode
 
 @Composable
 fun NewsSourcesScreen(
@@ -40,71 +38,57 @@ fun NewsSourcesScreen(
 
     val newsSourcesState by newsSourcesViewModel.collectAsState()
 
-    LazyColumn {
-        item {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                TitleHeader(
-                    modifier = Modifier.align(CenterHorizontally), title = R.string.news_sources
-                )
+    Column(modifier = Modifier.fillMaxSize()) {
+        TitleHeader(
+            modifier = Modifier.align(CenterHorizontally),
+            title = R.string.news_sources
+        )
+        Spacer(modifier = Modifier.height(20.dp))
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                CategoryMenuBox(
-                    modifier = Modifier.padding(12.dp),
-                    selectedCategory = { selectedCategory ->
-                        newsSourceCategory = selectedCategory
-                    }
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                ShowNewsSources(
-                    modifier = Modifier.padding(12.dp),
-                    newsSourcesState = newsSourcesState,
-                    newsSourceSelected = { newsSource ->
-                        newsSourcesViewModel.setCurrentNewsSource(newsSource)
-                        goToNewsSourcesDetailsScreen()
-                    }
-                )
+        CategoryChipGroup(
+            selectedCategory = newsSourceCategory,
+            onSelectedCategory = { selectedCategory ->
+                newsSourceCategory = selectedCategory
             }
-        }
+        )
+
+        ShowNewsSources(
+            modifier = Modifier.padding(12.dp),
+            newsSourcesState = newsSourcesState,
+            newsSourceSelected = { newsSource ->
+                newsSourcesViewModel.setCurrentNewsSource(newsSource)
+                goToNewsSourcesDetailsScreen()
+            }
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryMenuBox(
-    modifier: Modifier = Modifier,
-    initialValue: String = "",
-    selectedCategory: (String) -> Unit
+fun CategoryChipGroup(
+    selectedCategory: String? = null,
+    onSelectedCategory: (String) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(initialValue) }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded },
-        modifier = modifier.clip(RoundedCornerShape(8.dp))
+    FlowRow(
+        modifier = Modifier
+            .fillMaxWidth().padding(12.dp)
     ) {
-        TextField(
-            modifier = Modifier.menuAnchor(),
-            value = selectedOptionText,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text("Category") },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-            }
-        )
-        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            NEWS_CATEGORY_TYPES.forEach { selectionOption ->
-                DropdownMenuItem(text = { Text(text = selectionOption) }, onClick = {
-                    selectedOptionText = selectionOption
-                    selectedCategory(selectionOption)
-                    expanded = false
-                })
-            }
+        NEWS_CATEGORY_TYPES.forEach { category ->
+            ElevatedSuggestionChip(
+                modifier = Modifier.padding(2.dp),
+                onClick = {
+                    onSelectedCategory(category)
+                },
+                icon = {
+                    if (selectedCategory == category) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Currently checked item"
+                        )
+                    }
+                },
+                label = { Text(category) },
+            )
         }
     }
 }
@@ -129,20 +113,18 @@ fun ShowNewsSources(
             }
         }
         is Success -> {
-            FlowRow(
-                modifier = modifier,
-                mainAxisSize = SizeMode.Expand,
-                mainAxisAlignment = MainAxisAlignment.Start
-            ) {
+            LazyColumn(modifier = modifier) {
                 val items = state.invoke()
-                if (items.isEmpty()) {
-                    ErrorText(title = R.string.sources_error)
-                } else {
-                    items.forEach { newsSource ->
-                        NewsSourceCard(
-                            newsSource,
-                            newsSourceSelected = newsSourceSelected
-                        )
+                item {
+                    if (items.isEmpty()) {
+                        ErrorText(title = R.string.sources_error)
+                    } else {
+                        items.forEach { newsSource ->
+                            NewsSourceCard(
+                                newsSource,
+                                newsSourceSelected = newsSourceSelected
+                            )
+                        }
                     }
                 }
             }
@@ -188,14 +170,6 @@ fun NewsSourceCard(
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(Modifier.height(4.dp))
-            }
-
-            val category = newsSource.category ?: ""
-            if (category.isNotEmpty()) {
-                CategoryOutlinedText(
-                    category = category,
-                    modifier = Modifier.align(CenterHorizontally)
-                )
             }
         }
     }
