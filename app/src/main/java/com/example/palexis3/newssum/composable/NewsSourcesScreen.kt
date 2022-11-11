@@ -19,7 +19,7 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
-import com.example.palexis3.newssum.models.NEWS_CATEGORY_TYPES
+import com.example.palexis3.newssum.models.NEWS_API_CATEGORY_TYPES
 import com.example.palexis3.newssum.models.NewsSource
 import com.example.palexis3.newssum.state.NewsSourcesState
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
@@ -73,7 +73,7 @@ fun CategoryChipGroup(
         modifier = Modifier
             .fillMaxWidth().padding(12.dp)
     ) {
-        NEWS_CATEGORY_TYPES.forEach { category ->
+        NEWS_API_CATEGORY_TYPES.forEach { category ->
             ElevatedSuggestionChip(
                 modifier = Modifier.padding(2.dp),
                 onClick = {

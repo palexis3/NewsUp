@@ -74,7 +74,7 @@ fun ShowArticlesState(
         is Loading -> {}
         is Fail -> {
             Box {
-                ErrorText(title = R.string.header_error)
+                ErrorText(title = R.string.articles_error)
             }
         }
         is Success -> {
@@ -82,7 +82,7 @@ fun ShowArticlesState(
                 val items = state.invoke()
                 if (items.isEmpty()) {
                     item {
-                        ErrorText(title = R.string.header_error)
+                        ErrorText(title = R.string.articles_error)
                     }
                 } else {
                     items(items, itemContent = { article ->

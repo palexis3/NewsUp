@@ -32,8 +32,8 @@ fun NewsSourceDetailsScreen(
 
     newsSource?.let { source ->
         // Get the headline article for this news source
-        LaunchedEffect(key1 = source.id) {
-            articleViewModel.getHeadlines(sources = source.id)
+        LaunchedEffect(Unit) {
+            articleViewModel.getArticles(sources = source.id)
         }
         val articlesState by articleViewModel.collectAsState()
 

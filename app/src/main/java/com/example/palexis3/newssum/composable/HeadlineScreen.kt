@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
-import com.example.palexis3.newssum.models.NEWS_CATEGORY_TYPES
+import com.example.palexis3.newssum.models.NEWS_API_CATEGORY_TYPES
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -28,8 +28,8 @@ fun HeadlineScreen(
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            val category = NEWS_CATEGORY_TYPES[page]
-            articleViewModel.getHeadlines(category = category)
+            val category = NEWS_API_CATEGORY_TYPES[page]
+            articleViewModel.getArticles(category = category)
         }
     }
 
@@ -54,7 +54,7 @@ fun HeadlineScreen(
 
         HorizontalPager(
             modifier = Modifier.padding(12.dp),
-            count = NEWS_CATEGORY_TYPES.size,
+            count = NEWS_API_CATEGORY_TYPES.size,
             state = pagerState
         ) {
             ShowArticlesState(
@@ -77,7 +77,7 @@ fun HorizontalTabs(
     ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage
     ) {
-        NEWS_CATEGORY_TYPES.forEachIndexed { index, category ->
+        NEWS_API_CATEGORY_TYPES.forEachIndexed { index, category ->
             Tab(
                 modifier = Modifier.padding(8.dp),
                 selected = pagerState.currentPage == index,
