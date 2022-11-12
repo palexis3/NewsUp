@@ -20,37 +20,38 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.helper.formatToReadableDate
-import com.example.palexis3.newssum.helper.toDate
-import com.example.palexis3.newssum.models.news_api.NewsApiArticle
+import com.example.palexis3.newssum.helper.toDateEmptySpace
+import com.example.palexis3.newssum.models.news_data.NewsDataArticle
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
+import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
-fun NewsApiArticleDetailsScreen(
+fun NewsDataArticleDetailsScreen(
     articleViewModel: ArticleViewModel,
     closeScreen: () -> Unit,
     goToWebView: (String) -> Unit
 ) {
-    val article by remember { articleViewModel.currentNewsApiArticle }
+    val article by remember { articleViewModel.currentNewsDataArticle }
 
     // Close the screen automatically if the article is null
     article?.let { item ->
-        ShowNewsApiArticleState(item, closeScreen, goToWebView)
+        ShowNewsDataArticleState(item, closeScreen, goToWebView)
     } ?: closeScreen()
 }
 
 @Composable
-fun ShowNewsApiArticleState(
-    newsApiArticle: NewsApiArticle,
+fun ShowNewsDataArticleState(
+    newsDataArticle: NewsDataArticle,
     closeScreen: () -> Unit,
     goToWebView: (String) -> Unit
 ) {
     LazyColumn {
         item {
             Box(Modifier.fillMaxWidth()) {
-                val urlImage = newsApiArticle.urlToImage
-                if (urlImage != null) {
+                val imageUrl = newsDataArticle.image_url
+                if (imageUrl != null) {
                     AsyncImage(
-                        model = urlImage,
+                        model = imageUrl,
                         contentDescription = "Article Image",
                         modifier = Modifier
                             .fillMaxWidth()
@@ -68,7 +69,7 @@ fun ShowNewsApiArticleState(
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Go Back",
-                        tint = if (urlImage != null) Color.White else Color.Unspecified
+                        tint = if (imageUrl != null) Color.White else Color.Unspecified
                     )
                 }
             }
@@ -79,15 +80,28 @@ fun ShowNewsApiArticleState(
                     .fillMaxWidth()
                     .padding(12.dp)
             ) {
-                val title = newsApiArticle.title
+                val title = newsDataArticle.title
                 if (title != null) {
                     Text(text = title, style = MaterialTheme.typography.titleLarge)
                     Spacer(Modifier.height(12.dp))
                 }
 
-                val publishedAt = newsApiArticle.publishedAt
+                val keywords = newsDataArticle.keywords ?: listOf()
+                if (keywords.isNotEmpty()) {
+                    FlowRow {
+                        keywords.forEach { item ->
+                            CategoryOutlinedText(
+                                category = item,
+                                modifier = Modifier.padding(4.dp)
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(2.dp))
+                }
+
+                val publishedAt = newsDataArticle.pubDate
                 if (publishedAt != null) {
-                    val date = publishedAt.toDate().formatToReadableDate()
+                    val date = publishedAt.toDateEmptySpace().formatToReadableDate()
                     Text(
                         text = date,
                         style = MaterialTheme.typography.bodySmall,
@@ -96,20 +110,9 @@ fun ShowNewsApiArticleState(
                     Spacer(Modifier.height(2.dp))
                 }
 
-                val newsSource = newsApiArticle.source?.name
-                if (newsSource != null) {
-                    val newsSourceText = "News source: $newsSource"
-                    Text(
-                        text = newsSourceText,
-                        style = MaterialTheme.typography.bodySmall,
-                        fontStyle = FontStyle.Italic
-                    )
-                    Spacer(Modifier.height(2.dp))
-                }
-
-                val author = newsApiArticle.author
-                if (author != null) {
-                    val authorText = "Written by: $author"
+                val creator = newsDataArticle.creator?.get(0) ?: ""
+                if (creator.isNotEmpty()) {
+                    val authorText = "Written by: $creator"
                     Text(
                         text = authorText,
                         style = MaterialTheme.typography.bodySmall,
@@ -118,7 +121,7 @@ fun ShowNewsApiArticleState(
                     Spacer(Modifier.height(2.dp))
                 }
 
-                val articleUrl = newsApiArticle.url ?: ""
+                val articleUrl = newsDataArticle.link ?: ""
                 if (articleUrl.isNotEmpty()) {
                     Spacer(Modifier.height(4.dp))
                     ElevatedButton(
@@ -132,10 +135,14 @@ fun ShowNewsApiArticleState(
 
                 Spacer(Modifier.height(20.dp))
 
-                val content = newsApiArticle.content ?: ""
+                val content = newsDataArticle.content ?: ""
+                val description = newsDataArticle.description ?: ""
+
                 Box(modifier = Modifier.fillMaxWidth()) {
                     if (content.isNotEmpty()) {
                         Text(text = content, style = MaterialTheme.typography.bodyLarge)
+                    } else if (description.isNotEmpty()) {
+                        Text(text = description, style = MaterialTheme.typography.bodyLarge)
                     } else {
                         Text(
                             text = stringResource(id = R.string.article_content_error),
