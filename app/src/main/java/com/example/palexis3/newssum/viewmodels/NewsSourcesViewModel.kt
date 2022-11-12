@@ -5,7 +5,7 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.hilt.AssistedViewModelFactory
 import com.airbnb.mvrx.hilt.hiltMavericksViewModelFactory
-import com.example.palexis3.newssum.models.NewsSource
+import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
 import com.example.palexis3.newssum.repository.source.NewsSourcesRepository
 import com.example.palexis3.newssum.state.NewsSourcesState
 import dagger.assisted.Assisted
@@ -13,11 +13,11 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 
 class NewsSourcesViewModel @AssistedInject constructor(
-    private val sourceRepository: NewsSourcesRepository,
+    private val newsSourcesRepository: NewsSourcesRepository,
     @Assisted initialState: NewsSourcesState
 ) : MavericksViewModel<NewsSourcesState>(initialState) {
 
-    var currentNewsSource = mutableStateOf<NewsSource?>(null)
+    var currentNewsDataNewsSource = mutableStateOf<NewsDataNewsSource?>(null)
         private set
 
     fun getNewsSources(
@@ -25,13 +25,13 @@ class NewsSourcesViewModel @AssistedInject constructor(
         language: String? = "en",
         country: String? = "us"
     ) {
-        sourceRepository
+        newsSourcesRepository
             .getNewsSources(category, language, country)
-            .execute { copy(newsSources = it) }
+            .execute { copy(newsDataNewsSources = it) }
     }
 
-    fun setCurrentNewsSource(newsSource: NewsSource) {
-        this.currentNewsSource.value = newsSource
+    fun setCurrentNewsSource(newsDataNewsSource: NewsDataNewsSource) {
+        this.currentNewsDataNewsSource.value = newsDataNewsSource
     }
 
     @AssistedFactory

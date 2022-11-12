@@ -5,7 +5,8 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.hilt.AssistedViewModelFactory
 import com.airbnb.mvrx.hilt.hiltMavericksViewModelFactory
-import com.example.palexis3.newssum.models.Article
+import com.example.palexis3.newssum.models.news_api.NewsApiArticle
+import com.example.palexis3.newssum.models.news_data.NewsDataArticle
 import com.example.palexis3.newssum.repository.article.ArticleRepository
 import com.example.palexis3.newssum.state.ArticlesState
 import dagger.assisted.Assisted
@@ -17,28 +18,46 @@ class ArticleViewModel @AssistedInject constructor(
     @Assisted initialState: ArticlesState
 ) : MavericksViewModel<ArticlesState>(initialState) {
 
-    var currentArticle = mutableStateOf<Article?>(null)
+    var currentNewsApiArticle = mutableStateOf<NewsApiArticle?>(null)
         private set
 
-    fun getArticles(
+    var currentNewsDataArticle = mutableStateOf<NewsDataArticle?>(null)
+        private set
+
+    fun getNewsApiArticles(
+        country: String? = "us",
         category: String? = null,
         keyword: String? = null,
-        sources: String? = null,
-        country: String? = "us"
+        sources: String? = null
     ) {
         articleRepository
-            .getArticles(category, keyword, sources, country)
-            .execute { copy(articles = it) }
+            .getNewsApiArticles(category, keyword, sources, country)
+            .execute { copy(newsApiArticles = it) }
+    }
+
+    fun getNewsDataArticles(
+        country: String? = "us",
+        language: String? = "en",
+        category: String? = null,
+        domain: String? = null
+    ) {
+        articleRepository
+            .getNewsDataArticles(country, category, language, domain)
+            .execute { copy(newsDataArticles = it) }
     }
 
     fun getEverything(keyword: String? = null, sortBy: String? = null) {
         articleRepository
             .getEverything(keyword, sortBy)
-            .execute { copy(articles = it) }
+            .execute { copy(newsApiArticles = it) }
     }
 
-    fun setCurrentArticle(article: Article) {
-        this.currentArticle.value = article
+    fun setCurrentNewsApiArticle(newsApiArticle: NewsApiArticle) {
+        this.currentNewsApiArticle.value = newsApiArticle
+    }
+
+    fun setCurrentNewsDataArticle(newsDataArticle: NewsDataArticle) {
+        this.currentNewsDataArticle.value = newsDataArticle
     }
 
     @AssistedFactory

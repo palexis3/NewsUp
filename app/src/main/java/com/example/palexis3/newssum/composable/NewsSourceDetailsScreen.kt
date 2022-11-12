@@ -1,6 +1,10 @@
 package com.example.palexis3.newssum.composable
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -8,17 +12,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.airbnb.mvrx.Async
+import com.airbnb.mvrx.Fail
+import com.airbnb.mvrx.Loading
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
-import com.example.palexis3.newssum.models.Article
-import com.example.palexis3.newssum.models.NewsSource
+import com.example.palexis3.newssum.helper.formatToReadableDate
+import com.example.palexis3.newssum.helper.toDateEmptySpace
+import com.example.palexis3.newssum.models.news_data.NewsDataArticle
+import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
 import com.example.palexis3.newssum.state.ArticlesState
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
+import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
 fun NewsSourceDetailsScreen(
@@ -28,14 +44,15 @@ fun NewsSourceDetailsScreen(
     goToArticleDetailsScreen: () -> Unit,
     goToWebView: (String) -> Unit
 ) {
-    val newsSource by remember { newsSourcesViewModel.currentNewsSource }
+    val newsSource by remember { newsSourcesViewModel.currentNewsDataNewsSource }
 
     newsSource?.let { source ->
         // Get the headline article for this news source
-        LaunchedEffect(Unit) {
-            articleViewModel.getArticles(sources = source.id)
+        LaunchedEffect(source.id) {
+            articleViewModel.getNewsDataArticles(domain = source.id)
         }
-        val articlesState by articleViewModel.collectAsState()
+
+        val articlesState by articleViewModel.collectAsState(ArticlesState::newsDataArticles)
 
         ShowNewsSourceDetails(
             closeScreen,
@@ -43,7 +60,7 @@ fun NewsSourceDetailsScreen(
             articlesState,
             goToWebView,
             articleSelected = { article ->
-                articleViewModel.setCurrentArticle(article)
+                articleViewModel.setCurrentNewsDataArticle(article)
                 goToArticleDetailsScreen()
             }
         )
@@ -53,10 +70,10 @@ fun NewsSourceDetailsScreen(
 @Composable
 fun ShowNewsSourceDetails(
     closeScreen: () -> Unit,
-    newsSource: NewsSource,
-    articlesState: ArticlesState,
+    newsDataNewsSource: NewsDataNewsSource,
+    articlesState: Async<List<NewsDataArticle>>,
     goToWebView: (String) -> Unit,
-    articleSelected: (Article) -> Unit
+    articleSelected: (NewsDataArticle) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -70,7 +87,7 @@ fun ShowNewsSourceDetails(
             )
         }
 
-        val name = newsSource.name ?: ""
+        val name = newsDataNewsSource.name ?: ""
         if (name.isNotEmpty()) {
             Text(
                 text = name,
@@ -80,13 +97,20 @@ fun ShowNewsSourceDetails(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        val description = newsSource.description ?: ""
-        if (description.isNotEmpty()) {
-            Text(text = description, style = MaterialTheme.typography.bodyMedium)
+        val category = newsDataNewsSource.category ?: listOf()
+        if (category.isNotEmpty()) {
+            FlowRow {
+                category.forEach { item ->
+                    CategoryOutlinedText(
+                        category = item,
+                        modifier = Modifier.padding(4.dp)
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(4.dp))
         }
 
-        val newsSourceUrl = newsSource.url ?: ""
+        val newsSourceUrl = newsDataNewsSource.url ?: ""
         if (newsSourceUrl.isNotEmpty()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -110,9 +134,103 @@ fun ShowNewsSourceDetails(
         )
         Spacer(Modifier.height(8.dp))
 
-        ShowArticlesState(
+        ShowNewsDataArticlesState(
             articlesState = articlesState,
             articleSelected = articleSelected
         )
+    }
+}
+
+@Composable
+fun ShowNewsDataArticlesState(
+    articlesState: Async<List<NewsDataArticle>>,
+    articleSelected: (NewsDataArticle) -> Unit
+) {
+    when (articlesState) {
+        is Loading -> {}
+        is Fail -> {
+            Box {
+                ErrorText(title = R.string.articles_error)
+            }
+        }
+        is Success -> {
+            LazyColumn {
+                val items = articlesState.invoke()
+                if (items.isEmpty()) {
+                    item {
+                        ErrorText(title = R.string.articles_error)
+                    }
+                } else {
+                    items(items, itemContent = { article ->
+                        NewsDataArticleCard(
+                            newsDataArticle = article,
+                            articleSelected = articleSelected
+                        )
+                    })
+                }
+            }
+        }
+        else -> {}
+    }
+}
+
+@Composable
+fun NewsDataArticleCard(
+    newsDataArticle: NewsDataArticle,
+    articleSelected: (NewsDataArticle) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
+            .padding(12.dp)
+            .clickable { articleSelected(newsDataArticle) },
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            val urlImage = newsDataArticle.image_url ?: ""
+            if (urlImage.isNotEmpty()) {
+                AsyncImage(
+                    model = urlImage,
+                    contentDescription = "Headline Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center
+                )
+                Spacer(Modifier.height(8.dp))
+            }
+
+            Column(modifier = Modifier.padding(12.dp)) {
+                val title = newsDataArticle.title ?: ""
+                if (title.isNotEmpty()) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.ExtraBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(Modifier.height(4.dp))
+                }
+
+                val publishedAt = newsDataArticle.pubDate ?: ""
+                if (publishedAt.isNotEmpty()) {
+                    val date = publishedAt.toDateEmptySpace().formatToReadableDate()
+                    Text(text = date, style = MaterialTheme.typography.bodyMedium)
+                    Spacer(Modifier.height(4.dp))
+                }
+
+                val description = newsDataArticle.description ?: ""
+                if (description.isNotEmpty()) {
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 4,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+        }
     }
 }
