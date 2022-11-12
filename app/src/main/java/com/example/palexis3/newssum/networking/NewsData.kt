@@ -9,16 +9,16 @@ interface NewsData {
 
     @GET("/news")
     suspend fun getArticles(
-        @Query("country") country: String,
-        @Query("category") category: String,
-        @Query("language") language: String,
-        @Query("domain") domain: String
+        @Query("country") country: String?,
+        @Query("category") category: String?,
+        @Query("language") language: String?,
+        @Query("domain") domain: String?
     ): NewsDataArticleResponse
 
     @GET("/sources")
     suspend fun getNewsSources(
-        @Query("country") country: String,
-        @Query("category") category: String,
-        @Query("language") language: String
+        @Query("country") country: String?,
+        @Query("category") category: String?,
+        @Query("language") language: String?
     ): NewsDataNewsSourcesResponse
 }

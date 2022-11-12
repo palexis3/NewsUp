@@ -14,13 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
-import com.example.palexis3.newssum.models.NEWS_API_CATEGORY_TYPES
-import com.example.palexis3.newssum.models.news_api.NewsApiNewsSource
+import com.example.palexis3.newssum.models.NEWS_DATA_CATEGORY_TYPES
+import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
 import com.example.palexis3.newssum.state.NewsSourcesState
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
 import com.google.accompanist.flowlayout.FlowRow
@@ -36,7 +37,7 @@ fun NewsSourcesScreen(
         newsSourcesViewModel.getNewsSources(category = newsSourceCategory)
     }
 
-    val newsSourcesState by newsSourcesViewModel.collectAsState()
+    val newsSourcesState by newsSourcesViewModel.collectAsState(NewsSourcesState::newsDataNewsSources)
 
     Column(modifier = Modifier.fillMaxSize()) {
         TitleHeader(
@@ -73,7 +74,7 @@ fun CategoryChipGroup(
         modifier = Modifier
             .fillMaxWidth().padding(12.dp)
     ) {
-        NEWS_API_CATEGORY_TYPES.forEach { category ->
+        NEWS_DATA_CATEGORY_TYPES.forEach { category ->
             ElevatedSuggestionChip(
                 modifier = Modifier.padding(2.dp),
                 onClick = {
@@ -96,17 +97,17 @@ fun CategoryChipGroup(
 @Composable
 fun ShowNewsSources(
     modifier: Modifier = Modifier,
-    newsSourcesState: NewsSourcesState,
-    newsSourceSelected: (NewsApiNewsSource) -> Unit
+    newsSourcesState: Async<List<NewsDataNewsSource>>,
+    newsSourceSelected: (NewsDataNewsSource) -> Unit
 ) {
-    when (val state = newsSourcesState.newsApiNewsSources) {
+    when (newsSourcesState) {
         is Loading -> {
             Box {
                 LoadingIcon(modifier = Modifier.align(Center))
             }
         }
         is Fail -> {
-            Box {
+            Box(modifier = Modifier.fillMaxWidth()) {
                 ErrorText(
                     modifier = Modifier.align(Center), title = R.string.sources_error
                 )
@@ -114,7 +115,7 @@ fun ShowNewsSources(
         }
         is Success -> {
             LazyColumn(modifier = modifier) {
-                val items = state.invoke()
+                val items = newsSourcesState.invoke()
                 item {
                     if (items.isEmpty()) {
                         ErrorText(title = R.string.sources_error)
@@ -135,38 +136,27 @@ fun ShowNewsSources(
 
 @Composable
 fun NewsSourceCard(
-    newsApiNewsSource: NewsApiNewsSource,
-    newsSourceSelected: (NewsApiNewsSource) -> Unit,
+    newsDataNewsSource: NewsDataNewsSource,
+    newsSourceSelected: (NewsDataNewsSource) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 20.dp)
-            .clickable { newsSourceSelected(newsApiNewsSource) },
+            .clickable { newsSourceSelected(newsDataNewsSource) },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
         Column(
             Modifier.padding(12.dp)
         ) {
-            val name = newsApiNewsSource.name ?: ""
+            val name = newsDataNewsSource.name ?: ""
             if (name.isNotEmpty()) {
                 Text(
                     text = name,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.ExtraBold,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(Modifier.height(4.dp))
-            }
-
-            val description = newsApiNewsSource.description ?: ""
-            if (description.isNotEmpty()) {
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 6,
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(Modifier.height(4.dp))
