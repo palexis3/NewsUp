@@ -13,6 +13,10 @@ fun String.toDate(
     return parser.parse(this)
 }
 
+fun String.toDateEmptySpace(
+    dateFormat: String = "yyyy-MM-dd HH:mm:ss"
+) = this.toDate(dateFormat)
+
 /**
  * Utility method that will help convert UTC dates returned from API into readable strings.
  * Reference here: https://stackoverflow.com/a/53714194/3681456

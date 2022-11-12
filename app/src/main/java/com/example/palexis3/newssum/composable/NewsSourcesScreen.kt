@@ -31,9 +31,9 @@ fun NewsSourcesScreen(
     newsSourcesViewModel: NewsSourcesViewModel,
     goToNewsSourcesDetailsScreen: () -> Unit
 ) {
-    var newsSourceCategory by rememberSaveable { mutableStateOf("") }
+    var newsSourceCategory by rememberSaveable { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(key1 = newsSourceCategory) {
+    LaunchedEffect(newsSourceCategory) {
         newsSourcesViewModel.getNewsSources(category = newsSourceCategory)
     }
 

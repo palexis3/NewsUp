@@ -15,7 +15,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 private const val NEWS_API_BASE_URL = "https://newsapi.org/"
-private const val NEWS_DATA_BASE_URL = "https://newsdata.io/api/1/"
+private const val NEWS_DATA_BASE_URL = "https://newsdata.io/"
 
 @Module
 @InstallIn(SingletonComponent::class)

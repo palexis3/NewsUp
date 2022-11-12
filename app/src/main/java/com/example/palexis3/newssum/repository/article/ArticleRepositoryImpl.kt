@@ -1,6 +1,5 @@
 package com.example.palexis3.newssum.repository.article
 
-import android.util.Log
 import com.example.palexis3.newssum.models.news_api.NewsApiArticle
 import com.example.palexis3.newssum.models.news_data.NewsDataArticle
 import com.example.palexis3.newssum.networking.NewsApi
@@ -22,7 +21,6 @@ class ArticleRepositoryImpl @Inject constructor(
     ): Flow<List<NewsApiArticle>> =
         flow {
             val response = newsApi.getArticles(category, keyword, sources, country)
-//            Log.d("XXX-SourcesRepository", "country: $country category: $category language: $language response: $response")
             val items = if (response.status == "ok") {
                 response.newsApiArticles
             } else {

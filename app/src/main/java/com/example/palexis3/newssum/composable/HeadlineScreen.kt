@@ -132,7 +132,7 @@ fun ShowNewsApiArticlesState(
                     }
                 } else {
                     items(items, itemContent = { article ->
-                        ArticleCard(
+                        NewsApiArticleCard(
                             newsApiArticle = article,
                             articleSelected = articleSelected
                         )
@@ -145,7 +145,7 @@ fun ShowNewsApiArticlesState(
 }
 
 @Composable
-fun ArticleCard(
+fun NewsApiArticleCard(
     newsApiArticle: NewsApiArticle,
     articleSelected: (NewsApiArticle) -> Unit
 ) {

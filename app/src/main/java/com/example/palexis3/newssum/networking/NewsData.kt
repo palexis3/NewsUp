@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface NewsData {
 
-    @GET("/news")
+    @GET("/api/1/news")
     suspend fun getArticles(
         @Query("country") country: String?,
         @Query("category") category: String?,
@@ -15,7 +15,7 @@ interface NewsData {
         @Query("domain") domain: String?
     ): NewsDataArticleResponse
 
-    @GET("/sources")
+    @GET("/api/1/sources")
     suspend fun getNewsSources(
         @Query("country") country: String?,
         @Query("category") category: String?,

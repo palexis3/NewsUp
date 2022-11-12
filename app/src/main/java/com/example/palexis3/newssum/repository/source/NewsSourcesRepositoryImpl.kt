@@ -1,6 +1,5 @@
 package com.example.palexis3.newssum.repository.source
 
-import android.util.Log
 import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
 import com.example.palexis3.newssum.networking.NewsData
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +17,6 @@ class NewsSourcesRepositoryImpl @Inject constructor(
     ): Flow<List<NewsDataNewsSource>> =
         flow {
             val response = newsData.getNewsSources(country, category, language)
-            Log.d("XXX-SourcesRepository", "country: $country category: $category language: $language response: $response")
             val items = if (response.status == "success") {
                 response.results
             } else {

@@ -28,12 +28,13 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.helper.formatToReadableDate
-import com.example.palexis3.newssum.helper.toDate
+import com.example.palexis3.newssum.helper.toDateEmptySpace
 import com.example.palexis3.newssum.models.news_data.NewsDataArticle
 import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
 import com.example.palexis3.newssum.state.ArticlesState
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
+import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
 fun NewsSourceDetailsScreen(
@@ -96,9 +97,16 @@ fun ShowNewsSourceDetails(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        val category = newsDataNewsSource.category?.get(0) ?: ""
+        val category = newsDataNewsSource.category ?: listOf()
         if (category.isNotEmpty()) {
-            CategoryOutlinedText(category = category)
+            FlowRow {
+                category.forEach { item ->
+                    CategoryOutlinedText(
+                        category = item,
+                        modifier = Modifier.padding(4.dp)
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(4.dp))
         }
 
@@ -208,7 +216,7 @@ fun NewsDataArticleCard(
 
                 val publishedAt = newsDataArticle.pubDate ?: ""
                 if (publishedAt.isNotEmpty()) {
-                    val date = publishedAt.toDate().formatToReadableDate()
+                    val date = publishedAt.toDateEmptySpace().formatToReadableDate()
                     Text(text = date, style = MaterialTheme.typography.bodyMedium)
                     Spacer(Modifier.height(4.dp))
                 }
