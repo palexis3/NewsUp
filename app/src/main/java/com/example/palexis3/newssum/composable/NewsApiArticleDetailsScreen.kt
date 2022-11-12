@@ -27,7 +27,7 @@ import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 // TODO: Add an article details screen to represent the articles object from the NewsData.io API
 
 @Composable
-fun ArticleDetailsScreen(
+fun NewsApiArticleDetailsScreen(
     articleViewModel: ArticleViewModel,
     closeScreen: () -> Unit,
     goToWebView: (String) -> Unit

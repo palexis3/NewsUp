@@ -19,7 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.mvrx.compose.mavericksViewModel
 import com.example.palexis3.newssum.composable.HeadlineScreen
-import com.example.palexis3.newssum.composable.ArticleDetailsScreen
+import com.example.palexis3.newssum.composable.NewsApiArticleDetailsScreen
 import com.example.palexis3.newssum.composable.NewsSourcesScreen
 import com.example.palexis3.newssum.composable.NewsSourceDetailsScreen
 import com.example.palexis3.newssum.composable.WebViewScreen
@@ -63,7 +63,7 @@ fun ShowNewsApp() {
         Screen.WebView.routeWithArgs -> {
             bottomBarVisible.value = false
         }
-        Screen.ArticleDetails.route -> {
+        Screen.NewsApiArticleDetails.route -> {
             bottomBarVisible.value = false
         }
         Screen.NewsSourceDetails.route -> {
@@ -101,14 +101,14 @@ fun ShowNewsApp() {
             composable(route = Screen.Headlines.route) {
                 HeadlineScreen(
                     articleViewModel = articleViewModel,
-                    goToArticleDetailsScreen = {
-                        navController.navigateSingleTopTo(Screen.ArticleDetails.route)
+                    goToNewsApiArticleDetailsScreen = {
+                        navController.navigateSingleTopTo(Screen.NewsApiArticleDetails.route)
                     }
                 )
             }
 
-            composable(route = Screen.ArticleDetails.route) {
-                ArticleDetailsScreen(
+            composable(route = Screen.NewsApiArticleDetails.route) {
+                NewsApiArticleDetailsScreen(
                     articleViewModel = articleViewModel,
                     closeScreen = {
                         navController.popBackStack()
@@ -146,7 +146,7 @@ fun ShowNewsApp() {
                     closeScreen = { navController.popBackStack() },
                     newsSourcesViewModel = newsSourcesViewModel,
                     articleViewModel = articleViewModel,
-                    goToArticleDetailsScreen = { navController.navigateSingleTopTo(Screen.ArticleDetails.route) },
+                    goToArticleDetailsScreen = { navController.navigateSingleTopTo(Screen.NewsApiArticleDetails.route) },
                     goToWebView = { url -> navController.navigateToWebView(url) }
                 )
             }

@@ -13,9 +13,14 @@ sealed class Screen {
         override val title: Int = R.string.headlines
     }
 
-    object ArticleDetails : Screen() {
-        override val route: String = "ArticleDetails"
-        override val title: Int = R.string.article_details
+    object NewsApiArticleDetails : Screen() {
+        override val route: String = "NewsApiArticleDetails"
+        override val title: Int = R.string.news_api_article_details
+    }
+
+    object NewsDataArticleDetails : Screen() {
+        override val route: String = "NewsDataArticleDetails"
+        override val title: Int = R.string.news_data_article_details
     }
 
     object NewsSources : Screen() {
