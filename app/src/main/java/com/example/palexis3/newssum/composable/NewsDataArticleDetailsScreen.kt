@@ -86,7 +86,7 @@ fun ShowNewsDataArticleState(
             Spacer(Modifier.height(4.dp))
 
             Column(
-                Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp)
             ) {
@@ -94,19 +94,6 @@ fun ShowNewsDataArticleState(
                 if (title != null) {
                     Text(text = title, style = MaterialTheme.typography.titleLarge)
                     Spacer(Modifier.height(12.dp))
-                }
-
-                val keywords = newsDataArticle.keywords ?: listOf()
-                if (keywords.isNotEmpty()) {
-                    FlowRow {
-                        keywords.forEach { item ->
-                            CategoryOutlinedText(
-                                category = item,
-                                modifier = Modifier.padding(4.dp)
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(2.dp))
                 }
 
                 val publishedAt = newsDataArticle.pubDate
@@ -128,7 +115,20 @@ fun ShowNewsDataArticleState(
                         style = MaterialTheme.typography.bodySmall,
                         fontStyle = FontStyle.Italic
                     )
-                    Spacer(Modifier.height(2.dp))
+                    Spacer(Modifier.height(8.dp))
+                }
+
+                val keywords = newsDataArticle.keywords ?: listOf()
+                if (keywords.isNotEmpty()) {
+                    FlowRow {
+                        keywords.forEach { item ->
+                            CategoryOutlinedText(
+                                category = item,
+                                modifier = Modifier.padding(end = 4.dp, bottom = 4.dp)
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(4.dp))
                 }
 
                 val articleUrl = newsDataArticle.link ?: ""
