@@ -22,7 +22,7 @@ class ArticleRepositoryImpl @Inject constructor(
         flow {
             val response = newsApi.getArticles(category, keyword, sources, country)
             val items = if (response.status == "ok") {
-                response.newsApiArticles
+                response.articles
             } else {
                 listOf()
             }
@@ -52,7 +52,7 @@ class ArticleRepositoryImpl @Inject constructor(
         flow {
             val response = newsApi.getEverything(keyword, sortBy)
             val items = if (response.status == "ok") {
-                response.newsApiArticles
+                response.articles
             } else {
                 listOf()
             }
