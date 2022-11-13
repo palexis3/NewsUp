@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/NewsUp.iml" filepath="$PROJECT_DIR$/NewsUp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NewsUp.iml" filepath="$PROJECT_DIR$/.idea/modules/NewsUp.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/NewsUp.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/NewsUp.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/NewsUp.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/NewsUp.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/NewsUp.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/NewsUp.app.main.iml" />

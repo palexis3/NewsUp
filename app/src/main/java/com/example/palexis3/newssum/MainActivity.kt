@@ -4,7 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +22,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.mvrx.compose.mavericksViewModel
-import com.example.palexis3.newssum.composable.*
+import com.example.palexis3.newssum.composable.HeadlineScreen
+import com.example.palexis3.newssum.composable.NewsApiArticleDetailsScreen
+import com.example.palexis3.newssum.composable.NewsDataArticleDetailsScreen
+import com.example.palexis3.newssum.composable.NewsSourceDetailsScreen
+import com.example.palexis3.newssum.composable.NewsSourcesScreen
+import com.example.palexis3.newssum.composable.WebViewScreen
 import com.example.palexis3.newssum.navigation.Screen
 import com.example.palexis3.newssum.navigation.bottomNavItems
 import com.example.palexis3.newssum.navigation.navigateSingleTopTo

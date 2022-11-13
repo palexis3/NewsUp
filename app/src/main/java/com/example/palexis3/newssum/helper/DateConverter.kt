@@ -1,7 +1,9 @@
 package com.example.palexis3.newssum.helper
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 fun String.toDate(
     dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss",
