@@ -23,5 +23,5 @@ data class SourceObj(
 data class NewsApiArticlesResponse(
     val status: String,
     val totalResults: Int,
-    val newsApiArticles: List<NewsApiArticle>
+    val articles: List<NewsApiArticle>
 )
