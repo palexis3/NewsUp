@@ -86,7 +86,6 @@ fun HeadlineScreen(
         Spacer(Modifier.height(8.dp))
 
         HorizontalPager(
-            modifier = Modifier.padding(12.dp),
             count = NEWS_API_CATEGORY_TYPES.size,
             state = pagerState
         ) {
