@@ -6,12 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -90,69 +88,73 @@ fun ShowNewsSourceDetails(
     goToWebView: (String) -> Unit,
     articleSelected: (NewsDataArticle) -> Unit
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(12.dp)
     ) {
-        IconButton(onClick = closeScreen) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Go Back"
-            )
-        }
+        item {
+            IconButton(
+                onClick = closeScreen
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Go Back"
+                )
+            }
 
-        val name = newsDataNewsSource.name ?: ""
-        if (name.isNotEmpty()) {
+            val name = newsDataNewsSource.name ?: ""
+            if (name.isNotEmpty()) {
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            val category = newsDataNewsSource.category ?: listOf()
+            if (category.isNotEmpty()) {
+                FlowRow {
+                    category.forEach { item ->
+                        CategoryOutlinedText(
+                            category = item,
+                            modifier = Modifier.padding(end = 4.dp, bottom = 4.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+
+            val newsSourceUrl = newsDataNewsSource.url ?: ""
+            if (newsSourceUrl.isNotEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    ElevatedButton(
+                        elevation = ButtonDefaults.buttonElevation(6.dp),
+                        onClick = { goToWebView(newsSourceUrl) }
+                    ) {
+                        Text(text = stringResource(id = R.string.open_web_version))
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(20.dp))
+
             Text(
-                text = name,
-                style = MaterialTheme.typography.headlineLarge,
+                text = stringResource(id = R.string.articles),
+                style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.ExtraBold
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(Modifier.height(8.dp))
+
+            ShowNewsDataArticlesState(
+                articlesState = articlesState,
+                articleSelected = articleSelected
+            )
         }
-
-        val category = newsDataNewsSource.category ?: listOf()
-        if (category.isNotEmpty()) {
-            FlowRow {
-                category.forEach { item ->
-                    CategoryOutlinedText(
-                        category = item,
-                        modifier = Modifier.padding(4.dp)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        val newsSourceUrl = newsDataNewsSource.url ?: ""
-        if (newsSourceUrl.isNotEmpty()) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                ElevatedButton(
-                    elevation = ButtonDefaults.buttonElevation(6.dp),
-                    onClick = { goToWebView(newsSourceUrl) }
-                ) {
-                    Text(text = stringResource(id = R.string.open_web_version))
-                }
-            }
-        }
-
-        Spacer(Modifier.height(20.dp))
-
-        Text(
-            text = stringResource(id = R.string.articles),
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.ExtraBold
-        )
-        Spacer(Modifier.height(8.dp))
-
-        ShowNewsDataArticlesState(
-            articlesState = articlesState,
-            articleSelected = articleSelected
-        )
     }
 }
 
@@ -162,26 +164,28 @@ fun ShowNewsDataArticlesState(
     articleSelected: (NewsDataArticle) -> Unit
 ) {
     when (articlesState) {
-        is Loading -> {}
+        is Loading -> {
+            Box {
+                LoadingIcon()
+            }
+        }
         is Fail -> {
             Box {
                 ErrorText(title = R.string.articles_error)
             }
         }
         is Success -> {
-            LazyColumn {
+            FlowRow {
                 val items = articlesState.invoke()
                 if (items.isEmpty()) {
-                    item {
-                        ErrorText(title = R.string.articles_error)
-                    }
+                    ErrorText(title = R.string.articles_error)
                 } else {
-                    items(items, itemContent = { article ->
+                    items.forEach { article ->
                         NewsDataArticleCard(
                             newsDataArticle = article,
                             articleSelected = articleSelected
                         )
-                    })
+                    }
                 }
             }
         }
@@ -197,7 +201,7 @@ fun NewsDataArticleCard(
     Card(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
-            .padding(12.dp)
+            .padding(bottom = 20.dp)
             .clickable { articleSelected(newsDataArticle) },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
