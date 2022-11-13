@@ -55,28 +55,32 @@ fun NewsSourcesScreen(
 
     val newsSourcesState by newsSourcesViewModel.collectAsState(NewsSourcesState::newsDataNewsSources)
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        TitleHeader(
-            modifier = Modifier.align(CenterHorizontally),
-            title = R.string.news_sources
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-
-        CategoryChipGroup(
-            selectedCategory = newsSourceCategory,
-            onSelectedCategory = { selectedCategory ->
-                newsSourceCategory = selectedCategory
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        item {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                TitleHeader(
+                    modifier = Modifier.align(CenterHorizontally),
+                    title = R.string.news_sources
+                )
+                Spacer(modifier = Modifier.height(20.dp))
             }
-        )
 
-        ShowNewsSources(
-            modifier = Modifier.padding(12.dp),
-            newsSourcesState = newsSourcesState,
-            newsSourceSelected = { newsSource ->
-                newsSourcesViewModel.setCurrentNewsSource(newsSource)
-                goToNewsSourcesDetailsScreen()
-            }
-        )
+            CategoryChipGroup(
+                selectedCategory = newsSourceCategory,
+                onSelectedCategory = { selectedCategory ->
+                    newsSourceCategory = selectedCategory
+                }
+            )
+
+            ShowNewsSources(
+                modifier = Modifier.padding(12.dp),
+                newsSourcesState = newsSourcesState,
+                newsSourceSelected = { newsSource ->
+                    newsSourcesViewModel.setCurrentNewsSource(newsSource)
+                    goToNewsSourcesDetailsScreen()
+                }
+            )
+        }
     }
 }
 
@@ -88,7 +92,8 @@ fun CategoryChipGroup(
 ) {
     FlowRow(
         modifier = Modifier
-            .fillMaxWidth().padding(12.dp)
+            .fillMaxWidth()
+            .padding(12.dp)
     ) {
         NEWS_DATA_CATEGORY_TYPES.forEach { category ->
             ElevatedSuggestionChip(
@@ -130,18 +135,16 @@ fun ShowNewsSources(
             }
         }
         is Success -> {
-            LazyColumn(modifier = modifier) {
+            FlowRow(modifier = modifier) {
                 val items = newsSourcesState.invoke()
-                item {
-                    if (items.isEmpty()) {
-                        ErrorText(title = R.string.sources_error)
-                    } else {
-                        items.forEach { newsSource ->
-                            NewsSourceCard(
-                                newsSource,
-                                newsSourceSelected = newsSourceSelected
-                            )
-                        }
+                if (items.isEmpty()) {
+                    ErrorText(title = R.string.sources_error)
+                } else {
+                    items.forEach { newsSource ->
+                        NewsSourceCard(
+                            newsSource,
+                            newsSourceSelected = newsSourceSelected
+                        )
                     }
                 }
             }
