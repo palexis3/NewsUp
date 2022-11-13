@@ -10,7 +10,9 @@ data class NewsDataArticle(
     val image_url: String?,
     val description: String?,
     val content: String?,
-    val pubDate: String?
+    val pubDate: String?,
+    val creator: List<String>?,
+    val keywords: List<String>?
 )
 
 data class NewsDataArticleResponse(

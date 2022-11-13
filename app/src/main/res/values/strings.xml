@@ -9,7 +9,8 @@
 
     <string name="headlines">Headlines</string>
     <string name="news_sources">News Sources</string>
-    <string name="article_details">Article Details</string>
+    <string name="news_api_article_details">News API Article Details</string>
+    <string name="news_data_article_details">NewsData.io Article Details</string>
     <string name="webview">WebView</string>
     <string name="open_web_version">Open Web Version</string>
     <string name="articles">Articles</string>

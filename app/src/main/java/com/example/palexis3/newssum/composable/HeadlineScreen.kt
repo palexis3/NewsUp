@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HeadlineScreen(
     articleViewModel: ArticleViewModel,
-    goToArticleDetailsScreen: () -> Unit
+    goToNewsApiArticleDetailsScreen: () -> Unit
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -79,7 +79,7 @@ fun HeadlineScreen(
                 articlesState = articlesState,
                 articleSelected = { article ->
                     articleViewModel.setCurrentNewsApiArticle(article)
-                    goToArticleDetailsScreen()
+                    goToNewsApiArticleDetailsScreen()
                 }
             )
         }
