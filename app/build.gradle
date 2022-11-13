@@ -15,15 +15,16 @@ android {
     defaultConfig {
         applicationId "com.example.palexis3.newsup"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         // Enabling multidex support.
         multiDexEnabled true
 
-        buildConfigField("String", "NEWS_API_KEY", "\"" + localProperties['NEWS_API_KEY'] + "\"")
+
         buildConfigField("String", "NEWS_DATA_KEY", "\"" + localProperties['NEWS_DATA_KEY'] + "\"")
+        buildConfigField("String", "NEWS_API_KEY", "\"" + localProperties['NEWS_API_KEY'] + "\"")
     }
 
     buildTypes {
