@@ -15,9 +15,11 @@
     <string name="open_web_version">Open Web Version</string>
     <string name="articles">Articles</string>
     <string name="news_sources_details">News Sources Details</string>
+    <string name="searchview">SearchView</string>
 
     <string name="articles_error">Error fetching articles. Try refreshing</string>
     <string name="sources_error">Error fetching news sources. Try refreshing</string>
     <string name="article_content_error">Could not get article content.</string>
     <string name="webview_loading_error">Error loading webview. Try again</string>
+    <string name="search_results_not_found">Search results not found.</string>
 </resources>

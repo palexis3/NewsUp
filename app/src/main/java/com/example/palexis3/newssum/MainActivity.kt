@@ -27,6 +27,7 @@ import com.example.palexis3.newssum.composable.NewsApiArticleDetailsScreen
 import com.example.palexis3.newssum.composable.NewsDataArticleDetailsScreen
 import com.example.palexis3.newssum.composable.NewsSourceDetailsScreen
 import com.example.palexis3.newssum.composable.NewsSourcesScreen
+import com.example.palexis3.newssum.composable.SearchView
 import com.example.palexis3.newssum.composable.WebViewScreen
 import com.example.palexis3.newssum.navigation.Screen
 import com.example.palexis3.newssum.navigation.bottomNavItems
@@ -63,6 +64,7 @@ fun ShowNewsApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
+    // TODO: Update bottom bar visibility logic to be more robust
     val bottomBarVisible = rememberSaveable { mutableStateOf(true) }
     when (navBackStackEntry?.destination?.route) {
         Screen.WebView.routeWithArgs -> {
@@ -75,6 +77,9 @@ fun ShowNewsApp() {
             bottomBarVisible.value = false
         }
         Screen.NewsDataArticleDetails.route -> {
+            bottomBarVisible.value = false
+        }
+        Screen.SearchView.route -> {
             bottomBarVisible.value = false
         }
         else -> {
@@ -111,6 +116,9 @@ fun ShowNewsApp() {
                     articleViewModel = articleViewModel,
                     goToNewsApiArticleDetailsScreen = {
                         navController.navigateSingleTopTo(Screen.NewsApiArticleDetails.route)
+                    },
+                    goToSearchView = {
+                        navController.navigateSingleTopTo(Screen.SearchView.route)
                     }
                 )
             }
@@ -144,6 +152,9 @@ fun ShowNewsApp() {
                     newsSourcesViewModel = newsSourcesViewModel,
                     goToNewsSourcesDetailsScreen = {
                         navController.navigateSingleTopTo(Screen.NewsSourceDetails.route)
+                    },
+                    goToSearchView = {
+                        navController.navigateSingleTopTo(Screen.SearchView.route)
                     }
                 )
             }
@@ -168,6 +179,16 @@ fun ShowNewsApp() {
                     articleViewModel = articleViewModel,
                     goToNewsDataArticleDetailsScreen = { navController.navigateSingleTopTo(Screen.NewsDataArticleDetails.route) },
                     goToWebView = { url -> navController.navigateToWebView(url) }
+                )
+            }
+
+            composable(route = Screen.SearchView.route) {
+                SearchView(
+                    articleViewModel = articleViewModel,
+                    goToNewsApiArticleDetailsScreen = {
+                        navController.navigateSingleTopTo(Screen.NewsApiArticleDetails.route)
+                    },
+                    closeScreen = { navController.popBackStack() }
                 )
             }
         }

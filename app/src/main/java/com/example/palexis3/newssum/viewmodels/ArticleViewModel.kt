@@ -46,10 +46,13 @@ class ArticleViewModel @AssistedInject constructor(
             .execute { copy(newsDataArticles = it) }
     }
 
-    fun getEverything(keyword: String? = null, sortBy: String? = null) {
+    fun getEverything(
+        keyword: String? = null,
+        sortBy: String? = null
+    ) {
         articleRepository
             .getEverything(keyword, sortBy)
-            .execute { copy(newsApiArticles = it) }
+            .execute { copy(searchedArticles = it) }
     }
 
     fun setCurrentNewsApiArticle(newsApiArticle: NewsApiArticle) {

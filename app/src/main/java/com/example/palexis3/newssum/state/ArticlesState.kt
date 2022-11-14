@@ -15,5 +15,6 @@ import com.example.palexis3.newssum.models.news_data.NewsDataArticle
  */
 data class ArticlesState(
     val newsApiArticles: Async<List<NewsApiArticle>> = Uninitialized,
-    val newsDataArticles: Async<List<NewsDataArticle>> = Uninitialized
+    val newsDataArticles: Async<List<NewsDataArticle>> = Uninitialized,
+    val searchedArticles: Async<List<NewsApiArticle>> = Uninitialized
 ) : MavericksState
