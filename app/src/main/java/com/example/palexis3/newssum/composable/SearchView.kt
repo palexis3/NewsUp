@@ -57,12 +57,12 @@ fun SearchView(
     goToNewsApiArticleDetailsScreen: () -> Unit,
     closeScreen: () -> Unit
 ) {
-    var searchText by rememberSaveable { mutableStateOf<String?>(null) }
+    var query by rememberSaveable { mutableStateOf<String?>(null) }
     var sortBy by rememberSaveable { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(key1 = searchText, key2 = sortBy) {
-        if (searchText.isNullOrEmpty().not()) {
-            articleViewModel.search(keyword = searchText, sortBy = sortBy)
+    LaunchedEffect(key1 = query, key2 = sortBy) {
+        if (query.isNullOrEmpty().not()) {
+            articleViewModel.search(keyword = query, sortBy = sortBy)
         } else {
             articleViewModel.resetSearch()
         }
@@ -89,10 +89,10 @@ fun SearchView(
             Spacer(modifier = Modifier.width(4.dp))
 
             OutlinedTextField(
-                value = searchText ?: "",
+                value = query ?: "",
                 singleLine = true,
                 onValueChange = { value ->
-                    searchText = value
+                    query = value
                 },
                 leadingIcon = {
                     Icon(
@@ -102,9 +102,9 @@ fun SearchView(
                     )
                 },
                 trailingIcon = {
-                    if (searchText.isNullOrEmpty().not()) {
+                    if (query.isNullOrEmpty().not()) {
                         IconButton(onClick = {
-                            searchText = null
+                            query = null
                         }) {
                             Icon(
                                 modifier = Modifier.padding(end = 4.dp),
@@ -141,7 +141,7 @@ fun SearchView(
             is Uninitialized -> {
                 // if the article search state has not been initialized and there's text being searched for
                 // show an error message
-                if (searchText.isNullOrEmpty().not()) {
+                if (query.isNullOrEmpty().not()) {
                     SearchTextError(modifier = Modifier.align(CenterHorizontally))
                 }
             }
@@ -211,10 +211,9 @@ fun SearchList(
         itemsIndexed(articles) { index, article ->
             val title = article.title ?: ""
             if (title.isNotEmpty()) {
-                Column {
+                Column(modifier = Modifier.clickable { articleSelected(article) }) {
                     Text(
                         modifier = Modifier
-                            .clickable { articleSelected(article) }
                             .padding(8.dp),
                         text = title,
                         style = MaterialTheme.typography.titleMedium
