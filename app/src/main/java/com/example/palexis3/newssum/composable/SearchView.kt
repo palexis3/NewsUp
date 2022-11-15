@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -22,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -29,8 +31,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.airbnb.mvrx.Success
+import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.models.news_api.NewsApiArticle
@@ -45,6 +49,14 @@ fun SearchView(
     closeScreen: () -> Unit
 ) {
     var searchText by rememberSaveable { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(searchText) {
+        if (searchText.isNullOrEmpty().not()) {
+            articleViewModel.search(keyword = searchText)
+        } else {
+            articleViewModel.resetSearch()
+        }
+    }
 
     val articleState by articleViewModel.collectAsState(ArticlesState::searchedArticles)
 
@@ -72,9 +84,6 @@ fun SearchView(
                 singleLine = true,
                 onValueChange = { value ->
                     searchText = value
-                    if (searchText.isNullOrEmpty().not()) {
-                        articleViewModel.getEverything(keyword = value)
-                    }
                 },
                 leadingIcon = {
                     Icon(
@@ -95,7 +104,8 @@ fun SearchView(
                             )
                         }
                     }
-                }
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
         }
 
@@ -111,18 +121,28 @@ fun SearchView(
                         }
                     )
                 } else {
-                    // if the article search found no articles and there's text being searched for
-                    // show an error message
-                    if (searchText.isNullOrEmpty().not()) {
-                        Text(
-                            modifier = Modifier.align(CenterHorizontally),
-                            text = stringResource(id = R.string.search_results_not_found)
-                        )
-                    }
+                    SearchTextError()
+                }
+            }
+            is Uninitialized -> {
+                // if the article search state has not been initialized and there's text being searched for
+                // show an error message
+                if (searchText.isNullOrEmpty().not()) {
+                    SearchTextError()
                 }
             }
             else -> {}
         }
+    }
+}
+
+@Composable
+fun SearchTextError() {
+    Column {
+        Text(
+            modifier = Modifier.align(CenterHorizontally),
+            text = stringResource(id = R.string.search_results_not_found)
+        )
     }
 }
 
@@ -142,8 +162,8 @@ fun SearchList(
                 Column {
                     Text(
                         modifier = Modifier
-                            .padding(8.dp)
-                            .clickable { articleSelected(article) },
+                            .clickable { articleSelected(article) }
+                            .padding(8.dp),
                         text = title,
                         style = MaterialTheme.typography.titleMedium
                     )
