@@ -27,6 +27,7 @@ import com.example.palexis3.newssum.composable.NewsApiArticleDetailsScreen
 import com.example.palexis3.newssum.composable.NewsDataArticleDetailsScreen
 import com.example.palexis3.newssum.composable.NewsSourceDetailsScreen
 import com.example.palexis3.newssum.composable.NewsSourcesScreen
+import com.example.palexis3.newssum.composable.PreferencesScreen
 import com.example.palexis3.newssum.composable.SearchView
 import com.example.palexis3.newssum.composable.WebViewScreen
 import com.example.palexis3.newssum.navigation.Screen
@@ -190,6 +191,10 @@ fun ShowNewsApp() {
                     },
                     closeScreen = { navController.popBackStack() }
                 )
+            }
+
+            composable(route = Screen.Preferences.route) {
+                PreferencesScreen()
             }
         }
     }

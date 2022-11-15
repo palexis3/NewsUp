@@ -26,7 +26,7 @@ class ArticleViewModel @AssistedInject constructor(
         private set
 
     fun getNewsApiArticles(
-        country: String? = "us",
+        country: String? = null,
         category: String? = null,
         keyword: String? = null,
         sources: String? = null
@@ -37,8 +37,8 @@ class ArticleViewModel @AssistedInject constructor(
     }
 
     fun getNewsDataArticles(
-        country: String? = "us",
-        language: String? = "en",
+        country: String? = null,
+        language: String? = null,
         category: String? = null,
         domain: String? = null
     ) {
