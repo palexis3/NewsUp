@@ -44,6 +44,7 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
+import com.example.palexis3.newssum.helper.EmptyScreenWidth
 import com.example.palexis3.newssum.helper.formatToReadableDate
 import com.example.palexis3.newssum.helper.toDate
 import com.example.palexis3.newssum.models.NEWS_API_CATEGORY_TYPES
@@ -81,13 +82,19 @@ fun HeadlineScreen(
             .fillMaxSize()
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 12.dp),
             verticalAlignment = CenterVertically,
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            TitleHeader(title = R.string.headlines)
-            Spacer(Modifier.width(72.dp))
-            IconButton(onClick = goToSearchView) {
+            Spacer(Modifier.width(EmptyScreenWidth()))
+            TitleHeader(
+                title = R.string.headlines
+            )
+            IconButton(
+                onClick = goToSearchView
+            ) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Search"

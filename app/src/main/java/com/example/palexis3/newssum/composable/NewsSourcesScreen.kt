@@ -41,6 +41,7 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
+import com.example.palexis3.newssum.helper.EmptyScreenWidth
 import com.example.palexis3.newssum.models.NEWS_DATA_CATEGORY_TYPES
 import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
 import com.example.palexis3.newssum.state.NewsSourcesState
@@ -66,10 +67,10 @@ fun NewsSourcesScreen(
             Row(
                 modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                Spacer(Modifier.width(EmptyScreenWidth()))
                 TitleHeader(title = R.string.news_sources)
-                Spacer(Modifier.width(72.dp))
                 IconButton(onClick = goToSearchView) {
                     Icon(
                         imageVector = Icons.Default.Search,
