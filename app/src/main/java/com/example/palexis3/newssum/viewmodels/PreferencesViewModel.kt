@@ -16,7 +16,7 @@ class PreferencesViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
-    val countryMap = mapOf(
+    private val _countryMap = mapOf(
         "Argentina" to "ar",
         "Austria" to "at",
         "Australia" to "au",
@@ -67,7 +67,9 @@ class PreferencesViewModel @Inject constructor(
         "South Africa" to "za"
     )
 
-    val languageMap = mapOf(
+    val countryMap = _countryMap
+
+    private val _languageMap = mapOf(
         "Arabic" to "ar",
         "German" to "de",
         "English" to "en",
@@ -82,6 +84,8 @@ class PreferencesViewModel @Inject constructor(
         "Swedish" to "sv",
         "Chinese" to "zh"
     )
+
+    val languageMap = _languageMap
 
     val country: StateFlow<String?> = preferencesManager.getCountry
         .stateIn(

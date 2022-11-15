@@ -1,4 +1,4 @@
-package com.example.palexis3.newssum.composable
+package com.example.palexis3.newssum.composable.articles
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.palexis3.newssum.R
+import com.example.palexis3.newssum.composable.CategoryOutlinedText
 import com.example.palexis3.newssum.helper.formatToReadableDate
 import com.example.palexis3.newssum.helper.toDateEmptySpace
 import com.example.palexis3.newssum.models.news_data.NewsDataArticle

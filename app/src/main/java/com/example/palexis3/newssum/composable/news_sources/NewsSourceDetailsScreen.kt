@@ -1,4 +1,4 @@
-package com.example.palexis3.newssum.composable
+package com.example.palexis3.newssum.composable.news_sources
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +42,9 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
+import com.example.palexis3.newssum.composable.CategoryOutlinedText
+import com.example.palexis3.newssum.composable.ErrorText
+import com.example.palexis3.newssum.composable.LoadingIcon
 import com.example.palexis3.newssum.helper.formatToReadableDate
 import com.example.palexis3.newssum.helper.toDateEmptySpace
 import com.example.palexis3.newssum.models.news_data.NewsDataArticle

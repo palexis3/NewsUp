@@ -22,8 +22,8 @@ class NewsSourcesViewModel @AssistedInject constructor(
 
     fun getNewsSources(
         category: String? = null,
-        language: String? = "en",
-        country: String? = "us"
+        language: String? = null,
+        country: String? = null
     ) {
         newsSourcesRepository
             .getNewsSources(category, language, country)

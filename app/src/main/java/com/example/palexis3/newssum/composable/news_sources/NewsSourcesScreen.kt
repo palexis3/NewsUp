@@ -1,4 +1,4 @@
-package com.example.palexis3.newssum.composable
+package com.example.palexis3.newssum.composable.news_sources
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,23 +42,38 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
+import com.example.palexis3.newssum.composable.ErrorText
+import com.example.palexis3.newssum.composable.LoadingIcon
+import com.example.palexis3.newssum.composable.TitleHeader
 import com.example.palexis3.newssum.helper.EmptyScreenWidth
 import com.example.palexis3.newssum.models.NEWS_DATA_CATEGORY_TYPES
 import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
 import com.example.palexis3.newssum.state.NewsSourcesState
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
+import com.example.palexis3.newssum.viewmodels.PreferencesViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
 fun NewsSourcesScreen(
     newsSourcesViewModel: NewsSourcesViewModel,
+    preferencesViewModel: PreferencesViewModel,
     goToNewsSourcesDetailsScreen: () -> Unit,
     goToSearchView: () -> Unit
 ) {
     var newsSourceCategory by rememberSaveable { mutableStateOf<String?>(null) }
 
+    val country by preferencesViewModel.country.collectAsState()
+    val countryKey: String? = preferencesViewModel.countryMap[country]
+
+    val language by preferencesViewModel.language.collectAsState()
+    val languageKey: String? = preferencesViewModel.languageMap[language]
+
     LaunchedEffect(newsSourceCategory) {
-        newsSourcesViewModel.getNewsSources(category = newsSourceCategory)
+        newsSourcesViewModel.getNewsSources(
+            category = newsSourceCategory,
+            language = languageKey,
+            country = countryKey
+        )
     }
 
     val newsSourcesState by newsSourcesViewModel.collectAsState(NewsSourcesState::newsDataNewsSources)
@@ -65,7 +81,9 @@ fun NewsSourcesScreen(
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         item {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {

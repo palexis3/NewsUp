@@ -24,13 +24,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.mvrx.compose.mavericksViewModel
 import com.example.palexis3.newssum.composable.HeadlineScreen
-import com.example.palexis3.newssum.composable.NewsApiArticleDetailsScreen
-import com.example.palexis3.newssum.composable.NewsDataArticleDetailsScreen
-import com.example.palexis3.newssum.composable.NewsSourceDetailsScreen
-import com.example.palexis3.newssum.composable.NewsSourcesScreen
-import com.example.palexis3.newssum.composable.PreferencesScreen
 import com.example.palexis3.newssum.composable.SearchView
 import com.example.palexis3.newssum.composable.WebViewScreen
+import com.example.palexis3.newssum.composable.articles.NewsApiArticleDetailsScreen
+import com.example.palexis3.newssum.composable.articles.NewsDataArticleDetailsScreen
+import com.example.palexis3.newssum.composable.news_sources.NewsSourceDetailsScreen
+import com.example.palexis3.newssum.composable.news_sources.NewsSourcesScreen
+import com.example.palexis3.newssum.composable.preferences.PreferencesScreen
 import com.example.palexis3.newssum.navigation.Screen
 import com.example.palexis3.newssum.navigation.bottomNavItems
 import com.example.palexis3.newssum.navigation.navigateSingleTopTo
@@ -155,6 +155,7 @@ fun ShowNewsApp() {
             composable(route = Screen.NewsSources.route) {
                 NewsSourcesScreen(
                     newsSourcesViewModel = newsSourcesViewModel,
+                    preferencesViewModel = preferencesViewModel,
                     goToNewsSourcesDetailsScreen = {
                         navController.navigateSingleTopTo(Screen.NewsSourceDetails.route)
                     },
