@@ -3,6 +3,7 @@ package com.example.palexis3.newssum.viewmodels
 import androidx.compose.runtime.mutableStateOf
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
+import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.hilt.AssistedViewModelFactory
 import com.airbnb.mvrx.hilt.hiltMavericksViewModelFactory
 import com.example.palexis3.newssum.models.news_api.NewsApiArticle
@@ -46,10 +47,17 @@ class ArticleViewModel @AssistedInject constructor(
             .execute { copy(newsDataArticles = it) }
     }
 
-    fun getEverything(keyword: String? = null, sortBy: String? = null) {
+    fun search(
+        keyword: String? = null,
+        sortBy: String? = null
+    ) {
         articleRepository
             .getEverything(keyword, sortBy)
-            .execute { copy(newsApiArticles = it) }
+            .execute { copy(searchedArticles = it) }
+    }
+
+    fun resetSearch() {
+        setState { copy(searchedArticles = Uninitialized) }
     }
 
     fun setCurrentNewsApiArticle(newsApiArticle: NewsApiArticle) {

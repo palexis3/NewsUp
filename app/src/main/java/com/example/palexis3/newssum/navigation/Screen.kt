@@ -42,6 +42,11 @@ sealed class Screen {
         override val route: String = "NewsSourceDetails"
         override val title: Int = R.string.news_sources_details
     }
+
+    object SearchView : Screen() {
+        override val route: String = "SearchView"
+        override val title: Int = R.string.searchview
+    }
 }
 
 val bottomNavItems = listOf(
