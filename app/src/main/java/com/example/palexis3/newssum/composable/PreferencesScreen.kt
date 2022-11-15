@@ -28,11 +28,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.palexis3.newssum.R
@@ -60,24 +60,28 @@ fun PreferencesScreen(
             title = R.string.preferences
         )
 
+        Spacer(Modifier.height(20.dp))
+
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .clickable { expandCountrySelectionBox = true }
                 .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = CenterVertically,
+            horizontalArrangement = SpaceBetween
         ) {
             Column {
                 Text(
                     text = stringResource(id = R.string.country),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.ExtraBold
                 )
                 val countryVal = country ?: ""
                 if (countryVal.isNotEmpty()) {
                     Spacer(Modifier.height(4.dp))
                     Text(
                         text = countryVal,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             }
@@ -89,56 +93,55 @@ fun PreferencesScreen(
 
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .clickable { expandLanguageSelectionBox = true }
                 .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = CenterVertically,
+            horizontalArrangement = SpaceBetween
         ) {
             Column {
                 Text(
                     text = stringResource(id = R.string.language),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.ExtraBold
                 )
                 val languageVal = language ?: ""
                 if (languageVal.isNotEmpty()) {
                     Spacer(Modifier.height(4.dp))
                     Text(
                         text = languageVal,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             }
 
             Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "Select language")
         }
+    }
 
-        if (expandCountrySelectionBox) {
-            Box {
-                ShowItemsList(
-                    title = R.string.country,
-                    list = countryMap.keys.toList(),
-                    currentItem = country,
-                    selectedItem = { item ->
-                        preferencesViewModel.setCountry(item)
-                    },
-                    closeScreen = { expandCountrySelectionBox = false }
-                )
-            }
-        }
+    // TODO: Migrate ShowItemsList to its own screen to mimic another screen covering another
+    if (expandCountrySelectionBox) {
+        ShowItemsList(
+            title = R.string.country,
+            list = countryMap.keys.toList(),
+            currentItem = country,
+            selectedItem = { item ->
+                preferencesViewModel.setCountry(item)
+            },
+            closeScreen = { expandCountrySelectionBox = false }
+        )
+    }
 
-        if (expandLanguageSelectionBox) {
-            Box {
-                ShowItemsList(
-                    title = R.string.language,
-                    list = languageMap.keys.toList(),
-                    currentItem = language,
-                    selectedItem = { item ->
-                        preferencesViewModel.setLanguage(item)
-                    },
-                    closeScreen = { expandLanguageSelectionBox = false }
-                )
-            }
-        }
+    if (expandLanguageSelectionBox) {
+        ShowItemsList(
+            title = R.string.language,
+            list = languageMap.keys.toList(),
+            currentItem = language,
+            selectedItem = { item ->
+                preferencesViewModel.setLanguage(item)
+            },
+            closeScreen = { expandLanguageSelectionBox = false }
+        )
     }
 }
 
@@ -150,48 +153,50 @@ fun ShowItemsList(
     selectedItem: (String) -> Unit,
     closeScreen: () -> Unit
 ) {
-    LazyColumn {
-        item {
-            Row(
-                modifier = Modifier.padding(start = 12.dp),
-                verticalAlignment = CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                IconButton(onClick = closeScreen) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "Close"
-                    )
-                }
-                TitleHeader(title = title)
-            }
-
-            Spacer(Modifier.height(20.dp))
-
-            list.forEachIndexed { index, item ->
-                Column(
-                    modifier = Modifier
-                        .clickable { selectedItem(item) }
-                        .padding(12.dp)
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn {
+            item {
+                Row(
+                    modifier = Modifier.padding(start = 12.dp),
+                    verticalAlignment = CenterVertically,
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Row(
-                        horizontalArrangement = SpaceBetween,
-                        verticalAlignment = CenterVertically
-                    ) {
-                        Text(
-                            text = item,
-                            style = MaterialTheme.typography.bodyMedium
+                    IconButton(onClick = closeScreen) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close"
                         )
-                        if (currentItem == item) {
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = "Selected item"
-                            )
-                        }
                     }
+                    TitleHeader(title = title)
+                }
 
-                    if (index < list.size - 1) {
-                        Divider(Modifier.fillMaxWidth())
+                Spacer(Modifier.height(20.dp))
+
+                list.forEachIndexed { index, item ->
+                    Column(
+                        modifier = Modifier
+                            .clickable { selectedItem(item) }
+                            .padding(12.dp)
+                    ) {
+                        Row(
+                            horizontalArrangement = SpaceBetween,
+                            verticalAlignment = CenterVertically
+                        ) {
+                            Text(
+                                text = item,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            if (currentItem == item) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = "Selected item"
+                                )
+                            }
+                        }
+
+                        if (index < list.size - 1) {
+                            Divider(Modifier.fillMaxWidth())
+                        }
                     }
                 }
             }
