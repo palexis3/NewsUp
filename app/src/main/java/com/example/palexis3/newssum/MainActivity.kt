@@ -16,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,6 +38,7 @@ import com.example.palexis3.newssum.navigation.navigateToWebView
 import com.example.palexis3.newssum.theme.AppTheme
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
+import com.example.palexis3.newssum.viewmodels.PreferencesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -61,6 +63,7 @@ fun ShowNewsApp() {
      */
     val articleViewModel: ArticleViewModel = mavericksViewModel()
     val newsSourcesViewModel: NewsSourcesViewModel = mavericksViewModel()
+    val preferencesViewModel: PreferencesViewModel = hiltViewModel()
 
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -115,6 +118,7 @@ fun ShowNewsApp() {
             composable(route = Screen.Headlines.route) {
                 HeadlineScreen(
                     articleViewModel = articleViewModel,
+                    preferencesViewModel = preferencesViewModel,
                     goToNewsApiArticleDetailsScreen = {
                         navController.navigateSingleTopTo(Screen.NewsApiArticleDetails.route)
                     },
@@ -177,6 +181,7 @@ fun ShowNewsApp() {
                 NewsSourceDetailsScreen(
                     closeScreen = { navController.popBackStack() },
                     newsSourcesViewModel = newsSourcesViewModel,
+                    preferencesViewModel = preferencesViewModel,
                     articleViewModel = articleViewModel,
                     goToNewsDataArticleDetailsScreen = { navController.navigateSingleTopTo(Screen.NewsDataArticleDetails.route) },
                     goToWebView = { url -> navController.navigateToWebView(url) }
@@ -186,6 +191,7 @@ fun ShowNewsApp() {
             composable(route = Screen.SearchView.route) {
                 SearchView(
                     articleViewModel = articleViewModel,
+                    preferencesViewModel = preferencesViewModel,
                     goToNewsApiArticleDetailsScreen = {
                         navController.navigateSingleTopTo(Screen.NewsApiArticleDetails.route)
                     },

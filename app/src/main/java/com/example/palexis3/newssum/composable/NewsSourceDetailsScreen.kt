@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -48,22 +49,34 @@ import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
 import com.example.palexis3.newssum.state.ArticlesState
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
+import com.example.palexis3.newssum.viewmodels.PreferencesViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
 fun NewsSourceDetailsScreen(
     closeScreen: () -> Unit,
     newsSourcesViewModel: NewsSourcesViewModel,
+    preferencesViewModel: PreferencesViewModel,
     articleViewModel: ArticleViewModel,
     goToNewsDataArticleDetailsScreen: () -> Unit,
     goToWebView: (String) -> Unit
 ) {
     val newsSource by remember { newsSourcesViewModel.currentNewsDataNewsSource }
 
+    val country by preferencesViewModel.country.collectAsState()
+    val countryKey: String? = preferencesViewModel.countryMap[country]
+
+    val language by preferencesViewModel.language.collectAsState()
+    val languageKey: String? = preferencesViewModel.languageMap[language]
+
     newsSource?.let { source ->
         // Get the headline article for this news source
         LaunchedEffect(source.id) {
-            articleViewModel.getNewsDataArticles(domain = source.id)
+            articleViewModel.getNewsDataArticles(
+                domain = source.id,
+                country = countryKey,
+                language = languageKey
+            )
         }
 
         val articlesState by articleViewModel.collectAsState(ArticlesState::newsDataArticles)

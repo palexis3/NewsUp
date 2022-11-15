@@ -47,10 +47,11 @@ class ArticleRepositoryImpl @Inject constructor(
 
     override fun getEverything(
         keyword: String?,
-        sortBy: String?
+        sortBy: String?,
+        language: String?
     ): Flow<List<NewsApiArticle>> =
         flow {
-            val response = newsApi.getEverything(keyword, sortBy)
+            val response = newsApi.getEverything(keyword, sortBy, language)
             val items = if (response.status == "ok") {
                 response.articles
             } else {

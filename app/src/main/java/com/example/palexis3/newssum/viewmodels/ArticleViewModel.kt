@@ -49,10 +49,11 @@ class ArticleViewModel @AssistedInject constructor(
 
     fun search(
         keyword: String? = null,
-        sortBy: String? = null
+        sortBy: String? = null,
+        language: String? = null
     ) {
         articleRepository
-            .getEverything(keyword, sortBy)
+            .getEverything(keyword, sortBy, language)
             .execute { copy(searchedArticles = it) }
     }
 

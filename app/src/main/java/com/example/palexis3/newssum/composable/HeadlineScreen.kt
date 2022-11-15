@@ -26,6 +26,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
@@ -51,6 +52,7 @@ import com.example.palexis3.newssum.models.NEWS_API_CATEGORY_TYPES
 import com.example.palexis3.newssum.models.news_api.NewsApiArticle
 import com.example.palexis3.newssum.state.ArticlesState
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
+import com.example.palexis3.newssum.viewmodels.PreferencesViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -62,20 +64,27 @@ import kotlinx.coroutines.launch
 @Composable
 fun HeadlineScreen(
     articleViewModel: ArticleViewModel,
+    preferencesViewModel: PreferencesViewModel,
     goToNewsApiArticleDetailsScreen: () -> Unit,
     goToSearchView: () -> Unit
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
+    val articlesState by articleViewModel.collectAsState(ArticlesState::newsApiArticles)
+
+    val country by preferencesViewModel.country.collectAsState()
+    val countryKey: String? = preferencesViewModel.countryMap[country]
+
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             val category = NEWS_API_CATEGORY_TYPES[page]
-            articleViewModel.getNewsApiArticles(category = category)
+            articleViewModel.getNewsApiArticles(
+                category = category,
+                country = countryKey
+            )
         }
     }
-
-    val articlesState by articleViewModel.collectAsState(ArticlesState::newsApiArticles)
 
     Column(
         modifier = Modifier

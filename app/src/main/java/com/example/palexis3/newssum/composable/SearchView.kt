@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,7 @@ import com.example.palexis3.newssum.R
 import com.example.palexis3.newssum.models.news_api.NewsApiArticle
 import com.example.palexis3.newssum.state.ArticlesState
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
+import com.example.palexis3.newssum.viewmodels.PreferencesViewModel
 
 private val SORT_BY = listOf("relevancy", "popularity", "publishedAt")
 
@@ -54,15 +56,23 @@ private val SORT_BY = listOf("relevancy", "popularity", "publishedAt")
 @Composable
 fun SearchView(
     articleViewModel: ArticleViewModel,
+    preferencesViewModel: PreferencesViewModel,
     goToNewsApiArticleDetailsScreen: () -> Unit,
     closeScreen: () -> Unit
 ) {
     var query by rememberSaveable { mutableStateOf<String?>(null) }
     var sortBy by rememberSaveable { mutableStateOf<String?>(null) }
 
+    val language by preferencesViewModel.language.collectAsState()
+    val languageKey: String? = preferencesViewModel.languageMap[language]
+
     LaunchedEffect(key1 = query, key2 = sortBy) {
         if (query.isNullOrEmpty().not()) {
-            articleViewModel.search(keyword = query, sortBy = sortBy)
+            articleViewModel.search(
+                keyword = query,
+                sortBy = sortBy,
+                language = languageKey
+            )
         } else {
             articleViewModel.resetSearch()
         }
