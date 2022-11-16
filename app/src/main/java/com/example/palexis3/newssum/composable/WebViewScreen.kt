@@ -2,12 +2,16 @@ package com.example.palexis3.newssum.composable
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -41,6 +45,18 @@ fun WebViewScreen(
     url: String,
     closeScreen: () -> Unit
 ) {
+    val context = LocalContext.current
+    val customTabsIntentBuilder = CustomTabsIntent.Builder()
+    val colorInt = Color.parseColor("#FFFDFFD9")
+    val colorSchemeParams = CustomTabColorSchemeParams.Builder()
+        .setToolbarColor(colorInt)
+        .build()
+    customTabsIntentBuilder.setDefaultColorSchemeParams(colorSchemeParams)
+    customTabsIntentBuilder.build().launchUrl(context, Uri.parse(url))
+}
+
+@Composable
+fun WebViewFallBack(url: String, closeScreen: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxWidth()) {
             IconButton(onClick = closeScreen) {
@@ -104,7 +120,7 @@ class LoadingWebViewClient(
         request: WebResourceRequest?,
         error: WebResourceError?
     ) {
-        if (error?.errorCode == ERROR_CONNECT || error?.errorCode == ERROR_FILE_NOT_FOUND || error?.errorCode == ERROR_IO) {
+        if (error?.errorCode == ERROR_CONNECT || error?.errorCode == ERROR_FILE_NOT_FOUND) {
             errorOccurred()
         }
         super.onReceivedError(view, request, error)
