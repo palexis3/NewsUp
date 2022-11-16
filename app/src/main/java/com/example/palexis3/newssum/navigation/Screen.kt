@@ -47,9 +47,15 @@ sealed class Screen {
         override val route: String = "SearchView"
         override val title: Int = R.string.searchview
     }
+
+    object Preferences : Screen() {
+        override val route: String = "Preferences"
+        override val title: Int = R.string.preferences
+    }
 }
 
 val bottomNavItems = listOf(
     Screen.Headlines,
-    Screen.NewsSources
+    Screen.NewsSources,
+    Screen.Preferences
 )

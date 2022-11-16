@@ -1,4 +1,4 @@
-package com.example.palexis3.newssum.composable
+package com.example.palexis3.newssum.composable.news_sources
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,6 +42,9 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
+import com.example.palexis3.newssum.composable.CategoryOutlinedText
+import com.example.palexis3.newssum.composable.ErrorText
+import com.example.palexis3.newssum.composable.LoadingIcon
 import com.example.palexis3.newssum.helper.formatToReadableDate
 import com.example.palexis3.newssum.helper.toDateEmptySpace
 import com.example.palexis3.newssum.models.news_data.NewsDataArticle
@@ -48,22 +52,34 @@ import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
 import com.example.palexis3.newssum.state.ArticlesState
 import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 import com.example.palexis3.newssum.viewmodels.NewsSourcesViewModel
+import com.example.palexis3.newssum.viewmodels.PreferencesViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
 fun NewsSourceDetailsScreen(
     closeScreen: () -> Unit,
     newsSourcesViewModel: NewsSourcesViewModel,
+    preferencesViewModel: PreferencesViewModel,
     articleViewModel: ArticleViewModel,
     goToNewsDataArticleDetailsScreen: () -> Unit,
     goToWebView: (String) -> Unit
 ) {
     val newsSource by remember { newsSourcesViewModel.currentNewsDataNewsSource }
 
+    val country by preferencesViewModel.country.collectAsState()
+    val countryKey: String? = preferencesViewModel.countryMap[country]
+
+    val language by preferencesViewModel.language.collectAsState()
+    val languageKey: String? = preferencesViewModel.languageMap[language]
+
     newsSource?.let { source ->
         // Get the headline article for this news source
         LaunchedEffect(source.id) {
-            articleViewModel.getNewsDataArticles(domain = source.id)
+            articleViewModel.getNewsDataArticles(
+                domain = source.id,
+                country = countryKey,
+                language = languageKey
+            )
         }
 
         val articlesState by articleViewModel.collectAsState(ArticlesState::newsDataArticles)

@@ -9,7 +9,8 @@ interface NewsApi {
     @GET("/v2/everything")
     suspend fun getEverything(
         @Query("q") keyword: String?,
-        @Query("sortBy") sortBy: String?
+        @Query("sortBy") sortBy: String?,
+        @Query("language") language: String?
     ): NewsApiArticlesResponse
 
     @GET("/v2/top-headlines")

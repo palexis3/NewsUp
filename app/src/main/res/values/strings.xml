@@ -6,7 +6,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
-
     <string name="headlines">Headlines</string>
     <string name="news_sources">News Sources</string>
     <string name="news_api_article_details">News API Article Details</string>
@@ -16,6 +15,12 @@
     <string name="articles">Articles</string>
     <string name="news_sources_details">News Sources Details</string>
     <string name="searchview">SearchView</string>
+
+    <string name="preferences">Preferences</string>
+    <string name="country">Country</string>
+    <string name="language">Language</string>
+    <string name="select_country">Select Country</string>
+    <string name="select_language">Select Language</string>
 
     <string name="articles_error">Error fetching articles. Try refreshing</string>
     <string name="sources_error">Error fetching news sources. Try refreshing</string>

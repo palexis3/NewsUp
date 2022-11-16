@@ -20,5 +20,9 @@ interface ArticleRepository {
         domain: String?
     ): Flow<List<NewsDataArticle>>
 
-    fun getEverything(keyword: String?, sortBy: String?): Flow<List<NewsApiArticle>>
+    fun getEverything(
+        keyword: String?,
+        sortBy: String?,
+        language: String?
+    ): Flow<List<NewsApiArticle>>
 }
