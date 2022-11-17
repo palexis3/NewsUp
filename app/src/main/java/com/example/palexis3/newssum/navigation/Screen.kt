@@ -53,9 +53,3 @@ sealed class Screen {
         override val title: Int = R.string.preferences
     }
 }
-
-val bottomNavItems = listOf(
-    Screen.Headlines,
-    Screen.NewsSources,
-    Screen.Preferences
-)
