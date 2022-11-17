@@ -1,6 +1,7 @@
 package com.example.palexis3.newssum.composable
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_CANCELED
 import android.content.ComponentName
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -11,6 +12,9 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsCallback
@@ -33,6 +37,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,12 +67,20 @@ fun WebViewScreen(
             chromeLoadError = { chromeTabsError = true }
         )
         if (chromeTabsError) {
-            ChromeTabFallBack(url = url, closeScreen = closeScreen)
+            /**
+             * Note: ShowChromeTabs launches another activity that displays the Chrome tab
+             *  and as of this writing, there isn't a way to handle the case where we
+             *  can follow the below steps when there's an error from Chrome Tabs
+             *  experiencing a load error.
+             *      1. Close ChromeTabs when NAVIGATION_FAILED error encountered (close
+             *          the activity that launched it from rememberLauncherForActivityResult)
+             *      2. Show the ChromeTabFallBack implementation on top of the Chrome tabs
+             */
+            // ChromeTabFallBack(url = url, closeScreen = closeScreen)
         }
     }
 }
 
-// TODO: Should be wrapped in SideEffect since it might be called every recomposition
 @Composable
 fun ShowChromeTabs(
     url: String,
@@ -113,7 +126,17 @@ fun ShowChromeTabs(
         .setDefaultColorSchemeParams(colorSchemeParams)
         .build()
 
-    customTabsIntent.launchUrl(context, Uri.parse(url))
+    val startForResult =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == RESULT_CANCELED) {
+                closeScreen.invoke()
+            }
+        }
+
+    LaunchedEffect(key1 = url) {
+        customTabsIntent.intent.data = Uri.parse(url)
+        startForResult.launch(customTabsIntent.intent)
+    }
 }
 
 @Composable
