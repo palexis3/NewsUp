@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -214,7 +215,8 @@ fun NewsApiArticleCard(
                         .fillMaxWidth()
                         .height(150.dp),
                     contentScale = ContentScale.Crop,
-                    alignment = Alignment.Center
+                    alignment = Alignment.Center,
+                    error = painterResource(R.drawable.not_found)
                 )
                 Spacer(Modifier.height(8.dp))
             }
