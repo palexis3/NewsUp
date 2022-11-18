@@ -75,13 +75,15 @@ fun HeadlineScreen(
     val articlesState by articleViewModel.collectAsState(ArticlesState::newsApiArticles)
 
     val country by preferencesViewModel.country.collectAsState()
+    val language by preferencesViewModel.language.collectAsState()
 
-    LaunchedEffect(key1 = pagerState, key2 = country) {
+    LaunchedEffect(key1 = pagerState, key2 = country, key3 = language) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             val category = NEWS_API_CATEGORY_TYPES[page]
             articleViewModel.getNewsApiArticles(
                 category = category,
-                country = preferencesViewModel.countryMap[country]
+                country = preferencesViewModel.countryMap[country],
+                language = preferencesViewModel.languageMap[language]
             )
         }
     }

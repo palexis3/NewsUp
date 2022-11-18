@@ -29,10 +29,11 @@ class ArticleViewModel @AssistedInject constructor(
         country: String? = null,
         category: String? = null,
         keyword: String? = null,
-        sources: String? = null
+        sources: String? = null,
+        language: String? = null
     ) {
         articleRepository
-            .getNewsApiArticles(category, keyword, sources, country)
+            .getNewsApiArticles(category, keyword, sources, country, language)
             .execute { copy(newsApiArticles = it) }
     }
 
