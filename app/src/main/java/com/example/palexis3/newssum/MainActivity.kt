@@ -10,14 +10,12 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -32,7 +30,6 @@ import com.example.palexis3.newssum.composable.news_sources.NewsSourceDetailsScr
 import com.example.palexis3.newssum.composable.news_sources.NewsSourcesScreen
 import com.example.palexis3.newssum.composable.preferences.PreferencesScreen
 import com.example.palexis3.newssum.navigation.Screen
-import com.example.palexis3.newssum.navigation.bottomNavItems
 import com.example.palexis3.newssum.navigation.navigateSingleTopTo
 import com.example.palexis3.newssum.navigation.navigateToWebView
 import com.example.palexis3.newssum.theme.AppTheme
@@ -65,53 +62,21 @@ fun ShowNewsApp() {
     val newsSourcesViewModel: NewsSourcesViewModel = mavericksViewModel()
     val preferencesViewModel: PreferencesViewModel = hiltViewModel()
 
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-
-    // TODO: Update bottom bar visibility logic to be more robust
-    val bottomBarVisible = rememberSaveable { mutableStateOf(true) }
-    when (navBackStackEntry?.destination?.route) {
-        Screen.WebView.routeWithArgs -> {
-            bottomBarVisible.value = false
-        }
-        Screen.NewsApiArticleDetails.route -> {
-            bottomBarVisible.value = false
-        }
-        Screen.NewsSourceDetails.route -> {
-            bottomBarVisible.value = false
-        }
-        Screen.NewsDataArticleDetails.route -> {
-            bottomBarVisible.value = false
-        }
-        Screen.SearchView.route -> {
-            bottomBarVisible.value = false
-        }
-        else -> {
-            bottomBarVisible.value = true
-        }
-    }
+    val myAppState = rememberMyAppState()
 
     Scaffold(
         bottomBar = {
-            if (bottomBarVisible.value) {
-                NavigationBar {
-                    val currentDestination = navBackStackEntry?.destination
-                    bottomNavItems.forEach { screen ->
-                        NavigationBarItem(
-                            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                            onClick = {
-                                navController.navigateSingleTopTo(screen.route)
-                            },
-                            label = { Text(stringResource(id = screen.title)) },
-                            icon = {}
-                        )
-                    }
-                }
+            if (myAppState.shouldShowBottomBar) {
+                BottomBar(
+                    bottomNavScreens = myAppState.bottomNavScreens,
+                    currentRoute = myAppState.currentRoute!!,
+                    navigateToScreen = myAppState::navigateToScreen
+                )
             }
         }
     ) { innerPadding ->
         NavHost(
-            navController = navController,
+            navController = myAppState.navController,
             startDestination = Screen.Headlines.route,
             modifier = Modifier.padding(innerPadding)
         ) {
@@ -120,10 +85,10 @@ fun ShowNewsApp() {
                     articleViewModel = articleViewModel,
                     preferencesViewModel = preferencesViewModel,
                     goToNewsApiArticleDetailsScreen = {
-                        navController.navigateSingleTopTo(Screen.NewsApiArticleDetails.route)
+                        myAppState.navigateToScreen(Screen.NewsApiArticleDetails.route)
                     },
                     goToSearchView = {
-                        navController.navigateSingleTopTo(Screen.SearchView.route)
+                        myAppState.navigateToScreen(Screen.SearchView.route)
                     }
                 )
             }
@@ -132,10 +97,10 @@ fun ShowNewsApp() {
                 NewsApiArticleDetailsScreen(
                     articleViewModel = articleViewModel,
                     closeScreen = {
-                        navController.popBackStack()
+                        myAppState.popBackStack()
                     },
                     goToWebView = { url ->
-                        navController.navigateToWebView(url)
+                        myAppState.navigateToWebView(url)
                     }
                 )
             }
@@ -144,10 +109,10 @@ fun ShowNewsApp() {
                 NewsDataArticleDetailsScreen(
                     articleViewModel = articleViewModel,
                     closeScreen = {
-                        navController.popBackStack()
+                        myAppState.popBackStack()
                     },
                     goToWebView = { url ->
-                        navController.navigateToWebView(url)
+                        myAppState.navigateToWebView(url)
                     }
                 )
             }
@@ -157,10 +122,10 @@ fun ShowNewsApp() {
                     newsSourcesViewModel = newsSourcesViewModel,
                     preferencesViewModel = preferencesViewModel,
                     goToNewsSourcesDetailsScreen = {
-                        navController.navigateSingleTopTo(Screen.NewsSourceDetails.route)
+                        myAppState.navigateToScreen(Screen.NewsSourceDetails.route)
                     },
                     goToSearchView = {
-                        navController.navigateSingleTopTo(Screen.SearchView.route)
+                        myAppState.navigateToScreen(Screen.SearchView.route)
                     }
                 )
             }
@@ -173,19 +138,19 @@ fun ShowNewsApp() {
                 if (webUrl != null) {
                     WebViewScreen(
                         url = webUrl,
-                        closeScreen = { navController.popBackStack() }
+                        closeScreen = { myAppState.popBackStack() }
                     )
                 }
             }
 
             composable(route = Screen.NewsSourceDetails.route) {
                 NewsSourceDetailsScreen(
-                    closeScreen = { navController.popBackStack() },
+                    closeScreen = { myAppState.popBackStack() },
                     newsSourcesViewModel = newsSourcesViewModel,
                     preferencesViewModel = preferencesViewModel,
                     articleViewModel = articleViewModel,
-                    goToNewsDataArticleDetailsScreen = { navController.navigateSingleTopTo(Screen.NewsDataArticleDetails.route) },
-                    goToWebView = { url -> navController.navigateToWebView(url) }
+                    goToNewsDataArticleDetailsScreen = { myAppState.navigateToScreen(Screen.NewsDataArticleDetails.route) },
+                    goToWebView = { url -> myAppState.navigateToWebView(url) }
                 )
             }
 
@@ -194,15 +159,68 @@ fun ShowNewsApp() {
                     articleViewModel = articleViewModel,
                     preferencesViewModel = preferencesViewModel,
                     goToNewsApiArticleDetailsScreen = {
-                        navController.navigateSingleTopTo(Screen.NewsApiArticleDetails.route)
+                        myAppState.navigateToScreen(Screen.NewsApiArticleDetails.route)
                     },
-                    closeScreen = { navController.popBackStack() }
+                    closeScreen = { myAppState.popBackStack() }
                 )
             }
 
             composable(route = Screen.Preferences.route) {
                 PreferencesScreen()
             }
+        }
+    }
+}
+
+@Composable
+fun rememberMyAppState(
+    navController: NavHostController = rememberNavController()
+) = remember(navController) { AppState(navController) }
+
+class AppState(val navController: NavHostController) {
+
+    val bottomNavScreens = listOf(
+        Screen.Headlines,
+        Screen.NewsSources,
+        Screen.Preferences
+    )
+
+    private val bottomNavRoutes = bottomNavScreens.map { it.route }
+
+    val currentRoute: String?
+        get() = navController.currentDestination?.route
+
+    val shouldShowBottomBar: Boolean
+        @Composable get() =
+            navController.currentBackStackEntryAsState().value?.destination?.route in bottomNavRoutes
+
+    fun popBackStack() {
+        navController.popBackStack()
+    }
+
+    fun navigateToScreen(route: String) {
+        if (currentRoute != route) {
+            navController.navigateSingleTopTo(route)
+        }
+    }
+
+    fun navigateToWebView(url: String) = navController.navigateToWebView(url)
+}
+
+@Composable
+fun BottomBar(
+    bottomNavScreens: List<Screen>,
+    currentRoute: String,
+    navigateToScreen: (String) -> Unit,
+) {
+    NavigationBar {
+        bottomNavScreens.forEach { screen ->
+            NavigationBarItem(
+                selected = currentRoute == screen.route,
+                onClick = { navigateToScreen(screen.route) },
+                label = { Text(stringResource(id = screen.title)) },
+                icon = {}
+            )
         }
     }
 }
