@@ -18,6 +18,7 @@ interface NewsApi {
         @Query("category") category: String?,
         @Query("sources") sources: String?,
         @Query("q") keyword: String?,
-        @Query("country") country: String?
+        @Query("country") country: String?,
+        @Query("language") language: String?
     ): NewsApiArticlesResponse
 }

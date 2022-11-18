@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -67,18 +68,15 @@ fun NewsSourceDetailsScreen(
     val newsSource by remember { newsSourcesViewModel.currentNewsDataNewsSource }
 
     val country by preferencesViewModel.country.collectAsState()
-    val countryKey: String? = preferencesViewModel.countryMap[country]
-
     val language by preferencesViewModel.language.collectAsState()
-    val languageKey: String? = preferencesViewModel.languageMap[language]
 
     newsSource?.let { source ->
         // Get the headline article for this news source
         LaunchedEffect(source.id) {
             articleViewModel.getNewsDataArticles(
                 domain = source.id,
-                country = countryKey,
-                language = languageKey
+                country = preferencesViewModel.countryMap[country],
+                language = preferencesViewModel.languageMap[language]
             )
         }
 
@@ -232,7 +230,8 @@ fun NewsDataArticleCard(
                         .fillMaxWidth()
                         .height(150.dp),
                     contentScale = ContentScale.Crop,
-                    alignment = Alignment.Center
+                    alignment = Alignment.Center,
+                    error = painterResource(R.drawable.not_found)
                 )
                 Spacer(Modifier.height(8.dp))
             }

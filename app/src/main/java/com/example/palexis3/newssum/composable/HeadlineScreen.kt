@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -74,14 +75,15 @@ fun HeadlineScreen(
     val articlesState by articleViewModel.collectAsState(ArticlesState::newsApiArticles)
 
     val country by preferencesViewModel.country.collectAsState()
-    val countryKey: String? = preferencesViewModel.countryMap[country]
+    val language by preferencesViewModel.language.collectAsState()
 
-    LaunchedEffect(pagerState) {
+    LaunchedEffect(key1 = pagerState, key2 = country, key3 = language) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             val category = NEWS_API_CATEGORY_TYPES[page]
             articleViewModel.getNewsApiArticles(
                 category = category,
-                country = countryKey
+                country = preferencesViewModel.countryMap[country],
+                language = preferencesViewModel.languageMap[language]
             )
         }
     }
@@ -215,7 +217,8 @@ fun NewsApiArticleCard(
                         .fillMaxWidth()
                         .height(150.dp),
                     contentScale = ContentScale.Crop,
-                    alignment = Alignment.Center
+                    alignment = Alignment.Center,
+                    error = painterResource(R.drawable.not_found)
                 )
                 Spacer(Modifier.height(8.dp))
             }

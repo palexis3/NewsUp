@@ -10,7 +10,8 @@ interface ArticleRepository {
         category: String?,
         keyword: String?,
         sources: String?,
-        country: String?
+        country: String?,
+        language: String?
     ): Flow<List<NewsApiArticle>>
 
     fun getNewsDataArticles(

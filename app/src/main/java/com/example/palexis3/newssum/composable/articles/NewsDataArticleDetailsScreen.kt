@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -68,7 +69,8 @@ fun ShowNewsDataArticleState(
                             .fillMaxWidth()
                             .height(250.dp),
                         contentScale = ContentScale.Crop,
-                        alignment = Center
+                        alignment = Center,
+                        error = painterResource(R.drawable.not_found)
                     )
                 }
                 IconButton(

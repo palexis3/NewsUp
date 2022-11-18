@@ -17,10 +17,11 @@ class ArticleRepositoryImpl @Inject constructor(
         category: String?,
         keyword: String?,
         sources: String?,
-        country: String?
+        country: String?,
+        language: String?
     ): Flow<List<NewsApiArticle>> =
         flow {
-            val response = newsApi.getArticles(category, keyword, sources, country)
+            val response = newsApi.getArticles(category, keyword, sources, country, language)
             val items = if (response.status == "ok") {
                 response.articles
             } else {

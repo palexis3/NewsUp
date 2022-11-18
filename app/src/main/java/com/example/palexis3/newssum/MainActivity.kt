@@ -56,7 +56,8 @@ class MainActivity : ComponentActivity() {
 fun ShowNewsApp() {
     /**
      * Creating shared viewmodels to set single article and source objects because
-     * the NewsApi doesn't support fetching objects via an id.
+     * the NewsApi/NewsData doesn't support fetching single objects via an id and I'll use
+     * the viewModels as a state holder.
      */
     val articleViewModel: ArticleViewModel = mavericksViewModel()
     val newsSourcesViewModel: NewsSourcesViewModel = mavericksViewModel()
