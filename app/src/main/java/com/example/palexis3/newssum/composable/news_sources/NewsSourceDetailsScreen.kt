@@ -67,18 +67,15 @@ fun NewsSourceDetailsScreen(
     val newsSource by remember { newsSourcesViewModel.currentNewsDataNewsSource }
 
     val country by preferencesViewModel.country.collectAsState()
-    val countryKey: String? = preferencesViewModel.countryMap[country]
-
     val language by preferencesViewModel.language.collectAsState()
-    val languageKey: String? = preferencesViewModel.languageMap[language]
 
     newsSource?.let { source ->
         // Get the headline article for this news source
         LaunchedEffect(source.id) {
             articleViewModel.getNewsDataArticles(
                 domain = source.id,
-                country = countryKey,
-                language = languageKey
+                country = preferencesViewModel.countryMap[country],
+                language = preferencesViewModel.languageMap[language]
             )
         }
 

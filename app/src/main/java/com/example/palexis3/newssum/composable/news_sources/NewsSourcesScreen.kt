@@ -63,16 +63,13 @@ fun NewsSourcesScreen(
     var newsSourceCategory by rememberSaveable { mutableStateOf<String?>(null) }
 
     val country by preferencesViewModel.country.collectAsState()
-    val countryKey: String? = preferencesViewModel.countryMap[country]
-
     val language by preferencesViewModel.language.collectAsState()
-    val languageKey: String? = preferencesViewModel.languageMap[language]
 
-    LaunchedEffect(newsSourceCategory) {
+    LaunchedEffect(key1 = newsSourceCategory, key2 = language, key3 = country) {
         newsSourcesViewModel.getNewsSources(
             category = newsSourceCategory,
-            language = languageKey,
-            country = countryKey
+            language = preferencesViewModel.languageMap[language],
+            country = preferencesViewModel.countryMap[country]
         )
     }
 
