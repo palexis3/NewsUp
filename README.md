@@ -28,7 +28,7 @@ interesting issues I encountered and some of the design decisions that were made
  ### News Sources Screen
  
   The News Sources screen pings the `../sources` [endpoint](https://newsdata.io/docs) from NewsData.io since it contained more news sources than 
-  NewsApi.org and seemed more inclusive of different countries/languages. A user can select a single category to make the search more refined. Notice that   the category items are composed of single selection chips that wrap to the next line using [FlowRow](https://google.github.io/accompanist/flowlayout/). .   To pair with the category chips is a LazyColumn that shows cards of each news source with its name. Check out the entire [PR]  (https://github.com/palexis3/NewsUp/pull/9)
+  NewsApi.org and seemed more inclusive of different countries/languages. A user can select a single category to make the search more refined. Notice that   the category items are composed of single selection chips that wrap to the next line using [FlowRow](https://google.github.io/accompanist/flowlayout/).     To pair with the category chips is a LazyColumn that shows cards of each news source with its name. Check out the entire [PR]    (https://github.com/palexis3/NewsUp/pull/9)
  
   https://user-images.githubusercontent.com/16326086/202833309-8b46f415-1947-4dc0-8775-e8252bcf7b42.mp4
 
