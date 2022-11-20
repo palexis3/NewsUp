@@ -58,9 +58,9 @@ fun HeadlineScreen(
     articleViewModel: ArticleViewModel,
     preferencesViewModel: PreferencesViewModel,
     goToNewsApiArticleDetailsScreen: () -> Unit,
-    screenTitle: (Int) -> Unit
+    title: (Int) -> Unit
 ) {
-    screenTitle(R.string.headlines)
+    title(R.string.headlines)
 
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()

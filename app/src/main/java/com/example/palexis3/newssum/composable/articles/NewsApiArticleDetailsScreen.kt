@@ -34,7 +34,7 @@ fun NewsApiArticleDetailsScreen(
     articleViewModel: ArticleViewModel,
     closeScreen: () -> Unit,
     goToWebView: (String) -> Unit,
-    screenTitle: (String) -> Unit
+    title: (String) -> Unit
 ) {
     val article by remember { articleViewModel.currentNewsApiArticle }
 
@@ -44,7 +44,7 @@ fun NewsApiArticleDetailsScreen(
             item,
             closeScreen,
             goToWebView,
-            screenTitle
+            title
         )
     } ?: closeScreen()
 }

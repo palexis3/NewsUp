@@ -91,8 +91,8 @@ fun ShowNewsApp() {
                 TopBar(
                     title = screenTitle,
                     isNavBarScreen = myAppState.isNavBarScreen,
-                    navigateToSearchScreen = { myAppState.navigateToSearchView() },
-                    closeScreen = { myAppState.popBackStack() }
+                    navigateToSearchScreen = myAppState::navigateToSearchView,
+                    closeScreen = myAppState::popBackStack
                 )
             }
         },
@@ -118,33 +118,29 @@ fun ShowNewsApp() {
                     goToNewsApiArticleDetailsScreen = {
                         myAppState.navigateToScreen(Screen.NewsApiArticleDetails.route)
                     },
-                    screenTitle = { stringId -> screenTitle = context.getString(stringId) }
+                    title = { stringId -> screenTitle = context.getString(stringId) }
                 )
             }
 
             composable(route = Screen.NewsApiArticleDetails.route) {
                 NewsApiArticleDetailsScreen(
                     articleViewModel = articleViewModel,
-                    closeScreen = {
-                        myAppState.popBackStack()
-                    },
+                    closeScreen = myAppState::popBackStack,
                     goToWebView = { url ->
                         myAppState.navigateToWebView(url)
                     },
-                    screenTitle = { title -> screenTitle = title }
+                    title = { title -> screenTitle = title }
                 )
             }
 
             composable(route = Screen.NewsDataArticleDetails.route) {
                 NewsDataArticleDetailsScreen(
                     articleViewModel = articleViewModel,
-                    closeScreen = {
-                        myAppState.popBackStack()
-                    },
+                    closeScreen = myAppState::popBackStack,
                     goToWebView = { url ->
                         myAppState.navigateToWebView(url)
                     },
-                    screenTitle = { title -> screenTitle = title }
+                    title = { title -> screenTitle = title }
                 )
             }
 
@@ -155,7 +151,7 @@ fun ShowNewsApp() {
                     goToNewsSourcesDetailsScreen = {
                         myAppState.navigateToScreen(Screen.NewsSourceDetails.route)
                     },
-                    screenTitle = { stringId -> screenTitle = context.getString(stringId) }
+                    title = { stringId -> screenTitle = context.getString(stringId) }
                 )
             }
 
@@ -167,20 +163,20 @@ fun ShowNewsApp() {
                 if (webUrl != null) {
                     WebViewScreen(
                         url = webUrl,
-                        closeScreen = { myAppState.popBackStack() }
+                        closeScreen = myAppState::popBackStack
                     )
                 }
             }
 
             composable(route = Screen.NewsSourceDetails.route) {
                 NewsSourceDetailsScreen(
-                    closeScreen = { myAppState.popBackStack() },
+                    closeScreen = myAppState::popBackStack,
                     newsSourcesViewModel = newsSourcesViewModel,
                     preferencesViewModel = preferencesViewModel,
                     articleViewModel = articleViewModel,
                     goToNewsDataArticleDetailsScreen = { myAppState.navigateToScreen(Screen.NewsDataArticleDetails.route) },
                     goToWebView = { url -> myAppState.navigateToWebView(url) },
-                    screenTitle = { title -> screenTitle = title }
+                    title = { title -> screenTitle = title }
                 )
             }
 
@@ -239,15 +235,13 @@ class AppState @OptIn(ExperimentalMaterial3Api::class) constructor(
         @Composable get() =
             navController.currentBackStackEntryAsState().value?.destination?.route !in nonTopBarRoutes
 
-    fun popBackStack() {
-        navController.popBackStack()
-    }
-
     fun navigateToScreen(route: String) {
         if (currentRoute != route) {
             navController.navigateSingleTopTo(route)
         }
     }
+
+    fun popBackStack() = navController.popBackStack()
 
     fun navigateToWebView(url: String) = navController.navigateToWebView(url)
 

@@ -60,7 +60,7 @@ fun NewsSourceDetailsScreen(
     articleViewModel: ArticleViewModel,
     goToNewsDataArticleDetailsScreen: () -> Unit,
     goToWebView: (String) -> Unit,
-    screenTitle: (String) -> Unit
+    title: (String) -> Unit
 ) {
     val newsSource by remember { newsSourcesViewModel.currentNewsDataNewsSource }
 
@@ -87,7 +87,7 @@ fun NewsSourceDetailsScreen(
                 articleViewModel.setCurrentNewsDataArticle(article)
                 goToNewsDataArticleDetailsScreen()
             },
-            screenTitle = screenTitle
+            screenTitle = title
         )
     } ?: closeScreen()
 }

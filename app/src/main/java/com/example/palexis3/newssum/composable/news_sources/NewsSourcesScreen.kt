@@ -50,9 +50,9 @@ fun NewsSourcesScreen(
     newsSourcesViewModel: NewsSourcesViewModel,
     preferencesViewModel: PreferencesViewModel,
     goToNewsSourcesDetailsScreen: () -> Unit,
-    screenTitle: (Int) -> Unit
+    title: (Int) -> Unit
 ) {
-    screenTitle(R.string.news_sources)
+    title(R.string.news_sources)
 
     var newsSourceCategory by rememberSaveable { mutableStateOf<String?>(null) }
 
