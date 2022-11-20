@@ -4,15 +4,30 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -63,11 +78,21 @@ fun ShowNewsApp() {
     val newsSourcesViewModel: NewsSourcesViewModel = mavericksViewModel()
     val preferencesViewModel: PreferencesViewModel = hiltViewModel()
 
+    var screenTitle by rememberSaveable { mutableStateOf("") }
+
     val myAppState = rememberMyAppState()
 
     Scaffold(
+        topBar = {
+            TopBar(
+                title = screenTitle,
+                isNavBarScreen = myAppState.isNavBarScreen,
+                navigateToSearchScreen = { myAppState.navigateToSearchView() },
+                closeScreen = { myAppState.popBackStack() }
+            )
+        },
         bottomBar = {
-            if (myAppState.shouldShowBottomBar) {
+            if (myAppState.isNavBarScreen) {
                 BottomBar(
                     bottomNavScreens = myAppState.bottomNavScreens,
                     currentRoute = myAppState.currentRoute!!,
@@ -173,13 +198,19 @@ fun ShowNewsApp() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun rememberMyAppState(
-    navController: NavHostController = rememberNavController()
-) = remember(navController) { AppState(navController) }
+    navController: NavHostController = rememberNavController(),
+    topAppBarState: TopAppBarState = rememberTopAppBarState()
+) = remember(navController, topAppBarState) {
+    AppState(navController, topAppBarState)
+}
 
-class AppState(val navController: NavHostController) {
-
+class AppState @OptIn(ExperimentalMaterial3Api::class) constructor(
+    val navController: NavHostController,
+    val topAppBarState: TopAppBarState
+) {
     val bottomNavScreens = listOf(
         Screen.Headlines,
         Screen.NewsSources,
@@ -191,7 +222,7 @@ class AppState(val navController: NavHostController) {
     val currentRoute: String?
         get() = navController.currentDestination?.route
 
-    val shouldShowBottomBar: Boolean
+    val isNavBarScreen: Boolean
         @Composable get() =
             navController.currentBackStackEntryAsState().value?.destination?.route in bottomNavRoutes
 
@@ -206,6 +237,48 @@ class AppState(val navController: NavHostController) {
     }
 
     fun navigateToWebView(url: String) = navController.navigateToWebView(url)
+
+    fun navigateToSearchView() = navigateToScreen(Screen.SearchView.route)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(
+    title: String,
+    isNavBarScreen: Boolean,
+    navigateToSearchScreen: () -> Unit,
+    closeScreen: () -> Unit
+) {
+    CenterAlignedTopAppBar(
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.ExtraBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        navigationIcon = {
+            // we only want to show back arrow for screens that are not on the bottom nav bar
+            if (isNavBarScreen.not()) {
+                IconButton(onClick = closeScreen) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Go Back"
+                    )
+                }
+            }
+        },
+        actions = {
+            IconButton(onClick = navigateToSearchScreen) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search"
+                )
+            }
+        }
+    )
 }
 
 @Composable
