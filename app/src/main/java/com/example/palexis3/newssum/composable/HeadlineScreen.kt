@@ -1,25 +1,18 @@
 package com.example.palexis3.newssum.composable
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -31,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -46,7 +38,6 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.palexis3.newssum.R
-import com.example.palexis3.newssum.helper.EmptyScreenWidth
 import com.example.palexis3.newssum.helper.formatToReadableDate
 import com.example.palexis3.newssum.helper.toDate
 import com.example.palexis3.newssum.models.NEWS_API_CATEGORY_TYPES
@@ -67,8 +58,10 @@ fun HeadlineScreen(
     articleViewModel: ArticleViewModel,
     preferencesViewModel: PreferencesViewModel,
     goToNewsApiArticleDetailsScreen: () -> Unit,
-    goToSearchView: () -> Unit
+    screenTitle: (Int) -> Unit
 ) {
+    screenTitle(R.string.headlines)
+
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -92,29 +85,6 @@ fun HeadlineScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 12.dp),
-            verticalAlignment = CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Spacer(Modifier.width(EmptyScreenWidth()))
-            TitleHeader(
-                title = R.string.headlines
-            )
-            IconButton(
-                onClick = goToSearchView
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
         HorizontalTabs(
             scope = coroutineScope,
             pagerState = pagerState

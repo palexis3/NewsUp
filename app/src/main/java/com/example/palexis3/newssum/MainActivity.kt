@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -69,6 +70,8 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun ShowNewsApp() {
+    val context = LocalContext.current
+
     /**
      * Creating shared viewmodels to set single article and source objects because
      * the NewsApi/NewsData doesn't support fetching single objects via an id and I'll use
@@ -84,12 +87,14 @@ fun ShowNewsApp() {
 
     Scaffold(
         topBar = {
-            TopBar(
-                title = screenTitle,
-                isNavBarScreen = myAppState.isNavBarScreen,
-                navigateToSearchScreen = { myAppState.navigateToSearchView() },
-                closeScreen = { myAppState.popBackStack() }
-            )
+            if (myAppState.isTopBarScreen) {
+                TopBar(
+                    title = screenTitle,
+                    isNavBarScreen = myAppState.isNavBarScreen,
+                    navigateToSearchScreen = { myAppState.navigateToSearchView() },
+                    closeScreen = { myAppState.popBackStack() }
+                )
+            }
         },
         bottomBar = {
             if (myAppState.isNavBarScreen) {
@@ -113,9 +118,7 @@ fun ShowNewsApp() {
                     goToNewsApiArticleDetailsScreen = {
                         myAppState.navigateToScreen(Screen.NewsApiArticleDetails.route)
                     },
-                    goToSearchView = {
-                        myAppState.navigateToScreen(Screen.SearchView.route)
-                    }
+                    screenTitle = { stringId -> screenTitle = context.getString(stringId) }
                 )
             }
 
@@ -127,7 +130,8 @@ fun ShowNewsApp() {
                     },
                     goToWebView = { url ->
                         myAppState.navigateToWebView(url)
-                    }
+                    },
+                    screenTitle = { title -> screenTitle = title }
                 )
             }
 
@@ -139,7 +143,8 @@ fun ShowNewsApp() {
                     },
                     goToWebView = { url ->
                         myAppState.navigateToWebView(url)
-                    }
+                    },
+                    screenTitle = { title -> screenTitle = title }
                 )
             }
 
@@ -150,9 +155,7 @@ fun ShowNewsApp() {
                     goToNewsSourcesDetailsScreen = {
                         myAppState.navigateToScreen(Screen.NewsSourceDetails.route)
                     },
-                    goToSearchView = {
-                        myAppState.navigateToScreen(Screen.SearchView.route)
-                    }
+                    screenTitle = { stringId -> screenTitle = context.getString(stringId) }
                 )
             }
 
@@ -176,7 +179,8 @@ fun ShowNewsApp() {
                     preferencesViewModel = preferencesViewModel,
                     articleViewModel = articleViewModel,
                     goToNewsDataArticleDetailsScreen = { myAppState.navigateToScreen(Screen.NewsDataArticleDetails.route) },
-                    goToWebView = { url -> myAppState.navigateToWebView(url) }
+                    goToWebView = { url -> myAppState.navigateToWebView(url) },
+                    screenTitle = { title -> screenTitle = title }
                 )
             }
 
@@ -187,7 +191,7 @@ fun ShowNewsApp() {
                     goToNewsApiArticleDetailsScreen = {
                         myAppState.navigateToScreen(Screen.NewsApiArticleDetails.route)
                     },
-                    closeScreen = { myAppState.popBackStack() }
+                    closeScreen = myAppState::popBackStack
                 )
             }
 
@@ -217,6 +221,11 @@ class AppState @OptIn(ExperimentalMaterial3Api::class) constructor(
         Screen.Preferences
     )
 
+    private val nonTopBarRoutes = listOf(
+        Screen.SearchView,
+        Screen.Preferences
+    ).map { it.route }
+
     private val bottomNavRoutes = bottomNavScreens.map { it.route }
 
     val currentRoute: String?
@@ -225,6 +234,10 @@ class AppState @OptIn(ExperimentalMaterial3Api::class) constructor(
     val isNavBarScreen: Boolean
         @Composable get() =
             navController.currentBackStackEntryAsState().value?.destination?.route in bottomNavRoutes
+
+    val isTopBarScreen: Boolean
+        @Composable get() =
+            navController.currentBackStackEntryAsState().value?.destination?.route !in nonTopBarRoutes
 
     fun popBackStack() {
         navController.popBackStack()
@@ -261,6 +274,7 @@ fun TopBar(
         },
         navigationIcon = {
             // we only want to show back arrow for screens that are not on the bottom nav bar
+            // since we have to navigate our way to them
             if (isNavBarScreen.not()) {
                 IconButton(onClick = closeScreen) {
                     Icon(

@@ -7,22 +7,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,13 +33,19 @@ import com.example.palexis3.newssum.viewmodels.ArticleViewModel
 fun NewsApiArticleDetailsScreen(
     articleViewModel: ArticleViewModel,
     closeScreen: () -> Unit,
-    goToWebView: (String) -> Unit
+    goToWebView: (String) -> Unit,
+    screenTitle: (String) -> Unit
 ) {
     val article by remember { articleViewModel.currentNewsApiArticle }
 
     // Close the screen automatically if the article is null
     article?.let { item ->
-        ShowNewsApiArticleState(item, closeScreen, goToWebView)
+        ShowNewsApiArticleState(
+            item,
+            closeScreen,
+            goToWebView,
+            screenTitle
+        )
     } ?: closeScreen()
 }
 
@@ -53,7 +53,8 @@ fun NewsApiArticleDetailsScreen(
 fun ShowNewsApiArticleState(
     newsApiArticle: NewsApiArticle,
     closeScreen: () -> Unit,
-    goToWebView: (String) -> Unit
+    goToWebView: (String) -> Unit,
+    screenTitle: (String) -> Unit
 ) {
     LazyColumn {
         item {
@@ -71,18 +72,6 @@ fun ShowNewsApiArticleState(
                         error = painterResource(R.drawable.not_found)
                     )
                 }
-                IconButton(
-                    onClick = closeScreen,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(12.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Go Back",
-                        tint = if (urlImage != null) Color.White else Color.Unspecified
-                    )
-                }
             }
             Spacer(Modifier.height(4.dp))
 
@@ -91,14 +80,11 @@ fun ShowNewsApiArticleState(
                     .fillMaxWidth()
                     .padding(12.dp)
             ) {
-                val title = newsApiArticle.title
-                if (title != null) {
-                    Text(text = title, style = MaterialTheme.typography.titleLarge)
-                    Spacer(Modifier.height(12.dp))
-                }
+                val title = newsApiArticle.title ?: ""
+                screenTitle(title)
 
-                val publishedAt = newsApiArticle.publishedAt
-                if (publishedAt != null) {
+                val publishedAt = newsApiArticle.publishedAt ?: ""
+                if (publishedAt.isNotEmpty()) {
                     val date = publishedAt.toDate().formatToReadableDate()
                     Text(
                         text = date,
@@ -108,8 +94,8 @@ fun ShowNewsApiArticleState(
                     Spacer(Modifier.height(2.dp))
                 }
 
-                val newsSource = newsApiArticle.source?.name
-                if (newsSource != null) {
+                val newsSource = newsApiArticle.source?.name ?: ""
+                if (newsSource.isNotEmpty()) {
                     val newsSourceText = "News source: $newsSource"
                     Text(
                         text = newsSourceText,
@@ -119,8 +105,8 @@ fun ShowNewsApiArticleState(
                     Spacer(Modifier.height(2.dp))
                 }
 
-                val author = newsApiArticle.author
-                if (author != null) {
+                val author = newsApiArticle.author ?: ""
+                if (author.isNotEmpty()) {
                     val authorText = "Written by: $author"
                     Text(
                         text = authorText,

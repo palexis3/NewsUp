@@ -12,14 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,7 +59,8 @@ fun NewsSourceDetailsScreen(
     preferencesViewModel: PreferencesViewModel,
     articleViewModel: ArticleViewModel,
     goToNewsDataArticleDetailsScreen: () -> Unit,
-    goToWebView: (String) -> Unit
+    goToWebView: (String) -> Unit,
+    screenTitle: (String) -> Unit
 ) {
     val newsSource by remember { newsSourcesViewModel.currentNewsDataNewsSource }
 
@@ -83,25 +80,25 @@ fun NewsSourceDetailsScreen(
         val articlesState by articleViewModel.collectAsState(ArticlesState::newsDataArticles)
 
         ShowNewsSourceDetails(
-            closeScreen,
             source,
             articlesState,
             goToWebView,
             articleSelected = { article ->
                 articleViewModel.setCurrentNewsDataArticle(article)
                 goToNewsDataArticleDetailsScreen()
-            }
+            },
+            screenTitle = screenTitle
         )
     } ?: closeScreen()
 }
 
 @Composable
 fun ShowNewsSourceDetails(
-    closeScreen: () -> Unit,
     newsDataNewsSource: NewsDataNewsSource,
     articlesState: Async<List<NewsDataArticle>>,
     goToWebView: (String) -> Unit,
-    articleSelected: (NewsDataArticle) -> Unit
+    articleSelected: (NewsDataArticle) -> Unit,
+    screenTitle: (String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -109,24 +106,8 @@ fun ShowNewsSourceDetails(
             .padding(12.dp)
     ) {
         item {
-            IconButton(
-                onClick = closeScreen
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Go Back"
-                )
-            }
-
             val name = newsDataNewsSource.name ?: ""
-            if (name.isNotEmpty()) {
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+            screenTitle(name)
 
             val category = newsDataNewsSource.category ?: listOf()
             if (category.isNotEmpty()) {

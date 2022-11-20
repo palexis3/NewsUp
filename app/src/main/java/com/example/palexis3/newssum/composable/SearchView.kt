@@ -64,14 +64,13 @@ fun SearchView(
     var sortBy by rememberSaveable { mutableStateOf<String?>(null) }
 
     val language by preferencesViewModel.language.collectAsState()
-    val languageKey: String? = preferencesViewModel.languageMap[language]
 
-    LaunchedEffect(key1 = query, key2 = sortBy) {
+    LaunchedEffect(key1 = query, key2 = sortBy, key3 = language) {
         if (query.isNullOrEmpty().not()) {
             articleViewModel.search(
                 keyword = query,
                 sortBy = sortBy,
-                language = languageKey
+                language = preferencesViewModel.languageMap[language]
             )
         } else {
             articleViewModel.resetSearch()
