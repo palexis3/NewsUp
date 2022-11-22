@@ -31,6 +31,17 @@ interesting issues I encountered and some of the design decisions that were made
   NewsApi.org and seemed more inclusive of different countries/languages. A user can select a single category to make the search more refined. Notice that   the category items are composed of single selection chips that wrap to the next line using [FlowRow](https://google.github.io/accompanist/flowlayout/).     To pair with the category chips is a LazyColumn that shows cards of each news source with its name. Check out the entire [PR]    (https://github.com/palexis3/NewsUp/pull/9)
  
   https://user-images.githubusercontent.com/16326086/202833309-8b46f415-1947-4dc0-8775-e8252bcf7b42.mp4
+  
+  
+  ### News Sources Details Screen
+  
+  When a user clicks on one of the news sources in the main NewSources screen, they're presented with a details page of that news source with keywords
+  shown as outlined texts but most importantly its top articles from today as LazyColumn. Notice that as a user scrolls, the top bar is pinned to the top
+  of the screen along with the article's title, back navigation and search icon. This pinned top bar with a scrollable content section implementation is
+  also seen if you click on one the articles for that news source. This is all provided from Material 3's [CenterAlignedTopAppBar](https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#CenterAlignedTopAppBar) where we simply just set the `topBar` 
+  parameter in the main scaffold and implement some logic in the [app state holder](https://github.com/palexis3/NewsUp/blob/master/app/src/main/java/com/example/palexis3/newssum/MainActivity.kt#L234) to ensure the top bar is shown on appropriate screens.
+  
+https://user-images.githubusercontent.com/16326086/203262655-48aa477a-2a70-4770-81e7-27b4106a1b8f.mp4
 
 
  ### Search Screen
@@ -40,7 +51,7 @@ interesting issues I encountered and some of the design decisions that were made
   without any fancy operators to be done on the stateflow being collected in the Search screen. In the Sarch screen composable, all that has to be done
   is a mapping of what to do for the different states in typical MVI scenarios. Here's the [PR](https://github.com/palexis3/NewsUp/pull/15)
 
-  https://user-images.githubusercontent.com/16326086/202833357-0abc2d05-f090-45fd-96fa-5f24dc1cc9b2.mp4
+  https://user-images.githubusercontent.com/16326086/203258643-97d30978-2326-47a2-b2d1-1e2dcf5fcf12.mp4
 
 
  ### Webview Screen using Chrome Tabs
@@ -70,11 +81,3 @@ interesting issues I encountered and some of the design decisions that were made
 - Material Design 3
 - Moshi
 - Dagger Hilt
-
-
-
-
-
-
-
-
