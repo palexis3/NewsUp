@@ -6,7 +6,7 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.hilt.AssistedViewModelFactory
 import com.airbnb.mvrx.hilt.hiltMavericksViewModelFactory
 import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
-import com.example.palexis3.newssum.repository.source.NewsSourcesRepository
+import com.example.palexis3.newssum.repository.news_sources.NewsSourcesRepository
 import com.example.palexis3.newssum.state.NewsSourcesState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory

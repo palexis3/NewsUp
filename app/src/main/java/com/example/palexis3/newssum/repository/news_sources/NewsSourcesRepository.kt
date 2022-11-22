@@ -1,4 +1,4 @@
-package com.example.palexis3.newssum.repository.source
+package com.example.palexis3.newssum.repository.news_sources
 
 import com.example.palexis3.newssum.models.news_data.NewsDataNewsSource
 import kotlinx.coroutines.flow.Flow
