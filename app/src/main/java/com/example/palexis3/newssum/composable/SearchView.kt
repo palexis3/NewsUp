@@ -64,14 +64,13 @@ fun SearchView(
     var sortBy by rememberSaveable { mutableStateOf<String?>(null) }
 
     val language by preferencesViewModel.language.collectAsState()
-    val languageKey: String? = preferencesViewModel.languageMap[language]
 
-    LaunchedEffect(key1 = query, key2 = sortBy) {
+    LaunchedEffect(key1 = query, key2 = sortBy, key3 = language) {
         if (query.isNullOrEmpty().not()) {
             articleViewModel.search(
                 keyword = query,
                 sortBy = sortBy,
-                language = languageKey
+                language = preferencesViewModel.languageMap[language]
             )
         } else {
             articleViewModel.resetSearch()
@@ -127,9 +126,13 @@ fun SearchView(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
 
+            var expanded by remember { mutableStateOf(false) }
+
             SortDropDown(
                 currentSelectedItem = sortBy,
-                selected = { item -> sortBy = item }
+                selected = { item -> sortBy = item },
+                expanded = expanded,
+                onExpanded = { bool -> expanded = bool }
             )
         }
 
@@ -163,38 +166,43 @@ fun SearchView(
 @Composable
 fun SortDropDown(
     currentSelectedItem: String?,
-    selected: (String) -> Unit
+    selected: (String) -> Unit,
+    expanded: Boolean,
+    onExpanded: (Boolean) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-
     Box {
-        IconButton(onClick = { expanded = true }) {
+        IconButton(onClick = { onExpanded(true) }) {
             Icon(
                 imageVector = Icons.Filled.Menu,
                 contentDescription = "Sort By"
             )
         }
 
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            SORT_BY.forEach { item ->
-                DropdownMenuItem(
-                    text = {
-                        Row(verticalAlignment = CenterVertically) {
-                            Text(item)
-                            if (currentSelectedItem == item) {
-                                Spacer(Modifier.width(2.dp))
-                                Icon(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = "Checked item"
-                                )
+        if (expanded) {
+            DropdownMenu(
+                expanded = true,
+                onDismissRequest = { onExpanded(false) }
+            ) {
+                SORT_BY.forEach { item ->
+                    DropdownMenuItem(
+                        text = {
+                            Row(verticalAlignment = CenterVertically) {
+                                Text(item)
+                                if (currentSelectedItem == item) {
+                                    Spacer(Modifier.width(2.dp))
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = "Checked item"
+                                    )
+                                }
                             }
+                        },
+                        onClick = {
+                            selected(item)
+                            onExpanded(false)
                         }
-                    },
-                    onClick = { selected(item) }
-                )
+                    )
+                }
             }
         }
     }
