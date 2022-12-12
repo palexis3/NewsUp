@@ -109,7 +109,11 @@ dependencies {
     // AndroidX Browser
     implementation "androidx.browser:browser:$androidx_browser_version"
 
+    // Testing
     testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
+    testImplementation "app.cash.turbine:turbine:$turbine_test_version"
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
