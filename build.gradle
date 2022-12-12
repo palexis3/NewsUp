@@ -18,6 +18,8 @@ buildscript {
         material_version = '1.3.0'
         datastore_preferences_version = '1.0.0'
         androidx_browser_version = '1.3.0'
+        coroutines_test_version = '1.6.4'
+        turbine_test_version = '0.8.0'
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.1'
